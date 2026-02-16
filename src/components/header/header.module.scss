@@ -1,0 +1,64 @@
+.header {
+  background: white;
+  padding: 0.75em;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .logo {
+    height: 50px;
+ }
+
+  nav {
+    ul {
+        list-style: none;
+        display: flex;
+        gap: 1em;
+        margin: 0;
+        padding: 0;
+    
+        li {
+            .navLink {
+                color: var(--color-primary);
+                text-decoration: none;
+                transition: all 0.3s ease;
+                position: relative;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    background: var(--color-primary);
+                    left: 0;
+                    bottom: -4px;
+                    transition: width 0.3s ease;
+                }
+
+                &:hover::after {
+                    width: 100%;
+                }    
+            }
+
+        }
+        .register {
+            background: var(--color-primary);
+            padding: 0.5em 1.2em;
+            border-radius: 4px;
+            color: white;
+            position: relative;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: var(--color-text);
+            }
+        }
+    }
+  }
+  // align logo and nav vertically on smaller screens
+   @media (max-width: 500px) {
+        height: 30px;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,25 @@
+  /* Light theme (default) */
+:root {
+  --color-bg: #f9f9f9;
+  --color-text: #222222;
+  --color-primary: #1976d2;
+  --color-primary-dark: #125aa0;
+  --color-secondary: #ff9800;
+  --color-border: #e0e0e0;
+  --color-muted: #777;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Dark theme */
+html.dark {
+  --color-bg: #121212;
+  --color-text: #e0e0e0;
+  --color-primary: #90caf9;
+  --color-primary-dark: #64b5f6;
+  --color-border: #333;
+  --color-muted: #aaa;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+}
+
