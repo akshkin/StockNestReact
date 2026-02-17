@@ -3,16 +3,14 @@ import type { RootState } from "../store";
 
 const authSlice = createSlice({
 	name: "auth",
-	initialState: { token: localStorage.getItem("user") || null },
+	initialState: { token: null },
 	reducers: {
 		setCredentials: (state, action) => {
 			const token = action.payload;
 			state.token = token;
-			localStorage.setItem("user", token);
 		},
 		logOut: (state) => {
 			state.token = null;
-			localStorage.removeItem("user");
 		},
 	},
 });
