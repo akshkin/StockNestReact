@@ -1,4 +1,3 @@
-import { setCredentials } from "../features/authSlice";
 import { apiSlice } from "./apiSlice";
 
 export const authApi = apiSlice.injectEndpoints({
@@ -9,14 +8,6 @@ export const authApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: credentials,
 			}),
-			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-				try {
-					const { data } = await queryFulfilled;
-					dispatch(setCredentials(data.token)); // store in auth slice
-				} catch (err) {
-					console.error("Failed to set user data:", err);
-				}
-			},
 		}),
 		register: builder.mutation({
 			query: (data) => ({
@@ -24,16 +15,25 @@ export const authApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: data,
 			}),
-			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-				try {
-					const { data } = await queryFulfilled;
-					dispatch(setCredentials(data.token)); // store in auth slice
-				} catch (err) {
-					console.error("Failed to set user data:", err);
-				}
-			},
+		}),
+		refresh: builder.mutation({
+			query: () => ({
+				url: "/account/refresh",
+				method: "GET",
+			}),
+		}),
+		logout: builder.mutation({
+			query: () => ({
+				url: "/account/logout",
+				method: "POST",
+			}),
 		}),
 	}),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+	useLoginMutation,
+	useRegisterMutation,
+	useRefreshMutation,
+	useLogoutMutation,
+} = authApi;
