@@ -1,16 +1,19 @@
 import logo from "@/assets/images/logo.svg";
 import styles from "./header.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { RootState } from "../../store";
-import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../../features/authSlice";
+import { useSelector } from "react-redux";
+import { useLogoutMutation } from "../../api/authApi";
 
 function Header() {
 	const currentUser = useSelector((state: RootState) => state.auth.token);
-	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-	function handleLogout() {
-		dispatch(logOut());
+	const [logout] = useLogoutMutation();
+
+	async function handleLogout() {
+		await logout(null);
+		navigate("/");
 	}
 
 	return (
