@@ -6,7 +6,7 @@ import InputField from "../../components/inputField/InputField";
 import styles from "./auth.module.scss";
 import { zodErrorsToObject } from "../../helpers/utils";
 import ErrorText from "../../components/errorText/ErrorText";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type loginScehma = z.infer<typeof loginSchema>;
 
