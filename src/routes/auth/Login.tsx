@@ -6,7 +6,7 @@ import InputField from "../../components/inputField/InputField";
 import styles from "./auth.module.scss";
 import { zodErrorsToObject } from "../../helpers/utils";
 import ErrorText from "../../components/errorText/ErrorText";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type loginScehma = z.infer<typeof loginSchema>;
 
@@ -20,6 +20,8 @@ function Login() {
 	>({});
 
 	const navigate = useNavigate();
+	const location = useLocation();
+	const message = location.state?.message || "";
 
 	const isFormValid =
 		Object.keys(errors).length === 0 && data.email && data.password;
@@ -62,6 +64,8 @@ function Login() {
 
 	return (
 		<div className={styles.container}>
+			{message && <ErrorText error={message} />}
+
 			<h1 className={styles.title}>Login</h1>
 			<form>
 				<InputField
