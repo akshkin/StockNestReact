@@ -14,5 +14,11 @@
 	.main {
 		flex: 1;
 		padding: 1em;
+		margin-left: 220px;
+		margin-top: 10em;
+
+		@media (max-width: 700px) {
+			margin-left: 60px;
+		}
 	}
 }

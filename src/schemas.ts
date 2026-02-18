@@ -27,3 +27,10 @@ export const registerSchema = z.object({
 // 	message: "Passwords do not match",
 // 	path: ["confirmPassword"],
 // });
+
+export const groupSchema = z.object({
+	name: z
+		.string()
+		.min(2, "Group name must be at least 2 characters")
+		.max(100, "Group name must be less than 100 characters"),
+});
