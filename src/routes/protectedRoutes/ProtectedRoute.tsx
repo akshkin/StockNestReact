@@ -1,11 +1,22 @@
-import type { RootState } from "../../store";
-import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
+import { useGetGroupsQuery } from "../../api/groupsApi";
+import DashboardHeader from "../../components/header/dashboardHeader/DashboardHeader";
+import Sidebar from "../../components/sidebar/Sidebar";
+import styles from "./protectRoute.module.css";
 
 function ProtectedRoute() {
-	const currentUser = useSelector((state: RootState) => state.auth.token);
+	const { data: groups, isLoading, error } = useGetGroupsQuery({});
 
-	if (!currentUser) {
+	console.log(
+		"ProtectedRoute: groups =",
+		groups,
+		"isLoading =",
+		isLoading,
+		"isError =",
+		error,
+	);
+
+	if (error && error?.status === 401) {
 		return (
 			<Navigate
 				to="/login"
@@ -16,7 +27,13 @@ function ProtectedRoute() {
 
 	return (
 		<>
-			<Outlet />
+			<DashboardHeader />
+			<div className={styles.container}>
+				<Sidebar />
+				<main className={styles.main}>
+					<Outlet />
+				</main>
+			</div>
 		</>
 	);
 }
