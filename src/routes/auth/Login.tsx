@@ -47,8 +47,8 @@ function Login() {
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		try {
-			const response = await login(data);
-			if (response.data?.user) {
+			const response = await login(data).unwrap();
+			if (response?.user) {
 				await new Promise((resolve) => setTimeout(resolve, 200)); // Add a delay of 0.2 seconds
 				navigate("/dashboard", { replace: true });
 			}
