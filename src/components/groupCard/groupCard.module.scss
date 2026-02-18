@@ -5,3 +5,12 @@
 	padding: 16px;
 	margin: 16px;
 }
+
+.buttonsContainer {
+	display: flex;
+	gap: 1em;
+
+	.deleteButton {
+		background-color: rgb(223, 60, 60);
+	}
+}

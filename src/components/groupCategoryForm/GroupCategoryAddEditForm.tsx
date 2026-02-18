@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputField from "../inputField/InputField";
 import {
 	useCreateNewGroupMutation,
+	useGetGroupsQuery,
 	useUpdateGroupMutation,
 } from "../../api/groupsApi";
 import { groupSchema } from "../../schemas";
@@ -13,16 +14,16 @@ import styles from "./groupCategoryForm.module.scss";
 type FormProps = {
 	id?: number;
 	name?: string;
+	value?: string;
 	closeModal: () => void;
-};
-
-const defaultFormValues = {
-	name: "",
 };
 
 type groupCategorySchema = z.infer<typeof groupSchema>;
 
-function GroupCategoryAddEditForm({ id, name, closeModal }: FormProps) {
+function GroupCategoryAddEditForm({ id, name, value, closeModal }: FormProps) {
+	const defaultFormValues = {
+		name: value || "",
+	};
 	const [formData, setFormData] =
 		useState<groupCategorySchema>(defaultFormValues);
 
@@ -34,6 +35,7 @@ function GroupCategoryAddEditForm({ id, name, closeModal }: FormProps) {
 
 	const [createNewGroup, createNewGroupState] = useCreateNewGroupMutation();
 	const [updateGroup, updateGroupState] = useUpdateGroupMutation();
+	const { refetch: refetchGroups } = useGetGroupsQuery({});
 
 	const isFormValid = Object.keys(errors).length === 0 && formData.name;
 
@@ -71,6 +73,7 @@ function GroupCategoryAddEditForm({ id, name, closeModal }: FormProps) {
 
 		if (!createNewGroupState.isSuccess && !updateGroupState.isSuccess)
 			closeModal();
+		await refetchGroups();
 	}
 
 	const hasError = !!(createNewGroupState?.error || updateGroupState?.error);

@@ -25,7 +25,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 		updateGroup: builder.mutation({
 			query: ({ id, group }) => ({
 				url: `/groups/${id}/edit`,
-				method: "PATCH",
+				method: "POST",
 				body: {
 					...group,
 				},
