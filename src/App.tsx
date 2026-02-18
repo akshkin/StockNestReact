@@ -5,6 +5,7 @@ import Login from "./routes/auth/Login";
 import Dashboard from "./routes/dashboard/Dashboard";
 import SignUp from "./routes/auth/SignUp";
 import ProtectedRoute from "./routes/protectedRoutes/ProtectedRoute";
+import Group from "./routes/group/Group";
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 				</Route>
 				<Route path="/dashboard" element={<ProtectedRoute />}>
 					<Route index element={<Dashboard />} />
+					<Route path="group/:id" element={<Group />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>
