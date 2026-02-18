@@ -15,7 +15,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 		}),
 		createNewGroup: builder.mutation({
 			query: (group) => ({
-				url: "/groups/createGroup",
+				url: "/groups/create",
 				method: "POST",
 				body: {
 					...group,
