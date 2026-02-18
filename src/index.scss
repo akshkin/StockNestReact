@@ -33,6 +33,16 @@ h1 {
 	line-height: 1.1;
 }
 
+button {
+	cursor: pointer;
+	border: none;
+	font-family: inherit;
+	background-color: var(--color-primary);
+	padding: 0.5em 1.2em;
+	color: white;
+	border-radius: var(--radius-sm);
+}
+
 .loading {
 	display: flex;
 	justify-content: center;
