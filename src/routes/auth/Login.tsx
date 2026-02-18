@@ -49,6 +49,7 @@ function Login() {
 		try {
 			const response = await login(data);
 			if (response.data?.user) {
+				await new Promise((resolve) => setTimeout(resolve, 200)); // Add a delay of 0.2 seconds
 				navigate("/dashboard", { replace: true });
 			}
 			console.log(response);
