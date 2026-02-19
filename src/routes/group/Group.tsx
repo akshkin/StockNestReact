@@ -127,9 +127,11 @@ function Group() {
 
 	return (
 		<main>
-			<button onClick={() => setIsModalOpen(true)}>
-				Add a person to group
-			</button>
+			{group.role === "Owner" && (
+				<button onClick={() => setIsModalOpen(true)}>
+					Add a person to group
+				</button>
+			)}
 			Group group: {group?.name}
 			{isModalOpen && (
 				<Modal
