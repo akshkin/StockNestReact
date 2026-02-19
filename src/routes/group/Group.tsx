@@ -37,9 +37,10 @@ function Group() {
 	] = useInviteMemeberToGroupMutation();
 
 	const {
-		data: groupMembers,
+		data: groupMembersResponse,
 		isLoading: membersLoading,
 		error: memberError,
+		refetch,
 	} = useGetGroupMembersQuery(id);
 
 	function handleChange(
@@ -64,19 +65,12 @@ function Group() {
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-		console.log("Submitting form with data:", formData);
 
-		const response = await inviteMemberToGroup({
+		await inviteMemberToGroup({
 			groupId: Number(id),
 			inviterData: { ...formData },
 		});
-
-		console.log("Invite member response:", response);
-		if ("error" in response) {
-			console.error("Failed to invite member:", response.error);
-		} else {
-			console.log("Member invited successfully:", response.data);
-		}
+		refetch();
 	}
 
 	const isFormValid =
@@ -128,20 +122,22 @@ function Group() {
 		</form>
 	);
 
+	console.log(groupMembersResponse);
+
 	return (
-		<main>
+		<>
 			{error && (
 				<ErrorText error="An error occurred while fetching the group details." />
 			)}
 			{memberError && (
 				<ErrorText error="An error occurred while fetching the group members." />
 			)}
+			<h2 className={styles.title}>Group: {group?.name}</h2>
 			{group.role === "Owner" && (
 				<button onClick={() => setIsModalOpen(true)}>
 					Add a person to group
 				</button>
 			)}
-			Group Name: {group?.name}
 			{isModalOpen && (
 				<Modal
 					title="Add a person to group"
@@ -151,11 +147,16 @@ function Group() {
 			)}
 			<h3>Members</h3>
 			{membersLoading && <Loading />}
-			{groupMembers?.length &&
-				groupMembers?.map((groupMember: GroupMember) => (
-					<UserInfoCard key={groupMember.email} user={groupMember} />
+			{groupMembersResponse?.groupMembers.length &&
+				groupMembersResponse?.groupMembers.map((groupMember: GroupMember) => (
+					<UserInfoCard
+						key={groupMember.email}
+						groupId={Number(id)}
+						user={groupMember}
+						myRole={groupMembersResponse.myRole}
+					/>
 				))}
-		</main>
+		</>
 	);
 }
 

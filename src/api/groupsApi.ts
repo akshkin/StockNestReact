@@ -60,6 +60,13 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 				method: "GET",
 			}),
 		}),
+		removeGroupMember: builder.mutation({
+			query: ({ groupId, email }) => ({
+				url: `/groups/${groupId}/deleteMember`,
+				method: "POST",
+				body: { email },
+			}),
+		}),
 	}),
 });
 
@@ -71,4 +78,5 @@ export const {
 	useDeleteGroupMutation,
 	useInviteMemeberToGroupMutation,
 	useGetGroupMembersQuery,
+	useRemoveGroupMemberMutation,
 } = groupsApiSlice;

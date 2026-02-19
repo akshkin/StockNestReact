@@ -16,7 +16,7 @@ function ProtectedRoute() {
 		error,
 	);
 
-	if (error && error?.status === 401) {
+	if (error && "status" in error && error?.status === 401) {
 		return (
 			<Navigate
 				to="/login"
