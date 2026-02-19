@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useGetGroupsQuery, type Group } from "../../api/groupsApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import GroupCard from "../../components/groupCard/GroupCard";
@@ -48,9 +48,7 @@ function Dashboard() {
 
 			{groups && groups.length > 0 ? (
 				groups.map((group: Group) => (
-					// <Link key={group.groupId} to={`/dashboard/group/${group.groupId}`}>
 					<GroupCard key={group.groupId} group={group} />
-					// </Link>
 				))
 			) : (
 				<p>No groups available</p>

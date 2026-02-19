@@ -34,3 +34,10 @@ export const groupSchema = z.object({
 		.min(2, "Group name must be at least 2 characters")
 		.max(100, "Group name must be less than 100 characters"),
 });
+
+export const inviteMemberSchema = z.object({
+	email: z.string().email("Invalid email address"),
+	role: z.enum(["Viewer", "Member"], {
+		message: "Role must be either Viewer or Member",
+	}),
+});

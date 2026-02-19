@@ -41,6 +41,17 @@ button {
 	padding: 0.5em 1.2em;
 	color: white;
 	border-radius: var(--radius-sm);
+
+	&:disabled {
+		background-color: var(--color-muted);
+		cursor: not-allowed;
+	}
+}
+
+button.invertedButton {
+	background-color: white;
+	border: 1px solid var(--color-primary);
+	color: var(--color-primary);
 }
 
 .loading {
