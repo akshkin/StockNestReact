@@ -29,6 +29,9 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 			if (refreshResult?.error?.status === 401) {
 				refreshResult.error.data = "Your login has expired. ";
 				await baseQuery("/account/logout", api, extraOptions);
+				setTimeout(() => {
+					api.dispatch(apiSlice.util.resetApiState());
+				}, 1000);
 			}
 			return refreshResult;
 		}

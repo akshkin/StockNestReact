@@ -37,7 +37,7 @@ export const groupSchema = z.object({
 
 export const inviteMemberSchema = z.object({
 	email: z.string().email("Invalid email address"),
-	role: z.enum(["Viewer", "Member"], {
+	role: z.enum(["Viewer", "Member", "Co-Owner"], {
 		message: "Role must be either Viewer or Member",
 	}),
 });

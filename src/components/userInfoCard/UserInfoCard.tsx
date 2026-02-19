@@ -17,13 +17,13 @@ type UserCardInfoProps = {
 
 function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const { fullName, role, email, isMe } = user;
+	const { fullName, role, isMe, userId } = user;
 
 	const [removeGroupMember, { isLoading, error }] =
 		useRemoveGroupMemberMutation();
 
 	async function handleDelete() {
-		await removeGroupMember({ groupId, email });
+		await removeGroupMember({ groupId, userId });
 
 		if (!error) setIsModalOpen(false);
 	}
@@ -49,7 +49,7 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 			<span className={styles.avatar}></span>
 			<p className={styles.name}>{fullName}</p>
 			<p className={styles.role}>{role}</p>
-			{myRole === "Owner" &&
+			{(myRole === "Owner" || myRole === "Co-Owner") &&
 				!isMe && ( // show delete button only to owner of the group
 					<div className={styles.iconsContainer}>
 						{/* <button>

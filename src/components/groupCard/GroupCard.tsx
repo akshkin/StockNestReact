@@ -61,7 +61,7 @@ function GroupCard({ group }: { group: Group }) {
 				</Link>
 				<span className={styles.role}>{group.role}</span>
 			</header>
-			{group.role === "Owner" ? (
+			{group.role === "Owner" || group.role === "Co-Owner" ? (
 				<div className={styles.buttonsContainer}>
 					<button onClick={() => openModal("edit")}>
 						<RiEditLine /> Edit

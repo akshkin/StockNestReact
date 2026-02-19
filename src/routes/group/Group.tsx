@@ -71,6 +71,12 @@ function Group() {
 			inviterData: { ...formData },
 		});
 		refetch();
+		setFormData(defaultData);
+	}
+
+	function closeModal() {
+		setIsModalOpen(false);
+		setFormData(defaultData);
 	}
 
 	const isFormValid =
@@ -94,6 +100,7 @@ function Group() {
 				value={formData.role}
 				onChange={(e) => handleChange(e)}
 			>
+				<option value="Co-Owner">Co-Owner</option>
 				<option value="Member">Member</option>
 				<option value="Viewer">Viewer</option>
 			</select>
@@ -102,11 +109,7 @@ function Group() {
 				<button disabled={!isFormValid || isInviting} onClick={handleSubmit}>
 					Add
 				</button>
-				<button
-					className="invertedButton"
-					type="button"
-					onClick={() => setIsModalOpen(false)}
-				>
+				<button className="invertedButton" type="button" onClick={closeModal}>
 					Cancel
 				</button>
 			</div>
@@ -121,8 +124,6 @@ function Group() {
 			)}
 		</form>
 	);
-
-	console.log(groupMembersResponse);
 
 	return (
 		<>
@@ -141,7 +142,7 @@ function Group() {
 			{isModalOpen && (
 				<Modal
 					title="Add a person to group"
-					closeModal={() => setIsModalOpen(false)}
+					closeModal={closeModal}
 					children={modalChild}
 				/>
 			)}

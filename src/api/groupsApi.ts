@@ -11,6 +11,7 @@ export type GroupMember = {
 	email: string;
 	role: string;
 	isMe: boolean;
+	userId: string;
 };
 
 export const groupsApiSlice = apiSlice.injectEndpoints({
@@ -61,10 +62,9 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 			}),
 		}),
 		removeGroupMember: builder.mutation({
-			query: ({ groupId, email }) => ({
-				url: `/groups/${groupId}/deleteMember`,
+			query: ({ groupId, userId }) => ({
+				url: `/groups/${groupId}/deleteMember/${userId}`,
 				method: "POST",
-				body: { email },
 			}),
 		}),
 	}),
