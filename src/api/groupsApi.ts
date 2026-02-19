@@ -37,6 +37,15 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 				method: "POST",
 			}),
 		}),
+		inviteMemeberToGroup: builder.mutation({
+			query: ({ groupId, inviterData }) => ({
+				url: `/groups/${groupId}/invite`,
+				method: "POST",
+				body: {
+					...inviterData,
+				},
+			}),
+		}),
 	}),
 });
 
@@ -46,4 +55,5 @@ export const {
 	useCreateNewGroupMutation,
 	useUpdateGroupMutation,
 	useDeleteGroupMutation,
+	useInviteMemeberToGroupMutation,
 } = groupsApiSlice;
