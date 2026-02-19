@@ -6,6 +6,12 @@ export type Group = {
 	role: string;
 };
 
+export type GroupMember = {
+	fullName: string;
+	email: string;
+	role: string;
+};
+
 export const groupsApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getGroups: builder.query({
@@ -47,6 +53,12 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 				},
 			}),
 		}),
+		getGroupMembers: builder.query({
+			query: (groupId) => ({
+				url: `/groups/${groupId}/members`,
+				method: "GET",
+			}),
+		}),
 	}),
 });
 
@@ -57,4 +69,5 @@ export const {
 	useUpdateGroupMutation,
 	useDeleteGroupMutation,
 	useInviteMemeberToGroupMutation,
+	useGetGroupMembersQuery,
 } = groupsApiSlice;

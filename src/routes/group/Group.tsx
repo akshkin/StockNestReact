@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
+	useGetGroupMembersQuery,
 	useInviteMemeberToGroupMutation,
+	type GroupMember,
 } from "../../api/groupsApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
@@ -26,13 +28,18 @@ function Group() {
 	const [errors, setErrors] = useState<
 		Partial<Record<keyof inviteMemberSchema, string>>
 	>({});
-	// const [isSelectSelected, setIsSelectSelected] = useState(false);
 
 	const { data: group, isLoading, error } = useGetGroupByIdQuery(id);
 	const [
 		inviteMemberToGroup,
 		{ error: inviteError, isLoading: isInviting, reset },
 	] = useInviteMemeberToGroupMutation();
+
+	const {
+		data: groupMembers,
+		isLoading: membersLoading,
+		error: memberError,
+	} = useGetGroupMembersQuery(id);
 
 	function handleChange(
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -75,11 +82,6 @@ function Group() {
 		Object.keys(errors).length === 0 && formData.email && formData.role;
 
 	if (isLoading) return <Loading />;
-
-	if (error)
-		return (
-			<ErrorText error="An error occurred while fetching the group details." />
-		);
 
 	const modalChild = (
 		<form>
@@ -127,12 +129,18 @@ function Group() {
 
 	return (
 		<main>
+			{error && (
+				<ErrorText error="An error occurred while fetching the group details." />
+			)}
+			{memberError && (
+				<ErrorText error="An error occurred while fetching the group members." />
+			)}
 			{group.role === "Owner" && (
 				<button onClick={() => setIsModalOpen(true)}>
 					Add a person to group
 				</button>
 			)}
-			Group group: {group?.name}
+			Group Name: {group?.name}
 			{isModalOpen && (
 				<Modal
 					title="Add a person to group"
@@ -140,6 +148,16 @@ function Group() {
 					children={modalChild}
 				/>
 			)}
+			<h3>Members</h3>
+			{membersLoading && <Loading />}
+			{groupMembers?.length &&
+				groupMembers?.map((groupMember: GroupMember) => (
+					<div key={groupMember.email}>
+						<p>Name: {groupMember.fullName}</p>
+						<p>Email: {groupMember.email}</p>
+						<p>Role: {groupMember.role}</p>
+					</div>
+				))}
 		</main>
 	);
 }
