@@ -14,6 +14,7 @@ import { inviteMemberSchema } from "../../schemas";
 import { zodErrorsToObject } from "../../helpers/utils";
 import type z from "zod";
 import styles from "./group.module.scss";
+import UserInfoCard from "../../components/userInfoCard/UserInfoCard";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
 
@@ -152,11 +153,7 @@ function Group() {
 			{membersLoading && <Loading />}
 			{groupMembers?.length &&
 				groupMembers?.map((groupMember: GroupMember) => (
-					<div key={groupMember.email}>
-						<p>Name: {groupMember.fullName}</p>
-						<p>Email: {groupMember.email}</p>
-						<p>Role: {groupMember.role}</p>
-					</div>
+					<UserInfoCard key={groupMember.email} user={groupMember} />
 				))}
 		</main>
 	);

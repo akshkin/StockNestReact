@@ -10,6 +10,7 @@ export type GroupMember = {
 	fullName: string;
 	email: string;
 	role: string;
+	isMe: boolean;
 };
 
 export const groupsApiSlice = apiSlice.injectEndpoints({
