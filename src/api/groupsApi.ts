@@ -3,6 +3,7 @@ import { apiSlice } from "./apiSlice";
 export type Group = {
 	groupId: number;
 	name: string;
+	role: string;
 };
 
 export const groupsApiSlice = apiSlice.injectEndpoints({

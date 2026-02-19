@@ -55,21 +55,32 @@ function GroupCard({ group }: { group: Group }) {
 
 	return (
 		<div className={styles.groupCard}>
-			<Link to={`/dashboard/group/${group.groupId}`}>
-				<h3>{group.name}</h3>
-			</Link>
-			<div className={styles.buttonsContainer}>
-				<button onClick={() => openModal("edit")}>
-					<RiEditLine /> Edit
-				</button>
-				<button
-					className={styles.deleteButton}
-					onClick={() => openModal("delete")}
-				>
-					<RiDeleteBin6Line />
-					Delete
-				</button>
-			</div>
+			<header>
+				<Link to={`/dashboard/group/${group.groupId}`}>
+					<h3>{group.name}</h3>
+				</Link>
+				<span className={styles.role}>{group.role}</span>
+			</header>
+			{group.role === "Owner" ? (
+				<div className={styles.buttonsContainer}>
+					<button onClick={() => openModal("edit")}>
+						<RiEditLine /> Edit
+					</button>
+					<button
+						className={styles.deleteButton}
+						onClick={() => openModal("delete")}
+					>
+						<RiDeleteBin6Line />
+						Delete
+					</button>
+				</div>
+			) : (
+				group.role === "Member" && (
+					<button onClick={() => openModal("edit")}>
+						<RiEditLine /> Edit
+					</button>
+				)
+			)}
 			{isModalOpen && (
 				<Modal
 					title={modalTitle}
