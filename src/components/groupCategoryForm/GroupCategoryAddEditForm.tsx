@@ -1,105 +1,115 @@
 import React, { useState } from "react";
 import InputField from "../inputField/InputField";
-import {
-	useCreateNewGroupMutation,
-	useGetGroupsQuery,
-	useUpdateGroupMutation,
-} from "../../api/groupsApi";
-import { groupSchema } from "../../schemas";
-import type z from "zod";
+import { useGetGroupsQuery } from "../../api/groupsApi";
 import ErrorText from "../errorText/ErrorText";
-import { zodErrorsToObject } from "../../helpers/utils";
-import styles from "./groupCategoryForm.module.scss";
+import { useZodForm } from "../../hooks/useZodForm";
 
-type FormProps = {
-	id?: number;
-	name?: string;
-	value?: string;
+type FormProps<T> = {
+	mode?: string;
+	initialValue: T;
+	label: string; // "Group", "Category",
+	schema: any; // eslint-disable-line
+	groupId?: number;
+	categoryId?: number;
+	onCreate?: ({
+		groupId,
+		formData,
+	}: {
+		groupId?: number;
+		formData: T;
+	}) => Promise<any>; // eslint-disable-line
+	onUpdate: ({
+		groupId,
+		categoryId,
+		formData,
+	}: {
+		groupId: number;
+		categoryId?: number;
+		formData: T;
+	}) => Promise<any>; // eslint-disable-line
 	closeModal: () => void;
 };
 
-type groupCategorySchema = z.infer<typeof groupSchema>;
+function GroupCategoryAddEditForm<T extends { name: string }>({
+	mode,
+	groupId,
+	categoryId,
+	initialValue,
+	label,
+	closeModal,
+	schema,
+	onCreate,
+	onUpdate,
+}: FormProps<T>) {
+	const isEditing = mode === "Edit";
 
-function GroupCategoryAddEditForm({ id, name, value, closeModal }: FormProps) {
-	const defaultFormValues = {
-		name: value || "",
-	};
-	const [formData, setFormData] =
-		useState<groupCategorySchema>(defaultFormValues);
+	const { data, update, errors, isValid } = useZodForm<T>(schema, {
+		...initialValue,
+	} as T);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
-	const [errors, setErrors] = useState<
-		Partial<Record<keyof groupCategorySchema, string>>
-	>({});
+	const { refetch } = useGetGroupsQuery({});
 
-	const isEditing = id ? true : false;
-
-	const [createNewGroup, createNewGroupState] = useCreateNewGroupMutation();
-	const [updateGroup, updateGroupState] = useUpdateGroupMutation();
-	const { refetch: refetchGroups } = useGetGroupsQuery({});
-
-	const isFormValid = Object.keys(errors).length === 0 && formData.name;
-
-	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-		if (isEditing) updateGroupState.reset();
-		else createNewGroupState.reset(); //reset the error from rtk query when user starts typing
-
-		const newFormData = { ...formData, [e.target.name]: e.target.value };
-
-		setFormData(newFormData);
-
-		const result = groupSchema.safeParse(newFormData);
-
-		if (!result.success) {
-			const formErrors = zodErrorsToObject(result.error);
-			setErrors(formErrors);
-			return;
-		} else {
-			setErrors({});
-		}
-	}
-
-	async function handleSubmit(e: React.FormEvent) {
+	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
-
-		let response;
-
+		setIsSubmitting(true);
+		let res;
 		if (isEditing) {
-			response = await updateGroup({ id, group: formData });
+			if (categoryId) {
+				//update category
+				res = await onUpdate({
+					groupId: groupId!,
+					categoryId,
+					formData: data,
+				});
+			} else {
+				//update group
+				res = await onUpdate({
+					groupId: groupId!,
+					formData: data,
+				});
+			}
 		} else {
-			response = await createNewGroup(formData);
+			if (onCreate) {
+				// create category or group
+				if (groupId) {
+					// create category
+					res = await onCreate({ groupId: groupId, formData: data });
+				} else {
+					//create group
+					res = await onCreate({ formData: data });
+				}
+			}
 		}
 
-		console.log("API response:", response);
+		console.log(error);
 
-		if (!createNewGroupState.isSuccess && !updateGroupState.isSuccess)
+		if (!("error" in res)) {
+			await refetch();
 			closeModal();
-		await refetchGroups();
+		} else {
+			setError("data" in res.error ? res.error.data : "An error occured");
+		}
+		setIsSubmitting(false);
 	}
-
-	const hasError = !!(createNewGroupState?.error || updateGroupState?.error);
-	// const errorString = "data" in createNewGroupState.error || "data" in updateGroupState?.error ? (createNewGroupState?.error || updateGroupState?.error)?.data : "An error occurred";
 
 	return (
-		<form className={styles.form}>
+		<form>
 			<InputField
-				label={`${name} name`}
+				label={`${label} name`}
 				name="name"
-				value={formData.name}
-				onChange={(e) => handleChange(e)}
-				placeholder="Type a name"
-				error={errors?.name}
+				value={data.name}
+				onChange={(e) => update("name", e.target.value)}
+				placeholder={`Type ${label.toLowerCase()} name`}
+				error={errors.name}
 			/>
-			<button
-				disabled={
-					createNewGroupState.isLoading ||
-					updateGroupState.isLoading ||
-					!isFormValid
-				}
-				onClick={handleSubmit}
-			>
+
+			<button disabled={isSubmitting || !isValid} onClick={onSubmit}>
 				{isEditing ? "Update" : "Create"}
 			</button>
-			{hasError && <ErrorText error={"An error occurred"} />}
+
+			{error && <ErrorText error={error} />}
 		</form>
 	);
 }
