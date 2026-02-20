@@ -1,5 +1,10 @@
 import { apiSlice } from "./apiSlice";
 
+export type Category = {
+	categoryId: number;
+	name: string;
+};
+
 export const categoriesApi = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		createCategory: builder.mutation({

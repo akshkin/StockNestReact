@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
 	useGetGroupMembersQuery,
@@ -18,8 +18,11 @@ import UserInfoCard from "../../components/userInfoCard/UserInfoCard";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
 import {
 	useCreateCategoryMutation,
+	useGetCategoriesQuery,
 	useUpdateCategoryMutation,
+	type Category,
 } from "../../api/categoriesApi";
+import GroupCard from "../../components/groupCard/GroupCard";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
 type categorySchema = z.infer<typeof groupSchema>;
@@ -33,7 +36,7 @@ const defaultCategoryData: categorySchema = {
 	name: "",
 };
 function Group() {
-	const { id } = useParams();
+	const { groupId } = useParams();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [formData, setFormData] = useState(defaultInviterData);
 	const [errors, setErrors] = useState<
@@ -41,7 +44,7 @@ function Group() {
 	>({});
 	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
-	const { data: group, isLoading, error } = useGetGroupByIdQuery(id);
+	const { data: group, isLoading, error } = useGetGroupByIdQuery(groupId);
 	const [
 		inviteMemberToGroup,
 		{ error: inviteError, isLoading: isInviting, reset },
@@ -52,10 +55,12 @@ function Group() {
 		isLoading: membersLoading,
 		error: memberError,
 		refetch,
-	} = useGetGroupMembersQuery(id);
+	} = useGetGroupMembersQuery(groupId);
 
 	const [createCategory] = useCreateCategoryMutation();
 	const [updateCategory] = useUpdateCategoryMutation();
+	const { data: categories, error: categoriesError } =
+		useGetCategoriesQuery(groupId);
 
 	function handleChange(
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -81,7 +86,7 @@ function Group() {
 		e.preventDefault();
 
 		await inviteMemberToGroup({
-			groupId: Number(id),
+			groupId: Number(groupId),
 			inviterData: { ...formData },
 		});
 		refetch();
@@ -139,6 +144,8 @@ function Group() {
 		</form>
 	);
 
+	console.log(categoriesError);
+
 	return (
 		<>
 			{error && (
@@ -168,7 +175,7 @@ function Group() {
 						<GroupCategoryAddEditForm
 							initialValue={defaultCategoryData}
 							label="Category"
-							groupId={Number(id)}
+							groupId={Number(groupId)}
 							schema={groupSchema}
 							onCreate={createCategory}
 							onUpdate={updateCategory}
@@ -191,11 +198,34 @@ function Group() {
 				groupMembersResponse?.groupMembers.map((groupMember: GroupMember) => (
 					<UserInfoCard
 						key={groupMember.email}
-						groupId={Number(id)}
+						groupId={Number(groupId)}
 						user={groupMember}
 						myRole={groupMembersResponse.myRole}
 					/>
 				))}
+
+			{categories?.length &&
+				categories.map((category: Category) => (
+					<GroupCard
+						key={category.categoryId}
+						id={category.categoryId}
+						name={category.name}
+						type="Category"
+						role={group.role}
+						groupId={Number(groupId)}
+						navigateLink={`/dashboard/group/${groupId}/category/${category.categoryId}`}
+					/>
+				))}
+			{categoriesError && (
+				<ErrorText
+					error={
+						"data" in categoriesError
+							? categoriesError.data.toString()
+							: "An error occured while fetching categories"
+					}
+				/>
+			)}
+			<Outlet />
 		</>
 	);
 }
