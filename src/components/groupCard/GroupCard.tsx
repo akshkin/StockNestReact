@@ -9,7 +9,10 @@ import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import GroupCategoryAddEditForm from "../groupCategoryForm/GroupCategoryAddEditForm";
 import { groupSchema } from "../../schemas";
-import { useUpdateCategoryMutation } from "../../api/categoriesApi";
+import {
+	useDeleteCategoryMutation,
+	useUpdateCategoryMutation,
+} from "../../api/categoriesApi";
 
 type Mode = "Edit" | "Delete";
 
@@ -29,6 +32,7 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	const [deleteGroup] = useDeleteGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
 	const [updateCategory] = useUpdateCategoryMutation();
+	const [deleteCategory] = useDeleteCategoryMutation();
 
 	const isGroup = type === "Group";
 
@@ -40,6 +44,8 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	async function handleDelete() {
 		if (isGroup) {
 			await deleteGroup({ id: id });
+		} else {
+			await deleteCategory({ groupId, categoryId: id });
 		}
 		setIsModalOpen(false);
 	}
@@ -58,7 +64,7 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 
 	const modalTitle =
 		mode === "Delete"
-			? "Are you sure you want to delete this group?"
+			? `Are you sure you want to delete this ${type}?`
 			: `Edit ${type} Name`;
 
 	const childContent =
