@@ -27,6 +27,18 @@ export const categoriesApi = apiSlice.injectEndpoints({
 				method: "GET",
 			}),
 		}),
+		getCategoryById: builder.query({
+			query: ({ groupId, categoryId }) => ({
+				url: `categories/group/${groupId}/category/${categoryId}`,
+				method: "GET",
+			}),
+		}),
+		deleteCategory: builder.mutation({
+			query: ({ groupId, categoryId }) => ({
+				url: `categories/group/${groupId}/category/${categoryId}/delete`,
+				method: "POST",
+			}),
+		}),
 	}),
 });
 
@@ -34,4 +46,6 @@ export const {
 	useCreateCategoryMutation,
 	useUpdateCategoryMutation,
 	useGetCategoriesQuery,
+	useGetCategoryByIdQuery,
+	useDeleteCategoryMutation,
 } = categoriesApi;
