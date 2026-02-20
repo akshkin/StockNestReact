@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
 	useGetGroupMembersQuery,
@@ -217,15 +217,8 @@ function Group() {
 					/>
 				))}
 			{categoriesError && (
-				<ErrorText
-					error={
-						"data" in categoriesError
-							? categoriesError.data.toString()
-							: "An error occured while fetching categories"
-					}
-				/>
+				<ErrorText error={"An error occured while fetching categories"} />
 			)}
-			<Outlet />
 		</>
 	);
 }
