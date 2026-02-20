@@ -10,25 +10,36 @@ import Loading from "../../components/loading/Loading";
 import Modal from "../../components/modal/Modal";
 import { useState } from "react";
 import InputField from "../../components/inputField/InputField";
-import { inviteMemberSchema } from "../../schemas";
+import { groupSchema, inviteMemberSchema } from "../../schemas";
 import { zodErrorsToObject } from "../../helpers/utils";
 import type z from "zod";
 import styles from "./group.module.scss";
 import UserInfoCard from "../../components/userInfoCard/UserInfoCard";
+import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
+import {
+	useCreateCategoryMutation,
+	useUpdateCategoryMutation,
+} from "../../api/categoriesApi";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
+type categorySchema = z.infer<typeof groupSchema>;
 
-const defaultData: inviteMemberSchema = {
+const defaultInviterData: inviteMemberSchema = {
 	email: "",
 	role: "Member",
+};
+
+const defaultCategoryData: categorySchema = {
+	name: "",
 };
 function Group() {
 	const { id } = useParams();
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [formData, setFormData] = useState(defaultData);
+	const [formData, setFormData] = useState(defaultInviterData);
 	const [errors, setErrors] = useState<
 		Partial<Record<keyof inviteMemberSchema, string>>
 	>({});
+	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
 	const { data: group, isLoading, error } = useGetGroupByIdQuery(id);
 	const [
@@ -42,6 +53,9 @@ function Group() {
 		error: memberError,
 		refetch,
 	} = useGetGroupMembersQuery(id);
+
+	const [createCategory] = useCreateCategoryMutation();
+	const [updateCategory] = useUpdateCategoryMutation();
 
 	function handleChange(
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -71,12 +85,12 @@ function Group() {
 			inviterData: { ...formData },
 		});
 		refetch();
-		setFormData(defaultData);
+		setFormData(defaultInviterData);
 	}
 
 	function closeModal() {
 		setIsModalOpen(false);
-		setFormData(defaultData);
+		setFormData(defaultInviterData);
 	}
 
 	const isFormValid =
@@ -134,11 +148,36 @@ function Group() {
 				<ErrorText error="An error occurred while fetching the group members." />
 			)}
 			<h2 className={styles.title}>Group: {group?.name}</h2>
-			{group.role === "Owner" && (
+			{group?.role === "Owner" && (
 				<button onClick={() => setIsModalOpen(true)}>
 					Add a person to group
 				</button>
 			)}
+			<button
+				style={{ backgroundColor: "black" }}
+				onClick={() => setIsCategoryModalOpen(true)}
+			>
+				Create a category
+			</button>
+
+			{isCategoryModalOpen && (
+				<Modal
+					title="Add a category"
+					closeModal={() => setIsCategoryModalOpen(false)}
+					children={
+						<GroupCategoryAddEditForm
+							initialValue={defaultCategoryData}
+							label="Category"
+							groupId={Number(id)}
+							schema={groupSchema}
+							onCreate={createCategory}
+							onUpdate={updateCategory}
+							closeModal={() => setIsCategoryModalOpen(false)}
+						/>
+					}
+				/>
+			)}
+
 			{isModalOpen && (
 				<Modal
 					title="Add a person to group"

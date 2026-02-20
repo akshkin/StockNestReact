@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { useDeleteGroupMutation, type Group } from "../../api/groupsApi";
+import {
+	useDeleteGroupMutation,
+	useUpdateGroupMutation,
+	type Group,
+} from "../../api/groupsApi";
 import Modal from "../modal/Modal";
 import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import GroupCategoryAddEditForm from "../groupCategoryForm/GroupCategoryAddEditForm";
+import { groupSchema } from "../../schemas";
 
 type Mode = "edit" | "delete";
 
@@ -13,6 +18,7 @@ function GroupCard({ group }: { group: Group }) {
 	const [mode, setMode] = useState<Mode>("edit");
 
 	const [deleteGroup] = useDeleteGroupMutation();
+	const [updateGroup] = useUpdateGroupMutation();
 
 	function openModal(mode: Mode) {
 		setMode(mode);
@@ -46,10 +52,13 @@ function GroupCard({ group }: { group: Group }) {
 			deleteModalContent()
 		) : (
 			<GroupCategoryAddEditForm
-				id={group.groupId}
-				name="Group name"
+				groupId={group.groupId}
+				label="Group"
+				schema={groupSchema}
+				onUpdate={updateGroup}
 				closeModal={() => setIsModalOpen(false)}
-				value={group.name}
+				initialValue={{ name: group.name }}
+				mode="Edit"
 			/>
 		);
 
