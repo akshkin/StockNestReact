@@ -67,7 +67,14 @@ function Dashboard() {
 
 			{groups && groups.length > 0 ? (
 				groups.map((group: Group) => (
-					<GroupCard key={group.groupId} group={group} />
+					<GroupCard
+						key={group.groupId}
+						id={group.groupId}
+						type="Group"
+						name={group.name}
+						role={group.role}
+						navigateLink={`/dashboard/group/${group.groupId}`}
+					/>
 				))
 			) : (
 				<p>No groups available</p>

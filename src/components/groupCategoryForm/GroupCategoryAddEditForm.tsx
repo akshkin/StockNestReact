@@ -7,7 +7,7 @@ import { useZodForm } from "../../hooks/useZodForm";
 type FormProps<T> = {
 	mode?: string;
 	initialValue: T;
-	label: string; // "Group", "Category",
+	label: "Group" | "Category"; // "Group", "Category",
 	schema: any; // eslint-disable-line
 	groupId?: number;
 	categoryId?: number;
@@ -56,11 +56,11 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 		setIsSubmitting(true);
 		let res;
 		if (isEditing) {
-			if (categoryId) {
+			if (label === "Category") {
 				//update category
 				res = await onUpdate({
 					groupId: groupId!,
-					categoryId,
+					categoryId: categoryId,
 					formData: data,
 				});
 			} else {
@@ -83,13 +83,15 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 			}
 		}
 
-		console.log(error);
-
 		if (!("error" in res)) {
 			await refetch();
 			closeModal();
 		} else {
-			setError("data" in res.error ? res.error.data : "An error occured");
+			if (typeof res.error.data === "string") {
+				setError(res.error.data);
+			} else {
+				setError("An error occured");
+			}
 		}
 		setIsSubmitting(false);
 	}
@@ -105,7 +107,11 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 				error={errors.name}
 			/>
 
-			<button disabled={isSubmitting || !isValid} onClick={onSubmit}>
+			<button
+				disabled={isSubmitting || !isValid}
+				onClick={onSubmit}
+				type="submit"
+			>
 				{isEditing ? "Update" : "Create"}
 			</button>
 
