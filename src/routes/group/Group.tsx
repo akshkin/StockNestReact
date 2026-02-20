@@ -144,8 +144,6 @@ function Group() {
 		</form>
 	);
 
-	console.log(categoriesError);
-
 	return (
 		<>
 			{error && (
@@ -204,7 +202,8 @@ function Group() {
 					/>
 				))}
 
-			{categories?.length &&
+			<h3>Categories</h3>
+			{categories?.length ? (
 				categories.map((category: Category) => (
 					<GroupCard
 						key={category.categoryId}
@@ -215,7 +214,10 @@ function Group() {
 						groupId={Number(groupId)}
 						navigateLink={`/dashboard/group/${groupId}/category/${category.categoryId}`}
 					/>
-				))}
+				))
+			) : (
+				<p>No categories yet</p>
+			)}
 			{categoriesError && (
 				<ErrorText error={"An error occured while fetching categories"} />
 			)}
