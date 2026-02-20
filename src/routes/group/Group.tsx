@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
 	useGetGroupMembersQuery,
@@ -23,6 +23,7 @@ import {
 	type Category,
 } from "../../api/categoriesApi";
 import GroupCard from "../../components/groupCard/GroupCard";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
 type categorySchema = z.infer<typeof groupSchema>;
@@ -61,6 +62,8 @@ function Group() {
 	const [updateCategory] = useUpdateCategoryMutation();
 	const { data: categories, error: categoriesError } =
 		useGetCategoriesQuery(groupId);
+
+	const navigate = useNavigate();
 
 	function handleChange(
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -152,6 +155,10 @@ function Group() {
 			{memberError && (
 				<ErrorText error="An error occurred while fetching the group members." />
 			)}
+			<button className="back-button" onClick={() => navigate(-1)}>
+				<IoIosArrowRoundBack />
+				Back to Dashboard
+			</button>
 			<h2 className={styles.title}>Group: {group?.name}</h2>
 			{group?.role === "Owner" && (
 				<button onClick={() => setIsModalOpen(true)}>

@@ -48,6 +48,20 @@ button {
 	}
 }
 
+button.back-button {
+	background-color: transparent;
+	color: var(--color-primary);
+	font-size: 1rem;
+	display: flex;
+	align-items: end;
+	gap: 0.2em;
+	transition: color 0.3s ease;
+
+	&:hover {
+		color: var(--color-muted);
+	}
+}
+
 button.invertedButton {
 	background-color: white;
 	border: 1px solid var(--color-primary);
