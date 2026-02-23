@@ -28,10 +28,11 @@ export const itemsApi = apiSlice.injectEndpoints({
 				body: { ...formData },
 			}),
 		}),
-		deleteItem: builder.mutation({
-			query: ({ groupId, categoryId, itemId }) => ({
-				url: `items/group/${groupId}/category/${categoryId}/item/${itemId}/delete`,
+		deleteItems: builder.mutation({
+			query: ({ groupId, categoryId, itemIds }) => ({
+				url: `items/group/${groupId}/category/${categoryId}/delete`,
 				method: "POST",
+				body: itemIds,
 			}),
 		}),
 	}),
@@ -41,4 +42,5 @@ export const {
 	useCreateItemMutation,
 	useGetItemsQuery,
 	useUpdateItemMutation,
+	useDeleteItemsMutation,
 } = itemsApi;
