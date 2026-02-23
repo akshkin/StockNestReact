@@ -41,3 +41,11 @@ export const inviteMemberSchema = z.object({
 		message: "Role must be either Viewer or Member",
 	}),
 });
+
+export const itemSchema = z.object({
+	name: z
+		.string()
+		.min(2, "Item name must be at least 2 characters")
+		.max(100, "Item name must be less than 100 characters"),
+	quantity: z.number().nonnegative("Quantity must be 0 or more"),
+});
