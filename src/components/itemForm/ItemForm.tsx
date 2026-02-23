@@ -9,12 +9,15 @@ import {
 import ErrorText from "../errorText/ErrorText";
 import { itemSchema } from "../../schemas";
 
+type itemSchema = z.infer<typeof itemSchema>;
+
 type ItemFormProps = {
 	mode: string; //edit, add
 	groupId: number;
 	categoryId: number;
 	itemId?: number;
 	closeModal: () => void;
+	initialValues?: itemSchema;
 };
 
 const defaultValues = {
@@ -28,13 +31,17 @@ function ItemForm({
 	categoryId,
 	itemId,
 	closeModal,
+	initialValues,
 }: ItemFormProps) {
-	type itemSchema = z.infer<typeof itemSchema>;
-	// const [formData, setFormData] = useState<itemSchema>(defaultValues);
 	const [formError, setFormError] = useState<string | null>(null);
-	const { data, update, errors, isValid } = useZodForm<itemSchema>(itemSchema, {
-		...defaultValues,
-	});
+	const { data, update, errors, isValid } = useZodForm<itemSchema>(
+		itemSchema,
+		initialValues
+			? initialValues
+			: {
+					...defaultValues,
+				},
+	);
 
 	const [createItem] = useCreateItemMutation();
 	const [updateItem] = useUpdateItemMutation();
@@ -46,14 +53,12 @@ function ItemForm({
 		let res;
 		if (isEditing) {
 			res = await updateItem({ groupId, categoryId, itemId, formData: data });
-			console.log(res);
 		} else {
 			res = await createItem({
 				groupId,
 				categoryId,
 				formData: data,
 			});
-			console.log(res);
 		}
 
 		if (!("error" in res)) {

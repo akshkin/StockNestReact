@@ -6,6 +6,8 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import ItemForm from "../../components/itemForm/ItemForm";
+import { useGetItemsQuery, type Item } from "../../api/itemsApi";
+import ItemCard from "../../components/itemCard/ItemCard";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -20,6 +22,9 @@ function Category() {
 		groupId,
 		categoryId,
 	});
+	const { data: items } = useGetItemsQuery({ groupId, categoryId });
+
+	console.log(items);
 
 	if (categoryLoading) return <Loading />;
 	return (
@@ -32,6 +37,20 @@ function Category() {
 			<h2>Category {category?.name}</h2>
 			{error && (
 				<ErrorText error={"An error occured while fetching category"} />
+			)}
+			{items && items.length > 0 ? (
+				items.map((item: Item) => (
+					<ItemCard
+						key={item.itemId}
+						groupId={Number(groupId)}
+						categoryId={Number(categoryId)}
+						itemId={Number(item.itemId)}
+						name={item.name}
+						quantity={item.quantity}
+					/>
+				))
+			) : (
+				<p>No items yet</p>
 			)}
 			{isModalOpen && (
 				<Modal

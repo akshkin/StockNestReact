@@ -1,5 +1,11 @@
 import { apiSlice } from "./apiSlice";
 
+export type Item = {
+	itemId: number;
+	name: string;
+	quantity: number;
+};
+
 export const itemsApi = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		createItem: builder.mutation({
@@ -17,9 +23,15 @@ export const itemsApi = apiSlice.injectEndpoints({
 		}),
 		updateItem: builder.mutation({
 			query: ({ groupId, categoryId, itemId, formData }) => ({
-				url: `items/group/${groupId}/category/${categoryId}/item/${itemId}/update`,
+				url: `items/group/${groupId}/category/${categoryId}/item/${itemId}/edit`,
 				method: "POST",
 				body: { ...formData },
+			}),
+		}),
+		deleteItem: builder.mutation({
+			query: ({ groupId, categoryId, itemId }) => ({
+				url: `items/group/${groupId}/category/${categoryId}/item/${itemId}/delete`,
+				method: "POST",
 			}),
 		}),
 	}),
