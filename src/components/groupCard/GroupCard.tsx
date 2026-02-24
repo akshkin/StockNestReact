@@ -8,7 +8,7 @@ import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import GroupCategoryAddEditForm from "../groupCategoryForm/GroupCategoryAddEditForm";
-import { groupSchema } from "../../schemas";
+import { groupCategorySchema } from "../../schemas";
 import {
 	useDeleteCategoryMutation,
 	useUpdateCategoryMutation,
@@ -76,7 +76,7 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 				groupId={isGroup ? id : groupId}
 				categoryId={isGroup ? undefined : id}
 				label={type}
-				schema={groupSchema}
+				schema={groupCategorySchema}
 				onUpdate={isGroup ? updateGroup : updateCategory}
 				closeModal={() => setIsModalOpen(false)}
 				initialValue={{ name: name }}

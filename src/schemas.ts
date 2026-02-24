@@ -28,11 +28,11 @@ export const registerSchema = z.object({
 // 	path: ["confirmPassword"],
 // });
 
-export const groupSchema = z.object({
+export const groupCategorySchema = z.object({
 	name: z
 		.string()
-		.min(2, "Group name must be at least 2 characters")
-		.max(100, "Group name must be less than 100 characters"),
+		.min(2, "Name must be at least 2 characters")
+		.max(100, "Name must be less than 100 characters"),
 });
 
 export const inviteMemberSchema = z.object({

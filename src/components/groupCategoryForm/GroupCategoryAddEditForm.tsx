@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import InputField from "../inputField/InputField";
-import { useGetGroupsQuery } from "../../api/groupsApi";
 import ErrorText from "../errorText/ErrorText";
 import { useZodForm } from "../../hooks/useZodForm";
+import type { ZodSchema } from "zod";
 
 type FormProps<T> = {
 	mode?: string;
 	initialValue: T;
 	label: "Group" | "Category"; // "Group", "Category",
-	schema: any; // eslint-disable-line
+	schema: ZodSchema<T>;
 	groupId?: number;
 	categoryId?: number;
 	onCreate?: ({

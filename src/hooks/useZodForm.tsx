@@ -32,9 +32,6 @@ export function useZodForm<T>(schema: ZodSchema<T>, initialValues: T) {
 		}
 	}
 
-	// const isValid =
-	// 	Object.keys(errors).length === 0 &&
-	// 	Object.values(data as object).every((value) => value);
 	const isValid = schema.safeParse(data).success;
 	Object.values(data as object).every((value) => value);
 

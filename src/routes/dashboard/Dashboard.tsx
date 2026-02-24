@@ -11,7 +11,7 @@ import Loading from "../../components/loading/Loading";
 import { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
-import { groupSchema } from "../../schemas";
+import { groupCategorySchema } from "../../schemas";
 
 const defaultGroupData = {
 	name: "",
@@ -55,7 +55,7 @@ function Dashboard() {
 						<GroupCategoryAddEditForm
 							label="Group"
 							initialValue={defaultGroupData}
-							schema={groupSchema}
+							schema={groupCategorySchema}
 							onCreate={createNewGroup}
 							onUpdate={updateGroup}
 							closeModal={closeModal}

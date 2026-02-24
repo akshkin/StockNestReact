@@ -10,7 +10,7 @@ import Loading from "../../components/loading/Loading";
 import Modal from "../../components/modal/Modal";
 import { useState } from "react";
 import InputField from "../../components/inputField/InputField";
-import { groupSchema, inviteMemberSchema } from "../../schemas";
+import { groupCategorySchema, inviteMemberSchema } from "../../schemas";
 import { zodErrorsToObject } from "../../helpers/utils";
 import type z from "zod";
 import styles from "./group.module.scss";
@@ -26,7 +26,7 @@ import GroupCard from "../../components/groupCard/GroupCard";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
-type categorySchema = z.infer<typeof groupSchema>;
+type categorySchema = z.infer<typeof groupCategorySchema>;
 
 const defaultInviterData: inviteMemberSchema = {
 	email: "",
@@ -181,7 +181,7 @@ function Group() {
 							initialValue={defaultCategoryData}
 							label="Category"
 							groupId={Number(groupId)}
-							schema={groupSchema}
+							schema={groupCategorySchema}
 							onCreate={createCategory}
 							onUpdate={updateCategory}
 							closeModal={() => setIsCategoryModalOpen(false)}
