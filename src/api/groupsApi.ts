@@ -58,19 +58,21 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 					...inviterData,
 				},
 			}),
-			invalidatesTags: ["Groups"],
+			invalidatesTags: ["GroupMembers"],
 		}),
 		getGroupMembers: builder.query({
 			query: (groupId) => ({
 				url: `/groups/${groupId}/members`,
 				method: "GET",
 			}),
+			providesTags: ["GroupMembers"],
 		}),
 		removeGroupMember: builder.mutation({
 			query: ({ groupId, userId }) => ({
 				url: `/groups/${groupId}/deleteMember/${userId}`,
 				method: "POST",
 			}),
+			invalidatesTags: ["GroupMembers"],
 		}),
 	}),
 });
