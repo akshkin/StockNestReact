@@ -20,7 +20,7 @@ function ProtectedRoute() {
 	}
 
 	return (
-		<>
+		<div className={styles.layoutContainer}>
 			<DashboardHeader />
 			<div className={styles.container}>
 				<Sidebar />
@@ -28,7 +28,7 @@ function ProtectedRoute() {
 					<Outlet />
 				</main>
 			</div>
-		</>
+		</div>
 	);
 }
 

@@ -1,10 +1,13 @@
 .header {
 	background: white;
-	padding: 0.75em;
+	padding: 0.5em;
 	color: var(--color-primary);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	width: 100%;
+	overflow-x: hidden;
+	box-sizing: border-box;
 
 	.logo {
 		height: 50px;
@@ -65,10 +68,10 @@
 .dashheader {
 	width: 100%;
 	max-width: 100%;
-	padding: 1em;
+	z-index: 5;
 
 	@media (max-width: 500px) {
-		height: 30px;
+		padding: 1.5em;
 		flex-direction: row;
 	}
 }
