@@ -52,7 +52,7 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 
 	const deleteModalContent = () => (
 		<div className={styles.buttonsContainer}>
-			<button className={styles.deleteButton} onClick={handleDelete}>
+			<button className="danger" onClick={handleDelete}>
 				Confirm Delete
 			</button>
 
@@ -94,22 +94,23 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 			</header>
 			{(role && role === "Owner") || role === "Co-Owner" ? (
 				<div className={styles.buttonsContainer}>
-					<button onClick={() => openModal("Edit")}>
-						<RiEditLine /> Edit
+					<button className="action-btn" onClick={() => openModal("Edit")}>
+						<RiEditLine /> <span className="label">Edit</span>
 					</button>
 					<button
-						className={styles.deleteButton}
+						className="action-btn danger"
 						onClick={() => openModal("Delete")}
 					>
 						<RiDeleteBin6Line />
-						Delete
+						<span className="label">Delete</span>
 					</button>
 				</div>
 			) : (
 				role &&
 				role === "Member" && (
-					<button onClick={() => openModal("Edit")}>
-						<RiEditLine /> Edit
+					<button className="action-btn" onClick={() => openModal("Edit")}>
+						<RiEditLine />
+						<span className="label">Edit</span>
 					</button>
 				)
 			)}

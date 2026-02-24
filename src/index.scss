@@ -68,6 +68,31 @@ button.invertedButton {
 	color: var(--color-primary);
 }
 
+.action-btn {
+	display: flex;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.4em 0.6em;
+	border-radius: 6px;
+	cursor: pointer;
+	border: none;
+	font-size: 0.75rem;
+	background: var(--color-secondary);
+
+	.label {
+		display: inline;
+
+		@media (max-width: 768px) {
+			display: none; /* hide text on mobile */
+		}
+	}
+}
+
+.danger {
+	background-color: var(--color-danger);
+	color: white;
+}
+
 .loading {
 	display: flex;
 	justify-content: center;
