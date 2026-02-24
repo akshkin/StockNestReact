@@ -1,22 +1,16 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useGetGroupsQuery } from "../../api/groupsApi";
 import DashboardHeader from "../../components/header/dashboardHeader/DashboardHeader";
 import Sidebar from "../../components/sidebar/Sidebar";
 import styles from "./protectRoute.module.css";
+import { useGetMeQuery } from "../../api/authApi";
+import Loading from "../../components/loading/Loading";
 
 function ProtectedRoute() {
-	const { data: groups, isLoading, error } = useGetGroupsQuery({});
+	const { error: getMeError, isLoading, isFetching } = useGetMeQuery({});
 
-	console.log(
-		"ProtectedRoute: groups =",
-		groups,
-		"isLoading =",
-		isLoading,
-		"isError =",
-		error,
-	);
+	if (isLoading || isFetching) return <Loading />;
 
-	if (error && "status" in error && error?.status === 401) {
+	if (getMeError && "status" in getMeError && getMeError.status === 401) {
 		return (
 			<Navigate
 				to="/login"
