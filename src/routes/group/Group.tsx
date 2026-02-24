@@ -23,7 +23,12 @@ import {
 	type Category,
 } from "../../api/categoriesApi";
 import GroupCard from "../../components/groupCard/GroupCard";
-import { IoIosArrowRoundBack } from "react-icons/io";
+import {
+	IoIosArrowRoundBack,
+	IoMdPersonAdd,
+	IoMdAddCircleOutline,
+} from "react-icons/io";
+import IconButton from "../../components/iconButton/IconButton";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
 type categorySchema = z.infer<typeof groupCategorySchema>;
@@ -160,17 +165,22 @@ function Group() {
 				Back to Dashboard
 			</button>
 			<h2 className={styles.title}>Group: {group?.name}</h2>
-			{group?.role === "Owner" && (
-				<button onClick={() => setIsModalOpen(true)}>
-					Add a person to group
-				</button>
-			)}
-			<button
-				style={{ backgroundColor: "black" }}
-				onClick={() => setIsCategoryModalOpen(true)}
-			>
-				Create a category
-			</button>
+
+			<div className="buttonsContainer">
+				{group?.role === "Owner" && (
+					<IconButton
+						icon={<IoMdPersonAdd />}
+						title="Add a person to a group"
+						onClick={() => setIsModalOpen(true)}
+					/>
+				)}
+				<IconButton
+					icon={<IoMdAddCircleOutline />}
+					title="Create a category"
+					onClick={() => setIsCategoryModalOpen(true)}
+					variant="dark"
+				/>
+			</div>
 
 			{isCategoryModalOpen && (
 				<Modal

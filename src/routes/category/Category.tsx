@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetCategoryByIdQuery } from "../../api/categoriesApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
-import { IoIosArrowRoundBack } from "react-icons/io";
+import { IoIosArrowRoundBack, IoMdAddCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import ItemForm from "../../components/itemForm/ItemForm";
@@ -12,6 +12,8 @@ import {
 	type Item,
 } from "../../api/itemsApi";
 import ItemCard from "../../components/itemCard/ItemCard";
+import IconButton from "../../components/iconButton/IconButton";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -49,12 +51,23 @@ function Category() {
 				<IoIosArrowRoundBack />
 				Back to group
 			</button>
-			<button onClick={() => setIsModalOpen(true)}>Add an item</button>
-			{selectedItems?.length > 0 && (
-				<button onClick={() => setIsDeleteModalOpen(true)}>
-					Delete selected items
-				</button>
-			)}
+
+			<div className="buttonsContainer">
+				<IconButton
+					icon={<IoMdAddCircleOutline />}
+					title="Add an item"
+					onClick={() => setIsModalOpen(true)}
+				/>
+
+				{selectedItems?.length > 0 && (
+					<IconButton
+						icon={<RiDeleteBin6Line />}
+						title="Delete selected items"
+						variant="danger"
+						onClick={() => setIsDeleteModalOpen(true)}
+					/>
+				)}
+			</div>
 			<h2>Category {category?.name}</h2>
 			{error && (
 				<ErrorText error={"An error occured while fetching category"} />

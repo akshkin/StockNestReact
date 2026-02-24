@@ -12,6 +12,8 @@ import { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
 import { groupCategorySchema } from "../../schemas";
+import IconButton from "../../components/iconButton/IconButton";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const defaultGroupData = {
 	name: "",
@@ -46,7 +48,13 @@ function Dashboard() {
 
 			{error && <ErrorText error={"An error occuring while fetching groups"} />}
 
-			<button onClick={() => setIsModalOpen(true)}>Create a new group</button>
+			<IconButton
+				icon={<IoMdAddCircleOutline />}
+				title="Create a new group"
+				onClick={() => setIsModalOpen(true)}
+			/>
+
+			{/* <button onClick={() => setIsModalOpen(true)}>Create a new group</button> */}
 			{isModalOpen && (
 				<Modal
 					title="Create a new group"

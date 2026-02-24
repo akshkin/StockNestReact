@@ -93,6 +93,11 @@ button.invertedButton {
 	color: white;
 }
 
+.buttonsContainer {
+	display: flex;
+	gap: 0.5em;
+}
+
 .loading {
 	display: flex;
 	justify-content: center;
