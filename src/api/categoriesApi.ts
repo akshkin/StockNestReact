@@ -13,6 +13,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: { ...formData },
 			}),
+			invalidatesTags: ["Categories"],
 		}),
 		updateCategory: builder.mutation({
 			query: ({ groupId, categoryId, formData }) => ({
@@ -20,12 +21,14 @@ export const categoriesApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: { ...formData },
 			}),
+			invalidatesTags: ["Categories"],
 		}),
 		getCategories: builder.query({
 			query: (groupId) => ({
 				url: `categories/group/${groupId}`,
 				method: "GET",
 			}),
+			providesTags: ["Categories"],
 		}),
 		getCategoryById: builder.query({
 			query: ({ groupId, categoryId }) => ({
@@ -38,6 +41,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
 				url: `categories/group/${groupId}/category/${categoryId}/delete`,
 				method: "POST",
 			}),
+			invalidatesTags: ["Categories"],
 		}),
 	}),
 });

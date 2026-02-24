@@ -49,8 +49,6 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const { refetch } = useGetGroupsQuery({});
-
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		setIsSubmitting(true);
@@ -84,7 +82,6 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 		}
 
 		if (!("error" in res)) {
-			await refetch();
 			closeModal();
 		} else {
 			if (typeof res.error.data === "string") {

@@ -14,12 +14,14 @@ export const itemsApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: { ...formData },
 			}),
+			invalidatesTags: ["Items"],
 		}),
 		getItems: builder.query({
 			query: ({ groupId, categoryId }) => ({
 				url: `items/group/${groupId}/category/${categoryId}`,
 				method: "GET",
 			}),
+			providesTags: ["Items"],
 		}),
 		updateItem: builder.mutation({
 			query: ({ groupId, categoryId, itemId, formData }) => ({
@@ -27,6 +29,7 @@ export const itemsApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: { ...formData },
 			}),
+			invalidatesTags: ["Items"],
 		}),
 		deleteItems: builder.mutation({
 			query: ({ groupId, categoryId, itemIds }) => ({
@@ -34,6 +37,7 @@ export const itemsApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: itemIds,
 			}),
+			invalidatesTags: ["Items"],
 		}),
 	}),
 });

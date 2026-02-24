@@ -28,13 +28,12 @@ function Dashboard() {
 
 	const location = useLocation();
 	const message = location.state?.message;
-	const { data: groups, isLoading, error, refetch } = useGetGroupsQuery({});
+	const { data: groups, isLoading, error } = useGetGroupsQuery({});
 	const [createNewGroup] = useCreateNewGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
 
 	function closeModal() {
 		setIsModalOpen(false);
-		refetch(); // Refetch groups after closing the modal to get the updated list
 	}
 
 	return (

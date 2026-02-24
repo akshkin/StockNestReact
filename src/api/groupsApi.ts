@@ -18,6 +18,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getGroups: builder.query({
 			query: () => "/groups",
+			providesTags: ["Groups"],
 		}),
 		getGroupById: builder.query({
 			query: (id) => `/groups/${id}`,
@@ -30,6 +31,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 					...formData,
 				},
 			}),
+			invalidatesTags: ["Groups"],
 		}),
 		updateGroup: builder.mutation({
 			query: ({ groupId, formData }) => ({
@@ -39,12 +41,14 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 					...formData,
 				},
 			}),
+			invalidatesTags: ["Groups"],
 		}),
 		deleteGroup: builder.mutation({
 			query: ({ id }) => ({
 				url: `/groups/${id}/delete`,
 				method: "POST",
 			}),
+			invalidatesTags: ["Groups"],
 		}),
 		inviteMemeberToGroup: builder.mutation({
 			query: ({ groupId, inviterData }) => ({
@@ -54,6 +58,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 					...inviterData,
 				},
 			}),
+			invalidatesTags: ["Groups"],
 		}),
 		getGroupMembers: builder.query({
 			query: (groupId) => ({
