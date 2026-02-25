@@ -13,6 +13,7 @@ import {
 	useDeleteCategoryMutation,
 	useUpdateCategoryMutation,
 } from "../../api/categoriesApi";
+import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 
 type Mode = "Edit" | "Delete";
 
@@ -29,10 +30,12 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [mode, setMode] = useState<Mode>("Edit");
 
-	const [deleteGroup] = useDeleteGroupMutation();
+	const [deleteGroup, { isLoading: deleteGroupLoading }] =
+		useDeleteGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
 	const [updateCategory] = useUpdateCategoryMutation();
-	const [deleteCategory] = useDeleteCategoryMutation();
+	const [deleteCategory, { isLoading: deleteCategoryLoading }] =
+		useDeleteCategoryMutation();
 
 	const isGroup = type === "Group";
 
@@ -50,18 +53,6 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 		setIsModalOpen(false);
 	}
 
-	const deleteModalContent = () => (
-		<div className={styles.buttonsContainer}>
-			<button className="danger" onClick={handleDelete}>
-				Confirm Delete
-			</button>
-
-			<button type="button" onClick={() => setIsModalOpen(false)}>
-				Cancel
-			</button>
-		</div>
-	);
-
 	const modalTitle =
 		mode === "Delete"
 			? `Are you sure you want to delete this ${type}?`
@@ -69,7 +60,11 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 
 	const childContent =
 		mode === "Delete" ? (
-			deleteModalContent()
+			<ConfirmDelete
+				handleDelete={handleDelete}
+				closeModal={() => setIsModalOpen(false)}
+				isLoading={isGroup ? deleteGroupLoading : deleteCategoryLoading}
+			/>
 		) : (
 			// edit group or category
 			<GroupCategoryAddEditForm

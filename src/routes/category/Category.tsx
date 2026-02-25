@@ -14,6 +14,7 @@ import {
 import ItemCard from "../../components/itemCard/ItemCard";
 import IconButton from "../../components/iconButton/IconButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import ConfirmDelete from "../../components/confirmDelete/ConfirmDelete";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -31,7 +32,8 @@ function Category() {
 		categoryId,
 	});
 	const { data: items } = useGetItemsQuery({ groupId, categoryId });
-	const [deleteItems] = useDeleteItemsMutation();
+	const [deleteItems, { isLoading: deleteItemsLoading }] =
+		useDeleteItemsMutation();
 
 	async function handleDelete() {
 		const response = await deleteItems({
@@ -41,6 +43,7 @@ function Category() {
 		});
 		if (!("error" in response)) {
 			setSelectedItems([]);
+			setIsDeleteModalOpen(false);
 		}
 	}
 
@@ -105,7 +108,13 @@ function Category() {
 				<Modal
 					title="Are you sure you want to delete these items from this category?"
 					closeModal={() => setIsDeleteModalOpen(false)}
-					children={<button onClick={handleDelete}>Confirm</button>}
+					children={
+						<ConfirmDelete
+							handleDelete={handleDelete}
+							closeModal={() => setIsDeleteModalOpen(false)}
+							isLoading={deleteItemsLoading}
+						/>
+					}
 				/>
 			)}
 		</div>
