@@ -3,7 +3,7 @@ import { useGetCategoryByIdQuery } from "../../api/categoriesApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
 import { IoIosArrowRoundBack, IoMdAddCircleOutline } from "react-icons/io";
-import { useState } from "react";
+import React, { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import ItemForm from "../../components/itemForm/ItemForm";
 import {
@@ -15,6 +15,7 @@ import ItemCard from "../../components/itemCard/ItemCard";
 import IconButton from "../../components/iconButton/IconButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ConfirmDelete from "../../components/confirmDelete/ConfirmDelete";
+import styles from "./category.module.scss";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -22,6 +23,7 @@ function Category() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [isMainChecked, setIsMainChecked] = useState(false);
 
 	const {
 		data: category,
@@ -32,8 +34,20 @@ function Category() {
 		categoryId,
 	});
 	const { data: items } = useGetItemsQuery({ groupId, categoryId });
-	const [deleteItems, { isLoading: deleteItemsLoading }] =
-		useDeleteItemsMutation();
+	const [
+		deleteItems,
+		{ isLoading: deleteItemsLoading, isError: deleteItemsError },
+	] = useDeleteItemsMutation();
+
+	// handle change for main checkbox to select/unselect all items
+	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+		setIsMainChecked(e.target.checked);
+		if (e.target.checked) {
+			setSelectedItems([items.map((item: Item) => item.itemId)]);
+		} else {
+			setSelectedItems([]);
+		}
+	}
 
 	async function handleDelete() {
 		const response = await deleteItems({
@@ -48,6 +62,7 @@ function Category() {
 	}
 
 	if (categoryLoading) return <Loading />;
+
 	return (
 		<div>
 			<button className="back-button" onClick={() => navigate(-1)}>
@@ -76,17 +91,36 @@ function Category() {
 				<ErrorText error={"An error occured while fetching category"} />
 			)}
 			{items && items.length > 0 ? (
-				items.map((item: Item) => (
-					<ItemCard
-						key={item.itemId}
-						groupId={Number(groupId)}
-						categoryId={Number(categoryId)}
-						itemId={Number(item.itemId)}
-						name={item.name}
-						quantity={item.quantity}
-						setSelectedItems={setSelectedItems}
-					/>
-				))
+				<table className={styles.table}>
+					<thead>
+						<tr>
+							<th className={styles.columnOne}>
+								<input
+									type="checkbox"
+									checked={isMainChecked}
+									onChange={(e) => handleChange(e)}
+								/>
+							</th>
+							<th>Item Name</th>
+							<th className={styles.qty}>Qty</th>
+							<th className={styles.edit}>Edit</th>
+						</tr>
+					</thead>
+					<tbody>
+						{items.map((item: Item) => (
+							<ItemCard
+								key={item.itemId}
+								groupId={Number(groupId)}
+								categoryId={Number(categoryId)}
+								itemId={Number(item.itemId)}
+								name={item.name}
+								quantity={item.quantity}
+								setSelectedItems={setSelectedItems}
+								isMainChecked={isMainChecked}
+							/>
+						))}
+					</tbody>
+				</table>
 			) : (
 				<p>No items yet</p>
 			)}
@@ -109,11 +143,16 @@ function Category() {
 					title="Are you sure you want to delete these items from this category?"
 					closeModal={() => setIsDeleteModalOpen(false)}
 					children={
-						<ConfirmDelete
-							handleDelete={handleDelete}
-							closeModal={() => setIsDeleteModalOpen(false)}
-							isLoading={deleteItemsLoading}
-						/>
+						<>
+							<ConfirmDelete
+								handleDelete={handleDelete}
+								closeModal={() => setIsDeleteModalOpen(false)}
+								isLoading={deleteItemsLoading}
+							/>
+							{deleteItemsError && (
+								<ErrorText error="An error occured while deleting items" />
+							)}
+						</>
 					}
 				/>
 			)}
