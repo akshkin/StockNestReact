@@ -43,7 +43,7 @@ function Category() {
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setIsMainChecked(e.target.checked);
 		if (e.target.checked) {
-			setSelectedItems([items.map((item: Item) => item.itemId)]);
+			setSelectedItems(items.map((item: Item) => item.itemId));
 		} else {
 			setSelectedItems([]);
 		}
