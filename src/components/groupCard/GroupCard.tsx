@@ -14,6 +14,7 @@ import {
 	useUpdateCategoryMutation,
 } from "../../api/categoriesApi";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
+import ErrorText from "../errorText/ErrorText";
 
 type Mode = "Edit" | "Delete";
 
@@ -29,6 +30,7 @@ type CardProps = {
 function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [mode, setMode] = useState<Mode>("Edit");
+	const [error, setError] = useState<string | null>(null);
 
 	const [deleteGroup, { isLoading: deleteGroupLoading }] =
 		useDeleteGroupMutation();
@@ -45,12 +47,24 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	}
 
 	async function handleDelete() {
+		let res;
 		if (isGroup) {
-			await deleteGroup({ id: id });
+			res = await deleteGroup({ id: id });
 		} else {
-			await deleteCategory({ groupId, categoryId: id });
+			res = await deleteCategory({ groupId, categoryId: id });
 		}
-		setIsModalOpen(false);
+		if (!("error" in res)) {
+			setIsModalOpen(false);
+		} else if ("error" in res) {
+			const error = res?.error;
+			if (error && "data" in error) {
+				if (typeof error?.data === "string") {
+					setError(error?.data);
+				} else {
+					setError("An error occured!");
+				}
+			}
+		}
 	}
 
 	const modalTitle =
@@ -60,11 +74,14 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 
 	const childContent =
 		mode === "Delete" ? (
-			<ConfirmDelete
-				handleDelete={handleDelete}
-				closeModal={() => setIsModalOpen(false)}
-				isLoading={isGroup ? deleteGroupLoading : deleteCategoryLoading}
-			/>
+			<>
+				<ConfirmDelete
+					handleDelete={handleDelete}
+					closeModal={() => setIsModalOpen(false)}
+					isLoading={isGroup ? deleteGroupLoading : deleteCategoryLoading}
+				/>
+				{error && <ErrorText error={error} />}
+			</>
 		) : (
 			// edit group or category
 			<GroupCategoryAddEditForm
