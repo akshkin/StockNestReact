@@ -139,7 +139,7 @@ function Group() {
 						type="Category"
 						role={group.role}
 						groupId={Number(groupId)}
-						navigateLink={`/dashboard/group/${groupId}/category/${category.categoryId}`}
+						navigateLink={`/groups/${groupId}/category/${category.categoryId}`}
 					/>
 				))
 			) : (
