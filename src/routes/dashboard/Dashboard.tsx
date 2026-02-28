@@ -5,8 +5,23 @@ import { HiDocumentPlus, HiDocumentText, HiUserGroup } from "react-icons/hi2";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 import { AiFillProduct } from "react-icons/ai";
 import styles from "./dashboard.module.scss";
+import BarChart from "../../components/charts/BarChart";
+import Loading from "../../components/loading/Loading";
+import ErrorText from "../../components/errorText/ErrorText";
+import DoughnutChart from "../../components/charts/DoughnutChart";
+import useDashboardCharts from "../../hooks/useDashboardCharts";
 
 function Dashboard() {
+	const { data: stats, isLoading, isError, isFetching } = useGetStatsQuery({});
+
+	const {
+		selectedGroupId,
+		setSelectedGroupId,
+		uniqueGroups,
+		barChart,
+		doughnutChart,
+	} = useDashboardCharts(stats);
+
 	const date = new Date();
 	const today = date.toLocaleDateString("en-US", {
 		month: "long",
@@ -16,8 +31,6 @@ function Dashboard() {
 
 	const location = useLocation();
 	const message = location.state?.message;
-
-	const { data: stats } = useGetStatsQuery({});
 
 	const metricsMap = {
 		groups: {
@@ -52,13 +65,14 @@ function Dashboard() {
 		},
 	};
 
-	console.log(stats);
-
 	return (
 		<section>
 			<p>Today is {today}</p>
 			<h1 style={{ fontSize: "2em" }}>Welcome!</h1>
 			{message && <p>{message}</p>}
+
+			{(isLoading || isFetching) && <Loading />}
+
 			<div className={styles.metricGrid}>
 				{Object.values(metricsMap).map((metric) => (
 					<MetricsCard
@@ -70,6 +84,38 @@ function Dashboard() {
 					/>
 				))}
 			</div>
+
+			<div className={styles.groupTab}>
+				<h4>Groups</h4>
+				<div>
+					{uniqueGroups.map((g) => (
+						<span
+							className={styles.tab}
+							key={g.groupId}
+							onClick={() => setSelectedGroupId(g.groupId)}
+							style={{
+								backgroundColor: selectedGroupId === g.groupId ? "#FE9F43" : "",
+							}}
+						>
+							{g.groupName}
+						</span>
+					))}
+				</div>
+			</div>
+			{!isLoading && (
+				<div className={styles.chartWrapper}>
+					<BarChart labels={barChart.labels} datasets={barChart.datasets} />
+				</div>
+			)}
+			{!isLoading && (
+				<div className={styles.doughnutWrapper}>
+					<DoughnutChart
+						labels={doughnutChart.labels}
+						datasets={doughnutChart.datasets}
+					/>
+				</div>
+			)}
+			{isError && <ErrorText error={"An error occurred"} />}
 		</section>
 	);
 }

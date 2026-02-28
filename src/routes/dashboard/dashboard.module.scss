@@ -3,3 +3,39 @@
 	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 	grid-gap: 0.5em;
 }
+
+.groupTab {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid var(--color-border);
+	padding: 0.5em;
+	margin-block: 1em;
+
+	h4 {
+		margin: 0;
+	}
+
+	.tab {
+		background-color: var(--color-border);
+		font-size: 0.75rem;
+		padding: 0.5em;
+		border-right: 1px solid var(--color-muted);
+		cursor: pointer;
+		transition: filter 0.3s ease;
+
+		&:hover {
+			filter: brightness(110%);
+		}
+	}
+}
+
+.chartWrapper {
+	@media (max-width: 600px) {
+		height: 350px;
+	}
+}
+
+.doughnutWrapper {
+	max-height: 500px;
+}
