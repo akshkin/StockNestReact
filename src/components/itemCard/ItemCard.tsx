@@ -12,6 +12,7 @@ type ItemCardProps = {
 	quantity: number;
 	setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
 	isMainChecked: boolean; // main checkbox in the table header
+	highlight?: boolean; // whether the item is the one that was just created or updated, used to highlight the item card
 };
 
 function ItemCard({
@@ -22,6 +23,7 @@ function ItemCard({
 	quantity,
 	setSelectedItems,
 	isMainChecked,
+	highlight = false,
 }: ItemCardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isChecked, setIsChecked] = useState(false);
@@ -47,7 +49,10 @@ function ItemCard({
 	}
 
 	return (
-		<tr className={styles.itemCard}>
+		<tr
+			className={styles.itemCard}
+			style={{ backgroundColor: highlight ? "#d4e8f9" : "transparent" }}
+		>
 			<td>
 				<input
 					type="checkbox"

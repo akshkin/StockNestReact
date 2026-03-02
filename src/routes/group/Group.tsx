@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
 	useGetGroupMembersQuery,
@@ -53,6 +53,7 @@ function Group() {
 		useGetCategoriesQuery(groupId);
 
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	function closeModal() {
 		setIsModalOpen(false);
@@ -140,6 +141,7 @@ function Group() {
 						role={group.role}
 						groupId={Number(groupId)}
 						navigateLink={`/groups/${groupId}/category/${category.categoryId}`}
+						highlight={location.state?.categoryId === category.categoryId}
 					/>
 				))
 			) : (

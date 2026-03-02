@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGetCategoryByIdQuery } from "../../api/categoriesApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
@@ -24,6 +24,7 @@ function Category() {
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isMainChecked, setIsMainChecked] = useState(false);
+	const location = useLocation();
 
 	const {
 		data: category,
@@ -117,6 +118,7 @@ function Category() {
 								quantity={item.quantity}
 								setSelectedItems={setSelectedItems}
 								isMainChecked={isMainChecked}
+								highlight={location.state?.itemId === item.itemId}
 							/>
 						))}
 					</tbody>

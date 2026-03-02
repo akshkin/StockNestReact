@@ -13,6 +13,7 @@ import Modal from "../../components/modal/Modal";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
 import { groupCategorySchema } from "../../schemas";
 import GroupCard from "../../components/groupCard/GroupCard";
+import { useLocation } from "react-router-dom";
 
 const defaultGroupData = {
 	name: "",
@@ -24,6 +25,7 @@ function Groups() {
 	const { data: groups, isLoading, error } = useGetGroupsQuery({});
 	const [createNewGroup] = useCreateNewGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
+	const location = useLocation();
 
 	function closeModal() {
 		setIsModalOpen(false);
@@ -67,6 +69,7 @@ function Groups() {
 						name={group.name}
 						role={group.role}
 						navigateLink={`/groups/${group.groupId}`}
+						highlight={location.state?.groupId === group.groupId}
 					/>
 				))
 			) : (
