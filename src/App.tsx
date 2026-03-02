@@ -9,6 +9,7 @@ import Group from "./routes/group/Group";
 import Category from "./routes/category/Category";
 import GroupLayout from "./routes/group/GroupLayout";
 import Groups from "./routes/group/Groups";
+import Notifications from "./routes/notifications/Notifications";
 
 function App() {
 	return (
@@ -29,6 +30,8 @@ function App() {
 							element={<Category />}
 						/>
 					</Route>
+					<Route path="/notifications" element={<Notifications />} />
+					<Route path="*" element={<h1>404 Not Found</h1>} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

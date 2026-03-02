@@ -1,0 +1,41 @@
+.notificationsNav {
+	margin-bottom: 1em;
+}
+.notificationsTabGroup {
+	display: flex;
+	gap: 1em;
+	margin-bottom: 1rem;
+
+	.tab {
+		padding: 0.5em;
+		width: 50%;
+
+		button {
+			background: transparent;
+			color: var(--color-primary);
+			border: none;
+			cursor: pointer;
+			font-size: 0.75rem;
+			transition: filter 0.3s ease;
+
+			&:hover {
+				filter: brightness(110%);
+			}
+		}
+	}
+
+	.active {
+		border-bottom: 2px solid var(--color-primary);
+		background-color: white;
+
+		button {
+			font-weight: 700;
+		}
+	}
+
+	.hide {
+		@media (max-width: 500px) {
+			display: none;
+		}
+	}
+}

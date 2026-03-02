@@ -32,7 +32,7 @@ export const notificationsApi = apiSlice.injectEndpoints({
 			}),
 			providesTags: ["Notifications"],
 		}),
-		getUnreadNotifications: builder.query<NotificationType[], void>({
+		getUnreadNotifications: builder.query<NotificationResponseType[], void>({
 			query: () => ({
 				url: "notifications/unread",
 				method: "GET",
@@ -44,12 +44,14 @@ export const notificationsApi = apiSlice.injectEndpoints({
 				url: `notifications/${notificationId}/seen`,
 				method: "POST",
 			}),
+			invalidatesTags: ["Notifications"],
 		}),
 		setAllNotificationsAsSeen: builder.mutation({
 			query: () => ({
 				url: `notifications/seenAll`,
 				method: "POST",
 			}),
+			invalidatesTags: ["Notifications"],
 		}),
 	}),
 });

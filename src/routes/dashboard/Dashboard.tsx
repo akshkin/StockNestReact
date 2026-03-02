@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useGetStatsQuery } from "../../api/statsApi";
 import MetricsCard from "../../components/metricsCard/MetricsCard";
 import { HiDocumentPlus, HiDocumentText, HiUserGroup } from "react-icons/hi2";
@@ -20,10 +20,8 @@ function Dashboard() {
 		isLoading: notificationsLoading,
 		isError: notificationsError,
 		isFetching: notificationsFetching,
-		error: notificationsErrorData,
 	} = useGetNotificationsQuery();
 
-	console.log("Notifications:", notifications, notificationsErrorData);
 	const {
 		selectedGroupId,
 		setSelectedGroupId,
@@ -135,6 +133,7 @@ function Dashboard() {
 					{notifications?.map((notification) => (
 						<NotificationCard key={notification.id} {...notification} />
 					))}
+					<Link to="/notifications?tab=all">Read all notifications</Link>
 				</div>
 			</div>
 
