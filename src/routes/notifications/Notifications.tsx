@@ -49,6 +49,13 @@ function Notifications() {
 		});
 	}
 
+	function onPageChange(newPage: number) {
+		setPage(newPage);
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("page", newPage.toString());
+		setSearchParams(params);
+	}
+
 	let isCountMoreThanPageSize;
 	if (initialTab === "unread") {
 		isCountMoreThanPageSize =
@@ -126,9 +133,7 @@ function Notifications() {
 					<Pagination
 						currentPage={currentPage}
 						hasNextPage={!!notifications?.hasNextPage}
-						onPageChange={setPage}
-						searchParams={searchParams}
-						setSearchParams={setSearchParams}
+						onPageChange={onPageChange}
 					/>
 				)}
 				{isFetching && <Loading />}

@@ -1,4 +1,9 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "react-router-dom";
 import { useGetCategoryByIdQuery } from "../../api/categoriesApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
@@ -16,6 +21,7 @@ import IconButton from "../../components/iconButton/IconButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ConfirmDelete from "../../components/confirmDelete/ConfirmDelete";
 import styles from "./category.module.scss";
+import Pagination from "../../components/pagination/Pagination";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -25,6 +31,9 @@ function Category() {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isMainChecked, setIsMainChecked] = useState(false);
 	const location = useLocation();
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const initialPage = Number(searchParams.get("page") ?? 1);
 
 	const {
 		data: category,
@@ -34,7 +43,11 @@ function Category() {
 		groupId,
 		categoryId,
 	});
-	const { data: items } = useGetItemsQuery({ groupId, categoryId });
+	const { data: itemsResponse } = useGetItemsQuery({
+		groupId: Number(groupId),
+		categoryId: Number(categoryId),
+		page: initialPage,
+	});
 	const [
 		deleteItems,
 		{ isLoading: deleteItemsLoading, isError: deleteItemsError },
@@ -44,7 +57,9 @@ function Category() {
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setIsMainChecked(e.target.checked);
 		if (e.target.checked) {
-			setSelectedItems(items.map((item: Item) => item.itemId));
+			setSelectedItems(
+				itemsResponse?.items.map((item: Item) => item.itemId) || [],
+			);
 		} else {
 			setSelectedItems([]);
 		}
@@ -61,6 +76,14 @@ function Category() {
 			setIsDeleteModalOpen(false);
 		}
 	}
+
+	function onPageChange(newPage: number) {
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("page", newPage.toString());
+		setSearchParams(params);
+	}
+
+	const items = itemsResponse?.items || [];
 
 	if (categoryLoading) return <Loading />;
 
@@ -91,38 +114,48 @@ function Category() {
 			{error && (
 				<ErrorText error={"An error occured while fetching category"} />
 			)}
-			{items && items.length > 0 ? (
-				<table className={styles.table}>
-					<thead>
-						<tr>
-							<th className={styles.columnOne}>
-								<input
-									type="checkbox"
-									checked={isMainChecked}
-									onChange={(e) => handleChange(e)}
+			{items && items?.length > 0 ? (
+				<>
+					<table className={styles.table}>
+						<thead>
+							<tr>
+								<th className={styles.columnOne}>
+									<input
+										type="checkbox"
+										checked={isMainChecked}
+										onChange={(e) => handleChange(e)}
+									/>
+								</th>
+								<th>Item Name</th>
+								<th className={styles.qty}>Qty</th>
+								<th className={styles.edit}>Edit</th>
+							</tr>
+						</thead>
+						<tbody>
+							{items?.map((item: Item) => (
+								<ItemCard
+									key={item.itemId}
+									groupId={Number(groupId)}
+									categoryId={Number(categoryId)}
+									itemId={Number(item.itemId)}
+									name={item.name}
+									quantity={item.quantity}
+									setSelectedItems={setSelectedItems}
+									isMainChecked={isMainChecked}
+									highlight={location.state?.itemId === item.itemId}
 								/>
-							</th>
-							<th>Item Name</th>
-							<th className={styles.qty}>Qty</th>
-							<th className={styles.edit}>Edit</th>
-						</tr>
-					</thead>
-					<tbody>
-						{items.map((item: Item) => (
-							<ItemCard
-								key={item.itemId}
-								groupId={Number(groupId)}
-								categoryId={Number(categoryId)}
-								itemId={Number(item.itemId)}
-								name={item.name}
-								quantity={item.quantity}
-								setSelectedItems={setSelectedItems}
-								isMainChecked={isMainChecked}
-								highlight={location.state?.itemId === item.itemId}
-							/>
-						))}
-					</tbody>
-				</table>
+							))}
+						</tbody>
+					</table>
+
+					{itemsResponse && itemsResponse?.totalCount > 10 && (
+						<Pagination
+							currentPage={initialPage}
+							hasNextPage={!!itemsResponse?.hasNextPage}
+							onPageChange={onPageChange}
+						/>
+					)}
+				</>
 			) : (
 				<p>No items yet</p>
 			)}

@@ -6,6 +6,14 @@ export type Item = {
 	quantity: number;
 };
 
+export type ItemsResponseType = {
+	items: Item[];
+	hasNextPage: boolean;
+	pageSize: number;
+	pageNumber: number;
+	totalCount: number;
+};
+
 export const itemsApi = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		createItem: builder.mutation({
@@ -16,9 +24,12 @@ export const itemsApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Items"],
 		}),
-		getItems: builder.query({
-			query: ({ groupId, categoryId }) => ({
-				url: `items/group/${groupId}/category/${categoryId}`,
+		getItems: builder.query<
+			ItemsResponseType,
+			{ groupId: number; categoryId: number; page: number }
+		>({
+			query: ({ groupId, categoryId, page }) => ({
+				url: `items/group/${groupId}/category/${categoryId}?page=${page}`,
 				method: "GET",
 			}),
 			providesTags: ["Items"],
