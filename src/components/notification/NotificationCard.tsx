@@ -9,11 +9,17 @@ import {
 import { RxUpdate } from "react-icons/rx";
 import { CgFileRemove, CgFolderRemove } from "react-icons/cg";
 import { IoCreateOutline } from "react-icons/io5";
+import {
+	useSetNotificationAsSeenMutation,
+	type NotificationType,
+} from "../../api/notificationsApi";
+import { useNavigate } from "react-router-dom";
+import { navigateFromNotification } from "../../helpers/utils";
 
 type NotificationCardProps = {
 	id: number;
 	message: string;
-	type: string;
+	type: NotificationType;
 	seen: boolean;
 	createdAt: string;
 	groupId?: number | null;
@@ -21,16 +27,20 @@ type NotificationCardProps = {
 	itemId?: number | null;
 };
 
-function NotificationCard({
-	id,
-	message,
-	type,
-	seen,
-	createdAt,
-	groupId,
-	categoryId,
-	itemId,
-}: NotificationCardProps) {
+function NotificationCard(props: NotificationCardProps) {
+	const navigate = useNavigate();
+	const [setNotificationAsSeen] = useSetNotificationAsSeenMutation();
+	const { id, message, type, seen, createdAt } = props;
+
+	async function handleClick() {
+		try {
+			await setNotificationAsSeen(id);
+			navigateFromNotification({ ...props }, navigate);
+		} catch (error) {
+			console.error("Error setting notification as seen:", error);
+		}
+	}
+
 	const icon = () => {
 		switch (type) {
 			case "UserJoinedGroup":
@@ -59,6 +69,7 @@ function NotificationCard({
 	return (
 		<div
 			className={`${styles.notificationCard} ${seen ? styles.seen : styles.unseen}`}
+			onClick={handleClick}
 		>
 			<span className={styles.avatar}>{icon()}</span>
 			<div className={styles.content}>
