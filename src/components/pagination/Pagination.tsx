@@ -8,17 +8,28 @@ type PaginationProps = {
 	currentPage: number;
 	hasNextPage: boolean;
 	onPageChange: (newPage: number) => void;
+	searchParams: URLSearchParams;
+	setSearchParams: (params: URLSearchParams) => void;
 };
 
 function Pagination({
 	currentPage,
 	hasNextPage,
 	onPageChange,
+	setSearchParams,
+	searchParams,
 }: PaginationProps) {
+	function gotToPage(newPage: number) {
+		onPageChange(newPage);
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("page", newPage.toString());
+		setSearchParams(params);
+	}
+
 	return (
 		<div className={styles.paginationContainer}>
 			<button
-				onClick={() => onPageChange(currentPage - 1)}
+				onClick={() => gotToPage(currentPage - 1)}
 				disabled={currentPage === 1}
 				className={styles.paginatedButton}
 			>
@@ -26,7 +37,7 @@ function Pagination({
 			</button>
 			<span>{`Page ${currentPage}`}</span>
 			<button
-				onClick={() => onPageChange(currentPage + 1)}
+				onClick={() => gotToPage(currentPage + 1)}
 				disabled={!hasNextPage}
 				className={styles.paginatedButton}
 			>
