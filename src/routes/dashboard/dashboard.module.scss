@@ -38,4 +38,39 @@
 
 .doughnutWrapper {
 	max-height: 500px;
+	margin: 0 auto;
+}
+
+.chartWithNotification {
+	display: flex;
+	gap: 1em;
+	flex-wrap: wrap;
+	margin-top: 2em;
+
+	.doughnutWrapper {
+		flex: 1;
+		width: 50%;
+	}
+
+	.notifications {
+		flex: 1;
+		width: 50%;
+
+		.notificationsTitle {
+			margin-top: 0;
+		}
+	}
+
+	@media (max-width: 800px) {
+		flex-direction: column;
+		.doughnutWrapper {
+			flex: 1;
+			width: 100%;
+		}
+
+		.notifications {
+			flex: 1;
+			width: 100%;
+		}
+	}
 }

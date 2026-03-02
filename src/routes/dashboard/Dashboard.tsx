@@ -10,10 +10,20 @@ import Loading from "../../components/loading/Loading";
 import ErrorText from "../../components/errorText/ErrorText";
 import DoughnutChart from "../../components/charts/DoughnutChart";
 import useDashboardCharts from "../../hooks/useDashboardCharts";
+import { useGetNotificationsQuery } from "../../api/notificationsApi";
+import NotificationCard from "../../components/notification/NotificationCard";
 
 function Dashboard() {
 	const { data: stats, isLoading, isError, isFetching } = useGetStatsQuery({});
+	const {
+		data: notifications,
+		isLoading: notificationsLoading,
+		isError: notificationsError,
+		isFetching: notificationsFetching,
+		error: notificationsErrorData,
+	} = useGetNotificationsQuery();
 
+	console.log("Notifications:", notifications, notificationsErrorData);
 	const {
 		selectedGroupId,
 		setSelectedGroupId,
@@ -107,14 +117,27 @@ function Dashboard() {
 					<BarChart labels={barChart.labels} datasets={barChart.datasets} />
 				</div>
 			)}
-			{!isLoading && (
-				<div className={styles.doughnutWrapper}>
-					<DoughnutChart
-						labels={doughnutChart.labels}
-						datasets={doughnutChart.datasets}
-					/>
+			<div className={styles.chartWithNotification}>
+				{!isLoading && (
+					<div className={styles.doughnutWrapper}>
+						<DoughnutChart
+							labels={doughnutChart.labels}
+							datasets={doughnutChart.datasets}
+						/>
+					</div>
+				)}
+				<div className={styles.notifications}>
+					<h3 className={styles.notificationsTitle}>Recent Notifications</h3>
+					{notificationsLoading || notificationsFetching ? <Loading /> : null}
+					{notificationsError ? (
+						<ErrorText error={"Failed to load notifications"} />
+					) : null}
+					{notifications?.map((notification) => (
+						<NotificationCard key={notification.id} {...notification} />
+					))}
 				</div>
-			)}
+			</div>
+
 			{isError && <ErrorText error={"An error occurred"} />}
 		</section>
 	);
