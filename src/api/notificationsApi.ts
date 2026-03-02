@@ -13,6 +13,14 @@ export type NotificationType =
 	| "UserRemovedFromGroup";
 
 export type NotificationResponseType = {
+	items: NotificationItemType[];
+	hasNextPage: boolean;
+	pageSize: number;
+	pageNumber: number;
+	totalCount: number;
+};
+
+export type NotificationItemType = {
 	id: number;
 	message: string;
 	type: NotificationType;
@@ -25,16 +33,16 @@ export type NotificationResponseType = {
 
 export const notificationsApi = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
-		getNotifications: builder.query<NotificationResponseType[], void>({
-			query: () => ({
-				url: "notifications/all",
+		getNotifications: builder.query<NotificationResponseType, number>({
+			query: (page) => ({
+				url: `notifications/all?page=${page}`,
 				method: "GET",
 			}),
 			providesTags: ["Notifications"],
 		}),
-		getUnreadNotifications: builder.query<NotificationResponseType[], void>({
-			query: () => ({
-				url: "notifications/unread",
+		getUnreadNotifications: builder.query<NotificationResponseType, number>({
+			query: (page) => ({
+				url: `notifications/unread?page=${page}`,
 				method: "GET",
 			}),
 			providesTags: ["Notifications"],
@@ -53,6 +61,12 @@ export const notificationsApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Notifications"],
 		}),
+		getLatestNotifications: builder.query<NotificationItemType[], void>({
+			query: () => ({
+				url: "notifications/latest",
+			}),
+			providesTags: ["Notifications"],
+		}),
 	}),
 });
 
@@ -61,4 +75,5 @@ export const {
 	useGetUnreadNotificationsQuery,
 	useSetNotificationAsSeenMutation,
 	useSetAllNotificationsAsSeenMutation,
+	useGetLatestNotificationsQuery,
 } = notificationsApi;
