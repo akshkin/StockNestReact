@@ -10,7 +10,7 @@ import Loading from "../../components/loading/Loading";
 import ErrorText from "../../components/errorText/ErrorText";
 import DoughnutChart from "../../components/charts/DoughnutChart";
 import useDashboardCharts from "../../hooks/useDashboardCharts";
-import { useGetNotificationsQuery } from "../../api/notificationsApi";
+import { useGetLatestNotificationsQuery } from "../../api/notificationsApi";
 import NotificationCard from "../../components/notification/NotificationCard";
 
 function Dashboard() {
@@ -20,7 +20,7 @@ function Dashboard() {
 		isLoading: notificationsLoading,
 		isError: notificationsError,
 		isFetching: notificationsFetching,
-	} = useGetNotificationsQuery();
+	} = useGetLatestNotificationsQuery();
 
 	const {
 		selectedGroupId,
@@ -130,10 +130,11 @@ function Dashboard() {
 					{notificationsError ? (
 						<ErrorText error={"Failed to load notifications"} />
 					) : null}
-					{notifications?.map((notification) => (
-						<NotificationCard key={notification.id} {...notification} />
-					))}
-					<Link to="/notifications?tab=all">Read all notifications</Link>
+					{notifications &&
+						notifications.map((notification) => (
+							<NotificationCard key={notification.id} {...notification} />
+						))}
+					<Link to="/notifications?tab=all&page=1">Read all notifications</Link>
 				</div>
 			</div>
 
