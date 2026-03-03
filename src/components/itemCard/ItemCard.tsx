@@ -48,11 +48,10 @@ function ItemCard({
 		return `hsl(${hue}, 70%, 80%)`;
 	}
 
+	console.log(styles.highlight);
+
 	return (
-		<tr
-			className={styles.itemCard}
-			style={{ backgroundColor: highlight ? "#d4e8f9" : "transparent" }}
-		>
+		<tr className={`${styles.itemCard} ${highlight && styles.highlight}`}>
 			<td>
 				<input
 					type="checkbox"
@@ -62,7 +61,7 @@ function ItemCard({
 				/>
 			</td>
 			<td className={styles.nameColumn}>
-				<div
+				<span
 					className={styles.colorAccent}
 					style={{ backgroundColor: stringToColor(name) }}
 				/>

@@ -106,10 +106,7 @@ function GroupCard({
 		);
 
 	return (
-		<div
-			className={styles.groupCard}
-			style={{ backgroundColor: highlight ? "#d4e8f9" : "transparent" }}
-		>
+		<div className={`${styles.groupCard} ${highlight ? styles.highlight : ""}`}>
 			<header>
 				<Link to={navigateLink}>
 					<h3>{name}</h3>
