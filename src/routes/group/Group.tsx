@@ -76,7 +76,7 @@ function Group() {
 			<h2 className={styles.title}>Group: {group?.name}</h2>
 
 			<div className="buttonsContainer">
-				{group?.role === "Owner" && (
+				{(group?.role === "Owner" || group?.role === "Co-Owner") && (
 					<IconButton
 						icon={<IoMdPersonAdd />}
 						title="Add a person to a group"
