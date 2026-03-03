@@ -59,13 +59,19 @@ export const notificationsApi = apiSlice.injectEndpoints({
 				url: `notifications/seenAll`,
 				method: "POST",
 			}),
-			invalidatesTags: ["Notifications"],
+			invalidatesTags: ["Notifications", "NotificationCount"],
 		}),
 		getLatestNotifications: builder.query<NotificationItemType[], void>({
 			query: () => ({
 				url: "notifications/latest",
 			}),
 			providesTags: ["Notifications"],
+		}),
+		getUnreadNotificationsCount: builder.query<number, void>({
+			query: () => ({
+				url: "notifications/unread-count",
+			}),
+			providesTags: ["NotificationCount"],
 		}),
 	}),
 });
@@ -76,4 +82,5 @@ export const {
 	useSetNotificationAsSeenMutation,
 	useSetAllNotificationsAsSeenMutation,
 	useGetLatestNotificationsQuery,
+	useGetUnreadNotificationsCountQuery,
 } = notificationsApi;

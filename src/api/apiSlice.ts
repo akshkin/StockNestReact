@@ -57,6 +57,7 @@ export const apiSlice = createApi({
 		"Items",
 		"GroupMembers",
 		"Notifications",
+		"NotificationCount",
 	],
 	refetchOnFocus: true,
 	endpoints: (builder) => ({}),
