@@ -129,13 +129,14 @@ function Notifications() {
 				)}
 
 				{/* display pagination component only when total count is more than page size which is 10 */}
-				{isCountMoreThanPageSize && (
+				{isCountMoreThanPageSize ? (
 					<Pagination
 						currentPage={currentPage}
 						hasNextPage={!!notifications?.hasNextPage}
 						onPageChange={onPageChange}
 					/>
-				)}
+				) : null}
+
 				{isFetching && <Loading />}
 			</section>
 		</>
