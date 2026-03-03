@@ -107,6 +107,15 @@ button.invertedButton {
 	animation: spin 1s linear infinite;
 }
 
+.group-category-item-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6em;
+	width: 100%;
+	max-width: 400px;
+	padding: 0.5em;
+}
+
 @keyframes spin {
 	from {
 		transform: rotate(0deg);
