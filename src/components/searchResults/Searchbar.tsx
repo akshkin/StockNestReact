@@ -1,41 +1,45 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputField from "../inputField/InputField";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetSearchResultsQuery } from "../../api/searchApi";
 import SearchResults from "./SearchResults";
 import styles from "./searchResults.module.scss";
+import { formUrlQuery, removeUrlKeys } from "../../helpers/utils";
 
 function Searchbar() {
-	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchParams] = useSearchParams();
 	const initialQuery = searchParams.get("q") || "";
 	const [searchQuery, setSearchQuery] = useState(initialQuery);
 	const [isSearchResultsOpen, setIsSearchResultsOpen] = useState(false);
 	const searchInputRef = useRef<HTMLDivElement | null>(null);
+	const navigate = useNavigate();
 
 	const { data: searchResults } = useGetSearchResultsQuery(searchQuery);
 
 	useEffect(() => {
 		const delayDebounceFubction = setTimeout(() => {
-			const params = new URLSearchParams(searchParams);
-			if (searchQuery.trim() === "") {
-				setIsSearchResultsOpen(false);
-				params.delete("q");
-			} else {
-				params.set("q", searchQuery);
+			if (searchQuery) {
+				const url = formUrlQuery({
+					params: window.location.search,
+					key: "q",
+					value: searchQuery,
+				});
+				navigate(url);
 				setIsSearchResultsOpen(true);
 			}
-			setSearchParams(params);
 		}, 300);
 		return () => clearTimeout(delayDebounceFubction);
-	}, [searchQuery, searchParams, setSearchParams]);
+	}, [searchQuery, navigate]);
 
 	const resetSearch = useCallback(() => {
 		setSearchQuery("");
 		setIsSearchResultsOpen(false);
-		const params = new URLSearchParams(searchParams);
-		params.delete("q");
-		setSearchParams(params);
-	}, [searchParams, setSearchParams]);
+		const url = removeUrlKeys({
+			params: window.location.search,
+			keysToRemove: ["q"],
+		});
+		navigate(url);
+	}, [navigate]);
 
 	// close the results dropdown when clicking outside of the search input or pressing escape
 	useEffect(() => {

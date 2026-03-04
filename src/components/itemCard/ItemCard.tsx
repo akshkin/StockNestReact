@@ -48,8 +48,6 @@ function ItemCard({
 		return `hsl(${hue}, 70%, 80%)`;
 	}
 
-	console.log(styles.highlight);
-
 	return (
 		<tr className={`${styles.itemCard} ${highlight && styles.highlight}`}>
 			<td>

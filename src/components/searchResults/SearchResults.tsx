@@ -19,19 +19,17 @@ function SearchResults({ results, resetSearch }: SearchResultsProps) {
 		const { type, groupId, categoryId, itemId } = result;
 		switch (type) {
 			case "Group":
-				return { pathname: `/groups`, hash: `#${groupId}`, state: { groupId } };
+				return { pathname: `/groups`, state: { groupId } };
 
 			case "Category":
 				return {
 					pathname: `/groups/${groupId}`,
-					hash: `#${categoryId}`,
 					state: { categoryId },
 				};
 
 			case "Item":
 				return {
 					pathname: `/groups/${groupId}/category/${categoryId}`,
-					hash: `#${itemId}`,
 					state: { itemId },
 				};
 			default:
