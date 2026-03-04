@@ -4,6 +4,7 @@ import styles from "../header.module.scss";
 import { useLogoutMutation } from "../../../api/authApi";
 import { PiBellFill, PiBellLight } from "react-icons/pi";
 import { useGetUnreadNotificationsCountQuery } from "../../../api/notificationsApi";
+import Searchbar from "../../searchResults/Searchbar";
 
 function DashboardHeader() {
 	const navigate = useNavigate();
@@ -21,6 +22,9 @@ function DashboardHeader() {
 			<Link to="/">
 				<img src={logo} alt="Logo" className={styles.logo} />
 			</Link>
+			<div className={styles.searchbarDesktop}>
+				<Searchbar />
+			</div>
 			<nav>
 				<ul>
 					<li>
@@ -50,6 +54,9 @@ function DashboardHeader() {
 					</li>
 				</ul>
 			</nav>
+			<div className={styles.searchbarMobile}>
+				<Searchbar />
+			</div>
 		</header>
 	);
 }
