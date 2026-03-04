@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
 	useGetGroupMembersQuery,
@@ -20,11 +20,7 @@ import {
 	type Category,
 } from "../../api/categoriesApi";
 import GroupCard from "../../components/groupCard/GroupCard";
-import {
-	IoIosArrowRoundBack,
-	IoMdPersonAdd,
-	IoMdAddCircleOutline,
-} from "react-icons/io";
+import { IoMdPersonAdd, IoMdAddCircleOutline } from "react-icons/io";
 import IconButton from "../../components/iconButton/IconButton";
 import AddMemberForm from "./AddMemberForm";
 
@@ -52,7 +48,6 @@ function Group() {
 	const { data: categories, error: categoriesError } =
 		useGetCategoriesQuery(groupId);
 
-	const navigate = useNavigate();
 	const location = useLocation();
 
 	function closeModal() {
@@ -69,10 +64,7 @@ function Group() {
 			{memberError && (
 				<ErrorText error="An error occurred while fetching the group members." />
 			)}
-			<button className="back-button" onClick={() => navigate(-1)}>
-				<IoIosArrowRoundBack />
-				Back to Dashboard
-			</button>
+
 			<h2 className={styles.title}>Group: {group?.name}</h2>
 
 			<div className="buttonsContainer">

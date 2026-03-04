@@ -1,13 +1,8 @@
-import {
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { useGetCategoryByIdQuery } from "../../api/categoriesApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
-import { IoIosArrowRoundBack, IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import React, { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import ItemForm from "../../components/itemForm/ItemForm";
@@ -25,7 +20,6 @@ import Pagination from "../../components/pagination/Pagination";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
-	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -43,11 +37,13 @@ function Category() {
 		groupId,
 		categoryId,
 	});
+
 	const { data: itemsResponse } = useGetItemsQuery({
 		groupId: Number(groupId),
 		categoryId: Number(categoryId),
 		page: initialPage,
 	});
+
 	const [
 		deleteItems,
 		{ isLoading: deleteItemsLoading, isError: deleteItemsError },
@@ -89,11 +85,6 @@ function Category() {
 
 	return (
 		<div>
-			<button className="back-button" onClick={() => navigate(-1)}>
-				<IoIosArrowRoundBack />
-				Back to group
-			</button>
-
 			<div className="buttonsContainer">
 				<IconButton
 					icon={<IoMdAddCircleOutline />}
