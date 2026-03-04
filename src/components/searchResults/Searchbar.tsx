@@ -1,45 +1,43 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputField from "../inputField/InputField";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useGetSearchResultsQuery } from "../../api/searchApi";
 import SearchResults from "./SearchResults";
 import styles from "./searchResults.module.scss";
-import { formUrlQuery, removeUrlKeys } from "../../helpers/utils";
+import queryString from "query-string";
 
 function Searchbar() {
-	const [searchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useSearchParams();
 	const initialQuery = searchParams.get("q") || "";
 	const [searchQuery, setSearchQuery] = useState(initialQuery);
 	const [isSearchResultsOpen, setIsSearchResultsOpen] = useState(false);
 	const searchInputRef = useRef<HTMLDivElement | null>(null);
-	const navigate = useNavigate();
 
 	const { data: searchResults } = useGetSearchResultsQuery(searchQuery);
 
 	useEffect(() => {
 		const delayDebounceFubction = setTimeout(() => {
 			if (searchQuery) {
-				const url = formUrlQuery({
-					params: window.location.search,
-					key: "q",
-					value: searchQuery,
+				const parsed = queryString.parse(window.location.search);
+				const newQuery = queryString.stringify({
+					...parsed,
+					q: searchQuery,
 				});
-				navigate(url);
+				const params = new URLSearchParams(newQuery);
+				setSearchParams(params, { replace: true });
 				setIsSearchResultsOpen(true);
 			}
 		}, 300);
 		return () => clearTimeout(delayDebounceFubction);
-	}, [searchQuery, navigate]);
+	}, [searchQuery, setSearchParams]);
 
 	const resetSearch = useCallback(() => {
 		setSearchQuery("");
 		setIsSearchResultsOpen(false);
-		const url = removeUrlKeys({
-			params: window.location.search,
-			keysToRemove: ["q"],
-		});
-		navigate(url);
-	}, [navigate]);
+		if (searchParams.get("q")) {
+			setSearchParams({});
+		}
+	}, [setSearchParams, searchParams]);
 
 	// close the results dropdown when clicking outside of the search input or pressing escape
 	useEffect(() => {
@@ -52,7 +50,6 @@ function Searchbar() {
 
 			if (!clickedInput) {
 				setIsSearchResultsOpen(false);
-				resetSearch();
 			}
 		}
 
@@ -63,7 +60,7 @@ function Searchbar() {
 	useEffect(() => {
 		function handleKeyDown(e: KeyboardEvent) {
 			if (e.key === "Escape") {
-				resetSearch();
+				setIsSearchResultsOpen(false);
 			}
 		}
 

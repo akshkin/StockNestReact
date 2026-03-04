@@ -1,7 +1,6 @@
 import { ZodError } from "zod";
 import type { NotificationItemType } from "../api/notificationsApi";
 import type { NavigateFunction } from "react-router-dom";
-import queryString from "query-string";
 
 export function zodErrorsToObject<T extends object>(error: ZodError<T>) {
 	const errors: Partial<Record<keyof T, string>> = {};
@@ -20,12 +19,12 @@ export function navigateFromNotification(
 ) {
 	const routes = {
 		ItemCreated: () =>
-			navigate(`/groups/${n.groupId}/category/${n.categoryId}#${n.itemId}`, {
+			navigate(`/groups/${n.groupId}/category/${n.categoryId}`, {
 				state: { itemId: n.itemId },
 			}),
 
 		ItemUpdated: () =>
-			navigate(`/groups/${n.groupId}/category/${n.categoryId}#${n.itemId}`, {
+			navigate(`/groups/${n.groupId}/category/${n.categoryId}`, {
 				state: { itemId: n.itemId },
 			}),
 
@@ -33,12 +32,12 @@ export function navigateFromNotification(
 			navigate(`/groups/${n.groupId}/category/${n.categoryId}`),
 
 		CategoryCreated: () =>
-			navigate(`/groups/${n.groupId}#${n.categoryId}`, {
+			navigate(`/groups/${n.groupId}`, {
 				state: { categoryId: n.categoryId },
 			}),
 
 		CategoryUpdated: () =>
-			navigate(`/groups/${n.groupId}#${n.categoryId}`, {
+			navigate(`/groups/${n.groupId}`, {
 				state: { categoryId: n.categoryId },
 			}),
 
@@ -56,45 +55,4 @@ export function navigateFromNotification(
 	};
 
 	routes[n.type]?.();
-}
-
-type URLQueryProps = {
-	params: string;
-	key: string;
-	value: string | null;
-};
-
-export function formUrlQuery({ params, key, value }: URLQueryProps) {
-	const currentUrl = queryString.parse(params);
-	currentUrl[key] = value;
-
-	return queryString.stringifyUrl(
-		{
-			url: window.location.pathname,
-			query: currentUrl,
-		},
-		{
-			skipNull: true,
-		},
-	);
-}
-
-type RemoveUrlProps = {
-	params: string;
-	keysToRemove: string[];
-};
-
-export function removeUrlKeys({ params, keysToRemove }: RemoveUrlProps) {
-	const currentUrl = queryString.parse(params);
-	keysToRemove.forEach((key) => delete currentUrl[key]);
-
-	return queryString.stringifyUrl(
-		{
-			url: window.location.pathname,
-			query: currentUrl,
-		},
-		{
-			skipNull: true,
-		},
-	);
 }

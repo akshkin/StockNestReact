@@ -17,11 +17,11 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route path="/" index element={<h1>Home</h1>} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<SignUp />} />
+					<Route path="login" element={<Login />} />
+					<Route path="register" element={<SignUp />} />
 				</Route>
 				<Route element={<ProtectedRoute />}>
-					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="dashboard" element={<Dashboard />} />
 					<Route path="groups" element={<GroupLayout />}>
 						<Route index element={<Groups />} />
 						<Route path=":groupId" element={<Group />} />
@@ -30,7 +30,7 @@ function App() {
 							element={<Category />}
 						/>
 					</Route>
-					<Route path="/notifications" element={<Notifications />} />
+					<Route path="notifications" element={<Notifications />} />
 					<Route path="*" element={<h1>404 Not Found</h1>} />
 				</Route>
 			</Routes>
