@@ -1,12 +1,21 @@
 import { useState } from "react";
-import type { ZodSchema } from "zod/v3";
+import type { ZodSchema } from "zod";
 
 export function useZodForm<T>(schema: ZodSchema<T>, initialValues: T) {
 	const [data, setData] = useState<T>(initialValues);
 	const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
 
 	function update(field: keyof T, value: string) {
-		const newData = { ...data, [field]: value };
+		let parsedValue;
+		// parse only fields that have a number as value type
+		if (typeof value === "string") {
+			if (typeof initialValues[field] === "number") {
+				parsedValue = value === "" ? "" : Number(value);
+			} else {
+				parsedValue = value;
+			}
+		}
+		const newData = { ...data, [field]: parsedValue };
 		setData(newData);
 
 		const formErrors: Partial<Record<keyof T, string>> = {};
@@ -23,9 +32,11 @@ export function useZodForm<T>(schema: ZodSchema<T>, initialValues: T) {
 		}
 	}
 
-	const isValid =
-		Object.keys(errors).length === 0 &&
-		Object.values(data as object).every((value) => value);
+	// const isValid =
+	// 	Object.keys(errors).length === 0 &&
+	// 	Object.values(data as object).every((value) => value);
+	const isValid = schema.safeParse(data).success;
+	Object.values(data as object).every((value) => value);
 
 	return { data, update, errors, isValid };
 }
