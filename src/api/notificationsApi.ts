@@ -52,7 +52,7 @@ export const notificationsApi = apiSlice.injectEndpoints({
 				url: `notifications/${notificationId}/seen`,
 				method: "POST",
 			}),
-			invalidatesTags: ["Notifications"],
+			invalidatesTags: ["Notifications", "NotificationCount"],
 		}),
 		setAllNotificationsAsSeen: builder.mutation({
 			query: () => ({

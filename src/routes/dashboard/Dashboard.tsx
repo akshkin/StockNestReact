@@ -87,7 +87,7 @@ function Dashboard() {
 				<Loading />
 			) : isError ? (
 				<ErrorText error={"An error occurred"} />
-			) : (
+			) : uniqueGroups?.length > 0 ? (
 				<>
 					<div className={styles.metricGrid}>
 						{Object.values(metricsMap).map((metric) => (
@@ -120,9 +120,20 @@ function Dashboard() {
 						</div>
 					</div>
 
-					<div className={styles.chartWrapper}>
-						<BarChart labels={barChart.labels} datasets={barChart.datasets} />
-					</div>
+					{barChart.datasets && (
+						<div className={styles.chartWrapper}>
+							<BarChart labels={barChart.labels} datasets={barChart.datasets} />
+						</div>
+					)}
+				</>
+			) : (
+				<>
+					<p>
+						Create group(s) with categories and items to get some data displayed
+					</p>
+					<Link className={styles.startHere} to="/groups">
+						Start here
+					</Link>
 				</>
 			)}
 
@@ -142,9 +153,9 @@ function Dashboard() {
 						<Loading />
 					) : notificationsError ? (
 						<ErrorText error={"Failed to load notifications"} />
-					) : notifications ? (
+					) : notifications && notifications?.length > 0 ? (
 						<>
-							{notifications.map((notification) => (
+							{notifications?.map((notification) => (
 								<NotificationCard key={notification.id} {...notification} />
 							))}
 							<Link to="/notifications?tab=all&page=1">
