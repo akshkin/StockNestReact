@@ -1,0 +1,27 @@
+.metricsCard {
+	border-radius: var(--radius-sm);
+	color: white;
+	padding: 0.2em;
+	display: grid;
+	grid-template-areas:
+		"icon title title"
+		"icon value value";
+
+	.icon {
+		grid-area: icon;
+		font-size: 2rem;
+	}
+	.title {
+		margin: 0;
+		grid-area: title;
+		font-size: 0.75rem;
+		font-weight: 400;
+	}
+
+	.value {
+		margin: 0;
+		grid-area: value;
+		font-size: 1.2rem;
+		font-weight: bold;
+	}
+}

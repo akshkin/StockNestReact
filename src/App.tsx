@@ -8,6 +8,8 @@ import ProtectedRoute from "./routes/protectedRoutes/ProtectedRoute";
 import Group from "./routes/group/Group";
 import Category from "./routes/category/Category";
 import GroupLayout from "./routes/group/GroupLayout";
+import Groups from "./routes/group/Groups";
+import Notifications from "./routes/notifications/Notifications";
 
 function App() {
 	return (
@@ -18,15 +20,18 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<SignUp />} />
 				</Route>
-				<Route path="/dashboard" element={<ProtectedRoute />}>
-					<Route index element={<Dashboard />} />
-					<Route element={<GroupLayout />}>
-						<Route path="group/:groupId" element={<Group />} />
+				<Route element={<ProtectedRoute />}>
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="groups" element={<GroupLayout />}>
+						<Route index element={<Groups />} />
+						<Route path=":groupId" element={<Group />} />
 						<Route
-							path="group/:groupId/category/:categoryId"
+							path=":groupId/category/:categoryId"
 							element={<Category />}
 						/>
 					</Route>
+					<Route path="/notifications" element={<Notifications />} />
+					<Route path="*" element={<h1>404 Not Found</h1>} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

@@ -74,4 +74,18 @@
 		padding: 1.5em;
 		flex-direction: row;
 	}
+
+	.notificationsLink {
+		position: relative;
+		.bellIcon {
+			font-size: 1.7rem;
+		}
+		.notificationBadge {
+			color: white;
+			position: absolute;
+			font-size: 0.6rem;
+			left: 37%;
+			top: -21%;
+		}
+	}
 }

@@ -1,4 +1,6 @@
 import { ZodError } from "zod";
+import type { NotificationResponseType } from "../api/notificationsApi";
+import type { NavigateFunction } from "react-router-dom";
 
 export function zodErrorsToObject<T extends object>(error: ZodError<T>) {
 	const errors: Partial<Record<keyof T, string>> = {};
@@ -9,4 +11,48 @@ export function zodErrorsToObject<T extends object>(error: ZodError<T>) {
 	}
 
 	return errors;
+}
+
+export function navigateFromNotification(
+	n: NotificationResponseType,
+	navigate: NavigateFunction,
+) {
+	const routes = {
+		ItemCreated: () =>
+			navigate(`/groups/${n.groupId}/category/${n.categoryId}`, {
+				state: { itemId: n.itemId },
+			}),
+
+		ItemUpdated: () =>
+			navigate(`/groups/${n.groupId}/category/${n.categoryId}`, {
+				state: { itemId: n.itemId },
+			}),
+
+		ItemDeleted: () =>
+			navigate(`/groups/${n.groupId}/category/${n.categoryId}`),
+
+		CategoryCreated: () =>
+			navigate(`/groups/${n.groupId}`, {
+				state: { categoryId: n.categoryId },
+			}),
+
+		CategoryUpdated: () =>
+			navigate(`/groups/${n.groupId}`, {
+				state: { categoryId: n.categoryId },
+			}),
+
+		CategoryDeleted: () => navigate(`/groups/${n.groupId}`),
+
+		UserJoinedGroup: () => navigate(`/groups/${n.groupId}`),
+
+		UserRemovedFromGroup: () => navigate(`/groups/${n.groupId}`),
+
+		GroupUpdated: () =>
+			navigate(`/groups`, {
+				state: { groupId: n.groupId },
+			}),
+		GroupDeleted: () => navigate(`/groups`),
+	};
+
+	routes[n.type]?.();
 }

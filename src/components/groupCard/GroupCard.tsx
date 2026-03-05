@@ -25,9 +25,18 @@ type CardProps = {
 	type: "Group" | "Category";
 	navigateLink: string;
 	groupId?: number; // needed for category
+	highlight?: boolean; // whether the card is the one that was just created or updated, used to highlight the card
 };
 
-function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
+function GroupCard({
+	id,
+	name,
+	role,
+	type,
+	navigateLink,
+	groupId,
+	highlight = false,
+}: CardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [mode, setMode] = useState<Mode>("Edit");
 	const [error, setError] = useState<string | null>(null);
@@ -97,7 +106,10 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 		);
 
 	return (
-		<div className={styles.groupCard}>
+		<div
+			className={styles.groupCard}
+			style={{ backgroundColor: highlight ? "#d4e8f9" : "transparent" }}
+		>
 			<header>
 				<Link to={navigateLink}>
 					<h3>{name}</h3>

@@ -1,0 +1,26 @@
+.paginationContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1em;
+	margin-top: 1em;
+
+	.paginatedButton {
+		background-color: transparent;
+		border: none;
+		font-size: 1.5rem;
+		cursor: pointer;
+		padding: 0.2em;
+		color: var(--color-primary);
+		transition: color 0.2s;
+
+		&:hover {
+			color: var(--color-text);
+		}
+
+		&:disabled {
+			color: var(--color-muted);
+			cursor: not-allowed;
+		}
+	}
+}
