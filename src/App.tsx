@@ -10,13 +10,14 @@ import Category from "./routes/category/Category";
 import GroupLayout from "./routes/group/GroupLayout";
 import Groups from "./routes/group/Groups";
 import Notifications from "./routes/notifications/Notifications";
+import Home from "./routes/home/home";
 
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Layout />}>
-					<Route path="/" index element={<h1>Home</h1>} />
+					<Route path="/" index element={<Home />} />
 					<Route path="login" element={<Login />} />
 					<Route path="register" element={<SignUp />} />
 				</Route>
