@@ -6,6 +6,8 @@ import Dashboard from "./routes/dashboard/Dashboard";
 import SignUp from "./routes/auth/SignUp";
 import ProtectedRoute from "./routes/protectedRoutes/ProtectedRoute";
 import Group from "./routes/group/Group";
+import Category from "./routes/category/Category";
+import GroupLayout from "./routes/group/GroupLayout";
 
 function App() {
 	return (
@@ -18,7 +20,13 @@ function App() {
 				</Route>
 				<Route path="/dashboard" element={<ProtectedRoute />}>
 					<Route index element={<Dashboard />} />
-					<Route path="group/:id" element={<Group />} />
+					<Route element={<GroupLayout />}>
+						<Route path="group/:groupId" element={<Group />} />
+						<Route
+							path="group/:groupId/category/:categoryId"
+							element={<Category />}
+						/>
+					</Route>
 				</Route>
 			</Routes>
 		</BrowserRouter>

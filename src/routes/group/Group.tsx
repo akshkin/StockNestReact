@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	useGetGroupByIdQuery,
 	useGetGroupMembersQuery,
@@ -10,27 +10,42 @@ import Loading from "../../components/loading/Loading";
 import Modal from "../../components/modal/Modal";
 import { useState } from "react";
 import InputField from "../../components/inputField/InputField";
-import { inviteMemberSchema } from "../../schemas";
+import { groupSchema, inviteMemberSchema } from "../../schemas";
 import { zodErrorsToObject } from "../../helpers/utils";
 import type z from "zod";
 import styles from "./group.module.scss";
 import UserInfoCard from "../../components/userInfoCard/UserInfoCard";
+import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
+import {
+	useCreateCategoryMutation,
+	useGetCategoriesQuery,
+	useUpdateCategoryMutation,
+	type Category,
+} from "../../api/categoriesApi";
+import GroupCard from "../../components/groupCard/GroupCard";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
+type categorySchema = z.infer<typeof groupSchema>;
 
-const defaultData: inviteMemberSchema = {
+const defaultInviterData: inviteMemberSchema = {
 	email: "",
 	role: "Member",
 };
+
+const defaultCategoryData: categorySchema = {
+	name: "",
+};
 function Group() {
-	const { id } = useParams();
+	const { groupId } = useParams();
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [formData, setFormData] = useState(defaultData);
+	const [formData, setFormData] = useState(defaultInviterData);
 	const [errors, setErrors] = useState<
 		Partial<Record<keyof inviteMemberSchema, string>>
 	>({});
+	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
-	const { data: group, isLoading, error } = useGetGroupByIdQuery(id);
+	const { data: group, isLoading, error } = useGetGroupByIdQuery(groupId);
 	const [
 		inviteMemberToGroup,
 		{ error: inviteError, isLoading: isInviting, reset },
@@ -41,7 +56,14 @@ function Group() {
 		isLoading: membersLoading,
 		error: memberError,
 		refetch,
-	} = useGetGroupMembersQuery(id);
+	} = useGetGroupMembersQuery(groupId);
+
+	const [createCategory] = useCreateCategoryMutation();
+	const [updateCategory] = useUpdateCategoryMutation();
+	const { data: categories, error: categoriesError } =
+		useGetCategoriesQuery(groupId);
+
+	const navigate = useNavigate();
 
 	function handleChange(
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -67,16 +89,16 @@ function Group() {
 		e.preventDefault();
 
 		await inviteMemberToGroup({
-			groupId: Number(id),
+			groupId: Number(groupId),
 			inviterData: { ...formData },
 		});
 		refetch();
-		setFormData(defaultData);
+		setFormData(defaultInviterData);
 	}
 
 	function closeModal() {
 		setIsModalOpen(false);
-		setFormData(defaultData);
+		setFormData(defaultInviterData);
 	}
 
 	const isFormValid =
@@ -133,12 +155,41 @@ function Group() {
 			{memberError && (
 				<ErrorText error="An error occurred while fetching the group members." />
 			)}
+			<button className="back-button" onClick={() => navigate(-1)}>
+				<IoIosArrowRoundBack />
+				Back to Dashboard
+			</button>
 			<h2 className={styles.title}>Group: {group?.name}</h2>
-			{group.role === "Owner" && (
+			{group?.role === "Owner" && (
 				<button onClick={() => setIsModalOpen(true)}>
 					Add a person to group
 				</button>
 			)}
+			<button
+				style={{ backgroundColor: "black" }}
+				onClick={() => setIsCategoryModalOpen(true)}
+			>
+				Create a category
+			</button>
+
+			{isCategoryModalOpen && (
+				<Modal
+					title="Add a category"
+					closeModal={() => setIsCategoryModalOpen(false)}
+					children={
+						<GroupCategoryAddEditForm
+							initialValue={defaultCategoryData}
+							label="Category"
+							groupId={Number(groupId)}
+							schema={groupSchema}
+							onCreate={createCategory}
+							onUpdate={updateCategory}
+							closeModal={() => setIsCategoryModalOpen(false)}
+						/>
+					}
+				/>
+			)}
+
 			{isModalOpen && (
 				<Modal
 					title="Add a person to group"
@@ -152,11 +203,31 @@ function Group() {
 				groupMembersResponse?.groupMembers.map((groupMember: GroupMember) => (
 					<UserInfoCard
 						key={groupMember.email}
-						groupId={Number(id)}
+						groupId={Number(groupId)}
 						user={groupMember}
 						myRole={groupMembersResponse.myRole}
 					/>
 				))}
+
+			<h3>Categories</h3>
+			{categories?.length ? (
+				categories.map((category: Category) => (
+					<GroupCard
+						key={category.categoryId}
+						id={category.categoryId}
+						name={category.name}
+						type="Category"
+						role={group.role}
+						groupId={Number(groupId)}
+						navigateLink={`/dashboard/group/${groupId}/category/${category.categoryId}`}
+					/>
+				))
+			) : (
+				<p>No categories yet</p>
+			)}
+			{categoriesError && (
+				<ErrorText error={"An error occured while fetching categories"} />
+			)}
 		</>
 	);
 }

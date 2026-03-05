@@ -1,11 +1,21 @@
 import { useLocation } from "react-router-dom";
-import { useGetGroupsQuery, type Group } from "../../api/groupsApi";
+import {
+	useCreateNewGroupMutation,
+	useGetGroupsQuery,
+	useUpdateGroupMutation,
+	type Group,
+} from "../../api/groupsApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import GroupCard from "../../components/groupCard/GroupCard";
 import Loading from "../../components/loading/Loading";
 import { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
+import { groupSchema } from "../../schemas";
+
+const defaultGroupData = {
+	name: "",
+};
 
 function Dashboard() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +29,8 @@ function Dashboard() {
 	const location = useLocation();
 	const message = location.state?.message;
 	const { data: groups, isLoading, error, refetch } = useGetGroupsQuery({});
+	const [createNewGroup] = useCreateNewGroupMutation();
+	const [updateGroup] = useUpdateGroupMutation();
 
 	function closeModal() {
 		setIsModalOpen(false);
@@ -33,7 +45,7 @@ function Dashboard() {
 
 			{isLoading && <Loading />}
 
-			{error && <ErrorText error={error.toString()} />}
+			{error && <ErrorText error={"An error occuring while fetching groups"} />}
 
 			<button onClick={() => setIsModalOpen(true)}>Create a new group</button>
 			{isModalOpen && (
@@ -41,14 +53,28 @@ function Dashboard() {
 					title="Create a new group"
 					closeModal={closeModal}
 					children={
-						<GroupCategoryAddEditForm name="Group" closeModal={closeModal} />
+						<GroupCategoryAddEditForm
+							label="Group"
+							initialValue={defaultGroupData}
+							schema={groupSchema}
+							onCreate={createNewGroup}
+							onUpdate={updateGroup}
+							closeModal={closeModal}
+						/>
 					}
 				/>
 			)}
 
 			{groups && groups.length > 0 ? (
 				groups.map((group: Group) => (
-					<GroupCard key={group.groupId} group={group} />
+					<GroupCard
+						key={group.groupId}
+						id={group.groupId}
+						type="Group"
+						name={group.name}
+						role={group.role}
+						navigateLink={`/dashboard/group/${group.groupId}`}
+					/>
 				))
 			) : (
 				<p>No groups available</p>

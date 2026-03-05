@@ -1,18 +1,40 @@
 import { useState } from "react";
-import { useDeleteGroupMutation, type Group } from "../../api/groupsApi";
+import {
+	useDeleteGroupMutation,
+	useUpdateGroupMutation,
+} from "../../api/groupsApi";
 import Modal from "../modal/Modal";
 import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import GroupCategoryAddEditForm from "../groupCategoryForm/GroupCategoryAddEditForm";
+import { groupSchema } from "../../schemas";
+import {
+	useDeleteCategoryMutation,
+	useUpdateCategoryMutation,
+} from "../../api/categoriesApi";
 
-type Mode = "edit" | "delete";
+type Mode = "Edit" | "Delete";
 
-function GroupCard({ group }: { group: Group }) {
+type CardProps = {
+	id: number;
+	name: string;
+	role?: string;
+	type: "Group" | "Category";
+	navigateLink: string;
+	groupId?: number; // needed for category
+};
+
+function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [mode, setMode] = useState<Mode>("edit");
+	const [mode, setMode] = useState<Mode>("Edit");
 
 	const [deleteGroup] = useDeleteGroupMutation();
+	const [updateGroup] = useUpdateGroupMutation();
+	const [updateCategory] = useUpdateCategoryMutation();
+	const [deleteCategory] = useDeleteCategoryMutation();
+
+	const isGroup = type === "Group";
 
 	function openModal(mode: Mode) {
 		setMode(mode);
@@ -20,7 +42,11 @@ function GroupCard({ group }: { group: Group }) {
 	}
 
 	async function handleDelete() {
-		await deleteGroup({ id: group.groupId });
+		if (isGroup) {
+			await deleteGroup({ id: id });
+		} else {
+			await deleteCategory({ groupId, categoryId: id });
+		}
 		setIsModalOpen(false);
 	}
 
@@ -37,46 +63,52 @@ function GroupCard({ group }: { group: Group }) {
 	);
 
 	const modalTitle =
-		mode === "delete"
-			? "Are you sure you want to delete this group?"
-			: "Edit Group Name";
+		mode === "Delete"
+			? `Are you sure you want to delete this ${type}?`
+			: `Edit ${type} Name`;
 
 	const childContent =
-		mode === "delete" ? (
+		mode === "Delete" ? (
 			deleteModalContent()
 		) : (
+			// edit group or category
 			<GroupCategoryAddEditForm
-				id={group.groupId}
-				name="Group name"
+				groupId={isGroup ? id : groupId}
+				categoryId={isGroup ? undefined : id}
+				label={type}
+				schema={groupSchema}
+				onUpdate={isGroup ? updateGroup : updateCategory}
 				closeModal={() => setIsModalOpen(false)}
-				value={group.name}
+				initialValue={{ name: name }}
+				mode="Edit"
 			/>
 		);
 
 	return (
 		<div className={styles.groupCard}>
 			<header>
-				<Link to={`/dashboard/group/${group.groupId}`}>
-					<h3>{group.name}</h3>
+				<Link to={navigateLink}>
+					<h3>{name}</h3>
 				</Link>
-				<span className={styles.role}>{group.role}</span>
+				{isGroup && <span className={styles.role}>{role}</span>}
 			</header>
-			{group.role === "Owner" || group.role === "Co-Owner" ? (
+			{(role && role === "Owner") || role === "Co-Owner" ? (
 				<div className={styles.buttonsContainer}>
-					<button onClick={() => openModal("edit")}>
+					<button onClick={() => openModal("Edit")}>
 						<RiEditLine /> Edit
 					</button>
 					<button
 						className={styles.deleteButton}
-						onClick={() => openModal("delete")}
+						onClick={() => openModal("Delete")}
 					>
 						<RiDeleteBin6Line />
 						Delete
 					</button>
 				</div>
 			) : (
-				group.role === "Member" && (
-					<button onClick={() => openModal("edit")}>
+				role &&
+				role === "Member" && (
+					<button onClick={() => openModal("Edit")}>
 						<RiEditLine /> Edit
 					</button>
 				)

@@ -23,20 +23,20 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 			query: (id) => `/groups/${id}`,
 		}),
 		createNewGroup: builder.mutation({
-			query: (group) => ({
+			query: ({ formData }) => ({
 				url: "/groups/create",
 				method: "POST",
 				body: {
-					...group,
+					...formData,
 				},
 			}),
 		}),
 		updateGroup: builder.mutation({
-			query: ({ id, group }) => ({
-				url: `/groups/${id}/edit`,
+			query: ({ groupId, formData }) => ({
+				url: `/groups/${groupId}/edit`,
 				method: "POST",
 				body: {
-					...group,
+					...formData,
 				},
 			}),
 		}),
