@@ -94,7 +94,7 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 	}
 
 	return (
-		<form>
+		<form className="group-category-item-form">
 			<InputField
 				label={`${label} name`}
 				name="name"

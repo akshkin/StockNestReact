@@ -1,3 +1,4 @@
+import { logOut, setCredentials } from "../features/authSlice";
 import { apiSlice } from "./apiSlice";
 
 export const authApi = apiSlice.injectEndpoints({
@@ -38,12 +39,32 @@ export const authApi = apiSlice.injectEndpoints({
 				url: "/account/logout",
 				method: "POST",
 			}),
+			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+				try {
+					const { data } = await queryFulfilled;
+					console.log(data);
+					dispatch(logOut());
+					setTimeout(() => {
+						dispatch(apiSlice.util.resetApiState());
+					}, 1000);
+				} catch (err) {
+					console.log(err);
+				}
+			},
 		}),
 		getMe: builder.query({
 			query: () => ({
 				url: "/account/me",
 				method: "GET",
 			}),
+			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+				try {
+					const { data } = await queryFulfilled;
+					dispatch(setCredentials(data.name));
+				} catch (err) {
+					console.log(err);
+				}
+			},
 		}),
 	}),
 });

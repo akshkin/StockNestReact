@@ -76,7 +76,7 @@ function ItemForm({
 	}
 
 	return (
-		<form>
+		<form className="group-category-item-form">
 			<InputField
 				label="Item name"
 				name="name"

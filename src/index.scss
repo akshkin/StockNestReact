@@ -51,7 +51,9 @@ button {
 button.back-button {
 	background-color: transparent;
 	color: var(--color-primary);
-	font-size: 1rem;
+	font-size: 0.875rem;
+	padding: 0;
+	margin-bottom: 0.5em;
 	display: flex;
 	align-items: end;
 	gap: 0.2em;
@@ -105,6 +107,15 @@ button.invertedButton {
 	font-size: 1.5em;
 	color: var(--color-primary);
 	animation: spin 1s linear infinite;
+}
+
+.group-category-item-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6em;
+	width: 100%;
+	max-width: 400px;
+	padding: 0.5em;
 }
 
 @keyframes spin {

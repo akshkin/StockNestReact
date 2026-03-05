@@ -3,7 +3,7 @@ import styles from "./auth.module.scss";
 import { registerSchema } from "../../schemas";
 import { z } from "zod";
 import { useRegisterMutation } from "../../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import ErrorText from "../../components/errorText/ErrorText";
 import { zodErrorsToObject } from "../../helpers/utils";
@@ -147,6 +147,7 @@ function Auth() {
 					/>
 				)}
 			</form>
+			<Link to="/login">Already a member? Login</Link>
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import type { NotificationResponseType } from "../api/notificationsApi";
+import type { NotificationItemType } from "../api/notificationsApi";
 import type { NavigateFunction } from "react-router-dom";
 
 export function zodErrorsToObject<T extends object>(error: ZodError<T>) {
@@ -14,7 +14,7 @@ export function zodErrorsToObject<T extends object>(error: ZodError<T>) {
 }
 
 export function navigateFromNotification(
-	n: NotificationResponseType,
+	n: NotificationItemType,
 	navigate: NavigateFunction,
 ) {
 	const routes = {

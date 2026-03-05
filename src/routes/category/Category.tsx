@@ -1,13 +1,8 @@
-import {
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { useGetCategoryByIdQuery } from "../../api/categoriesApi";
 import ErrorText from "../../components/errorText/ErrorText";
 import Loading from "../../components/loading/Loading";
-import { IoIosArrowRoundBack, IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import React, { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import ItemForm from "../../components/itemForm/ItemForm";
@@ -25,7 +20,6 @@ import Pagination from "../../components/pagination/Pagination";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
-	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedItems, setSelectedItems] = useState<number[]>([]);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -38,16 +32,24 @@ function Category() {
 	const {
 		data: category,
 		isLoading: categoryLoading,
-		error,
+		error: categoryError,
+		isFetching: categoryFetching,
 	} = useGetCategoryByIdQuery({
 		groupId,
 		categoryId,
 	});
-	const { data: itemsResponse } = useGetItemsQuery({
+
+	const {
+		data: itemsResponse,
+		isLoading: itemsLoading,
+		isFetching: itemsFetching,
+		isError: itemsError,
+	} = useGetItemsQuery({
 		groupId: Number(groupId),
 		categoryId: Number(categoryId),
 		page: initialPage,
 	});
+
 	const [
 		deleteItems,
 		{ isLoading: deleteItemsLoading, isError: deleteItemsError },
@@ -85,36 +87,38 @@ function Category() {
 
 	const items = itemsResponse?.items || [];
 
-	if (categoryLoading) return <Loading />;
-
 	return (
 		<div>
-			<button className="back-button" onClick={() => navigate(-1)}>
-				<IoIosArrowRoundBack />
-				Back to group
-			</button>
-
-			<div className="buttonsContainer">
-				<IconButton
-					icon={<IoMdAddCircleOutline />}
-					title="Add an item"
-					onClick={() => setIsModalOpen(true)}
-				/>
-
-				{selectedItems?.length > 0 && (
-					<IconButton
-						icon={<RiDeleteBin6Line />}
-						title="Delete selected items"
-						variant="danger"
-						onClick={() => setIsDeleteModalOpen(true)}
-					/>
-				)}
-			</div>
-			<h2>Category {category?.name}</h2>
-			{error && (
+			{categoryLoading || categoryFetching ? (
+				<Loading />
+			) : categoryError ? (
 				<ErrorText error={"An error occured while fetching category"} />
+			) : (
+				<div className="buttonsContainer">
+					<IconButton
+						icon={<IoMdAddCircleOutline />}
+						title="Add an item"
+						onClick={() => setIsModalOpen(true)}
+					/>
+
+					{selectedItems?.length > 0 && (
+						<IconButton
+							icon={<RiDeleteBin6Line />}
+							title="Delete selected items"
+							variant="danger"
+							onClick={() => setIsDeleteModalOpen(true)}
+						/>
+					)}
+				</div>
 			)}
-			{items && items?.length > 0 ? (
+
+			<h2>Category {category?.name}</h2>
+
+			{itemsLoading || itemsFetching ? (
+				<Loading />
+			) : itemsError ? (
+				<ErrorText error="An error occured while loading items" />
+			) : items && items?.length > 0 ? (
 				<>
 					<table className={styles.table}>
 						<thead>
@@ -159,6 +163,7 @@ function Category() {
 			) : (
 				<p>No items yet</p>
 			)}
+
 			{isModalOpen && (
 				<Modal
 					title="Add an item"

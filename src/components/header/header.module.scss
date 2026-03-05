@@ -2,18 +2,19 @@
 	background: white;
 	padding: 0.5em;
 	color: var(--color-primary);
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
 	width: 100%;
-	overflow-x: hidden;
 	box-sizing: border-box;
 
 	.logo {
-		height: 50px;
+		height: 30px;
 	}
 
 	nav {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		ul {
 			list-style: none;
 			display: flex;
@@ -57,17 +58,17 @@
 				}
 			}
 		}
-	}
-	// align logo and nav vertically on smaller screens
-	@media (max-width: 500px) {
-		height: 30px;
-		flex-direction: column;
+		// align logo and nav vertically on smaller screens
+		@media (max-width: 500px) {
+			flex-direction: column;
+		}
 	}
 }
 
 .dashheader {
 	width: 100%;
 	max-width: 100%;
+	flex-wrap: wrap;
 	z-index: 5;
 
 	@media (max-width: 500px) {
@@ -75,17 +76,19 @@
 		flex-direction: row;
 	}
 
-	.notificationsLink {
-		position: relative;
-		.bellIcon {
-			font-size: 1.7rem;
+	.searchbarMobile {
+		display: block;
+		width: 100%;
+		@media (min-width: 500px) {
+			display: none;
 		}
-		.notificationBadge {
-			color: white;
-			position: absolute;
-			font-size: 0.6rem;
-			left: 37%;
-			top: -21%;
+	}
+	.searchbarDesktop {
+		flex: 1;
+		max-width: 400px;
+		padding: 0.5em;
+		@media (max-width: 500px) {
+			display: none;
 		}
 	}
 }

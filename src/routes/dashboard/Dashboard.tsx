@@ -12,8 +12,12 @@ import DoughnutChart from "../../components/charts/DoughnutChart";
 import useDashboardCharts from "../../hooks/useDashboardCharts";
 import { useGetLatestNotificationsQuery } from "../../api/notificationsApi";
 import NotificationCard from "../../components/notification/NotificationCard";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../features/authSlice";
 
 function Dashboard() {
+	const userName = useSelector(selectCurrentUser);
+
 	const { data: stats, isLoading, isError, isFetching } = useGetStatsQuery({});
 	const {
 		data: notifications,
@@ -76,45 +80,52 @@ function Dashboard() {
 	return (
 		<section>
 			<p>Today is {today}</p>
-			<h1 style={{ fontSize: "2em" }}>Welcome!</h1>
+			<h1 style={{ fontSize: "2em" }}>Welcome, {userName}!</h1>
 			{message && <p>{message}</p>}
 
-			{(isLoading || isFetching) && <Loading />}
+			{isLoading || isFetching ? (
+				<Loading />
+			) : isError ? (
+				<ErrorText error={"An error occurred"} />
+			) : (
+				<>
+					<div className={styles.metricGrid}>
+						{Object.values(metricsMap).map((metric) => (
+							<MetricsCard
+								key={metric.title}
+								title={metric.title}
+								value={metric.value}
+								icon={metric.icon}
+								backgroundColor={metric.backgroundColor}
+							/>
+						))}
+					</div>
 
-			<div className={styles.metricGrid}>
-				{Object.values(metricsMap).map((metric) => (
-					<MetricsCard
-						key={metric.title}
-						title={metric.title}
-						value={metric.value}
-						icon={metric.icon}
-						backgroundColor={metric.backgroundColor}
-					/>
-				))}
-			</div>
+					<div className={styles.groupTab}>
+						<h4>Groups</h4>
+						<div>
+							{uniqueGroups.map((g) => (
+								<span
+									className={styles.tab}
+									key={g.groupId}
+									onClick={() => setSelectedGroupId(g.groupId)}
+									style={{
+										backgroundColor:
+											selectedGroupId === g.groupId ? "#FE9F43" : "",
+									}}
+								>
+									{g.groupName}
+								</span>
+							))}
+						</div>
+					</div>
 
-			<div className={styles.groupTab}>
-				<h4>Groups</h4>
-				<div>
-					{uniqueGroups.map((g) => (
-						<span
-							className={styles.tab}
-							key={g.groupId}
-							onClick={() => setSelectedGroupId(g.groupId)}
-							style={{
-								backgroundColor: selectedGroupId === g.groupId ? "#FE9F43" : "",
-							}}
-						>
-							{g.groupName}
-						</span>
-					))}
-				</div>
-			</div>
-			{!isLoading && (
-				<div className={styles.chartWrapper}>
-					<BarChart labels={barChart.labels} datasets={barChart.datasets} />
-				</div>
+					<div className={styles.chartWrapper}>
+						<BarChart labels={barChart.labels} datasets={barChart.datasets} />
+					</div>
+				</>
 			)}
+
 			<div className={styles.chartWithNotification}>
 				{!isLoading && (
 					<div className={styles.doughnutWrapper}>
@@ -124,21 +135,27 @@ function Dashboard() {
 						/>
 					</div>
 				)}
+
 				<div className={styles.notifications}>
 					<h3 className={styles.notificationsTitle}>Recent Notifications</h3>
-					{notificationsLoading || notificationsFetching ? <Loading /> : null}
-					{notificationsError ? (
+					{notificationsLoading || notificationsFetching ? (
+						<Loading />
+					) : notificationsError ? (
 						<ErrorText error={"Failed to load notifications"} />
-					) : null}
-					{notifications &&
-						notifications.map((notification) => (
-							<NotificationCard key={notification.id} {...notification} />
-						))}
-					<Link to="/notifications?tab=all&page=1">Read all notifications</Link>
+					) : notifications ? (
+						<>
+							{notifications.map((notification) => (
+								<NotificationCard key={notification.id} {...notification} />
+							))}
+							<Link to="/notifications?tab=all&page=1">
+								Read all notifications
+							</Link>
+						</>
+					) : (
+						<p>No notifications yet</p>
+					)}
 				</div>
 			</div>
-
-			{isError && <ErrorText error={"An error occurred"} />}
 		</section>
 	);
 }

@@ -6,7 +6,7 @@ import InputField from "../../components/inputField/InputField";
 import styles from "./auth.module.scss";
 import { zodErrorsToObject } from "../../helpers/utils";
 import ErrorText from "../../components/errorText/ErrorText";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 type loginScehma = z.infer<typeof loginSchema>;
 
@@ -104,6 +104,7 @@ function Login() {
 					/>
 				)}
 			</form>
+			<Link to="/register">Not a member? Register here</Link>
 		</div>
 	);
 }

@@ -1,34 +1,50 @@
-import React from "react";
 import styles from "./sidebar.module.scss";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 import { HiUserGroup } from "react-icons/hi2";
-import { MdCategory } from "react-icons/md";
+import NotificationIcon from "../notification/NotificationIcon";
 
 function Sidebar() {
 	return (
-		<section className={styles.sidebar}>
-			<ul className={styles.dashlinks}>
-				<li>
-					<Link to="/dashboard" className={styles.dashlink}>
-						<RxDashboard className={styles.icon} />
-						<span className={styles.text}>Dashboard</span>
-					</Link>
-				</li>
-				<li>
-					<Link to="/groups" className={styles.dashlink}>
-						<HiUserGroup className={styles.icon} />
-						<span className={styles.text}>Groups</span>
-					</Link>
-				</li>
-				<li>
-					<Link to="/categories" className={styles.dashlink}>
-						<MdCategory className={styles.icon} />
-						<span className={styles.text}>Categories</span>
-					</Link>
-				</li>
-			</ul>
-		</section>
+		<aside className={styles.sidebar}>
+			<nav>
+				<ul className={styles.dashlinks}>
+					<li>
+						<NavLink
+							to="/dashboard"
+							className={({ isActive }) =>
+								`${styles.dashlink} ${isActive ? styles.active : ""}`
+							}
+						>
+							<RxDashboard className={styles.icon} />
+							<span className={styles.text}>Dashboard</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to="/groups"
+							className={({ isActive }) =>
+								`${styles.dashlink} ${isActive ? styles.active : ""}`
+							}
+						>
+							<HiUserGroup className={styles.icon} />
+							<span className={styles.text}>Groups</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to="/notifications?page=1"
+							className={({ isActive }) =>
+								`${styles.dashlink} ${isActive ? styles.active : ""}`
+							}
+						>
+							<NotificationIcon />
+							<span className={styles.text}>Notifications</span>
+						</NavLink>
+					</li>
+				</ul>
+			</nav>
+		</aside>
 	);
 }
 
