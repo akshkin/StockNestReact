@@ -2,9 +2,6 @@
 	background: white;
 	padding: 0.5em;
 	color: var(--color-primary);
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
 	width: 100%;
 	box-sizing: border-box;
 
@@ -13,6 +10,11 @@
 	}
 
 	nav {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		ul {
 			list-style: none;
 			display: flex;
@@ -56,10 +58,10 @@
 				}
 			}
 		}
-	}
-	// align logo and nav vertically on smaller screens
-	@media (max-width: 500px) {
-		flex-direction: column;
+		// align logo and nav vertically on smaller screens
+		@media (max-width: 500px) {
+			flex-direction: column;
+		}
 	}
 }
 
