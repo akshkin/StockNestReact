@@ -1,0 +1,49 @@
+@use "./styles/_variables.scss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+@media (prefers-color-scheme: dark) {
+   :root {
+    --color-bg: #121212;
+    --color-text: #e0e0e0;
+    --color-border: #333;
+  }
+
+}
+
+@media (min-width: 500px) {
+  html {
+    font-size: 120%;
+  }
+}
