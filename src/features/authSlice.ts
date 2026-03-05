@@ -3,14 +3,14 @@ import type { RootState } from "../store";
 
 const authSlice = createSlice({
 	name: "auth",
-	initialState: { token: null },
+	initialState: { name: null },
 	reducers: {
 		setCredentials: (state, action) => {
-			const token = action.payload;
-			state.token = token;
+			const user = action.payload;
+			state.name = user;
 		},
 		logOut: (state) => {
-			state.token = null;
+			state.name = null;
 		},
 	},
 });
@@ -19,4 +19,4 @@ export const { setCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
 
-export const selectCurrentToken = (state: RootState) => state.auth.token;
+export const selectCurrentUser = (state: RootState) => state.auth.name;
