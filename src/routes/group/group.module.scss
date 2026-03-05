@@ -1,0 +1,19 @@
+.title {
+	margin-top: 0;
+}
+select {
+	display: block;
+	margin: 0.5em auto;
+	width: 100%;
+	max-width: 400px;
+	font-size: 0.75rem;
+	padding: 0.5em;
+	border-radius: var(--radius-sm);
+}
+
+.buttonsContainer {
+	display: flex;
+	gap: 0.5em;
+	margin-top: 0.5em;
+	margin-left: 5px;
+}

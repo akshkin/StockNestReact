@@ -1,0 +1,32 @@
+.groupCard {
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	padding: 16px;
+	margin: 16px;
+	max-width: 400px;
+
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+
+		h3 {
+			margin-top: 0;
+		}
+	}
+
+	.role {
+		color: var(--color-muted);
+		font-size: 0.75rem;
+	}
+}
+
+.buttonsContainer {
+	display: flex;
+	gap: 1em;
+
+	.deleteButton {
+		background-color: rgb(223, 60, 60);
+	}
+}

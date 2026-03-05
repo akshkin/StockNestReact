@@ -1,49 +1,87 @@
 @use "./styles/_variables.scss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
 
-  color-scheme: light dark;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+	color-scheme: light dark;
+	color: var(--color-text);
+	background-color: var(--color-bg);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	box-sizing: border-box;
 }
 
 a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 a:hover {
-  color: var(--color-primary);
+	color: var(--color-primary);
 }
 
 body {
-  margin: 0;
+	margin: 0;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+	font-size: 3.2em;
+	line-height: 1.1;
 }
 
+button {
+	cursor: pointer;
+	border: none;
+	font-family: inherit;
+	background-color: var(--color-primary);
+	padding: 0.5em 1.2em;
+	color: white;
+	border-radius: var(--radius-sm);
+
+	&:disabled {
+		background-color: var(--color-muted);
+		cursor: not-allowed;
+	}
+}
+
+button.invertedButton {
+	background-color: white;
+	border: 1px solid var(--color-primary);
+	color: var(--color-primary);
+}
+
+.loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5em;
+	color: var(--color-primary);
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
 
 @media (prefers-color-scheme: dark) {
-   :root {
-    --color-bg: #121212;
-    --color-text: #e0e0e0;
-    --color-border: #333;
-  }
-
+	:root {
+		--color-bg: #121212;
+		--color-text: #e0e0e0;
+		--color-border: #333;
+	}
 }
 
 @media (min-width: 500px) {
-  html {
-    font-size: 120%;
-  }
+	html {
+		font-size: 120%;
+	}
 }

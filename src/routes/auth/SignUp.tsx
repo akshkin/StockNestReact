@@ -54,6 +54,7 @@ function Auth() {
 		try {
 			const response = await register(data);
 			if (response.data?.user) {
+				await new Promise((resolve) => setTimeout(resolve, 200)); // Add a delay of 0.2 seconds
 				navigate("/dashboard", {
 					replace: true,
 					state: {
