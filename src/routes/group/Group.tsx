@@ -35,18 +35,29 @@ function Group() {
 
 	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
-	const { data: group, isLoading, error } = useGetGroupByIdQuery(groupId);
+	const {
+		data: group,
+		isLoading,
+		error,
+		isFetching,
+	} = useGetGroupByIdQuery(groupId);
 
 	const {
 		data: groupMembersResponse,
 		isLoading: membersLoading,
 		error: memberError,
+		isFetching: memberFetching,
 	} = useGetGroupMembersQuery(groupId);
 
 	const [createCategory] = useCreateCategoryMutation();
 	const [updateCategory] = useUpdateCategoryMutation();
-	const { data: categories, error: categoriesError } =
-		useGetCategoriesQuery(groupId);
+
+	const {
+		data: categories,
+		isLoading: categoriesLoading,
+		error: categoriesError,
+		isFetching: categoriesFetching,
+	} = useGetCategoriesQuery(groupId);
 
 	const location = useLocation();
 
@@ -54,34 +65,31 @@ function Group() {
 		setIsModalOpen(false);
 	}
 
-	if (isLoading) return <Loading />;
-
 	return (
 		<>
-			{error && (
-				<ErrorText error="An error occurred while fetching the group details." />
-			)}
-			{memberError && (
-				<ErrorText error="An error occurred while fetching the group members." />
-			)}
-
 			<h2 className={styles.title}>Group: {group?.name}</h2>
 
-			<div className="buttonsContainer">
-				{(group?.role === "Owner" || group?.role === "Co-Owner") && (
+			{isLoading || isFetching ? (
+				<Loading />
+			) : error ? (
+				<ErrorText error="An error occurred while fetching the group details." />
+			) : (
+				<div className="buttonsContainer">
+					{(group?.role === "Owner" || group?.role === "Co-Owner") && (
+						<IconButton
+							icon={<IoMdPersonAdd />}
+							title="Add a person to a group"
+							onClick={() => setIsModalOpen(true)}
+						/>
+					)}
 					<IconButton
-						icon={<IoMdPersonAdd />}
-						title="Add a person to a group"
-						onClick={() => setIsModalOpen(true)}
+						icon={<IoMdAddCircleOutline />}
+						title="Create a category"
+						onClick={() => setIsCategoryModalOpen(true)}
+						variant="dark"
 					/>
-				)}
-				<IconButton
-					icon={<IoMdAddCircleOutline />}
-					title="Create a category"
-					onClick={() => setIsCategoryModalOpen(true)}
-					variant="dark"
-				/>
-			</div>
+				</div>
+			)}
 
 			{isCategoryModalOpen && (
 				<Modal
@@ -110,9 +118,14 @@ function Group() {
 					}
 				/>
 			)}
+
 			<h3>Members</h3>
-			{membersLoading && <Loading />}
-			{groupMembersResponse?.groupMembers.length &&
+			{membersLoading || memberFetching ? (
+				<Loading />
+			) : memberError ? (
+				<ErrorText error="An error occurred while fetching the group members." />
+			) : (
+				groupMembersResponse?.groupMembers.length &&
 				groupMembersResponse?.groupMembers.map((groupMember: GroupMember) => (
 					<UserInfoCard
 						key={groupMember.email}
@@ -120,17 +133,22 @@ function Group() {
 						user={groupMember}
 						myRole={groupMembersResponse.myRole}
 					/>
-				))}
+				))
+			)}
 
 			<h3>Categories</h3>
-			{categories?.length ? (
+			{categoriesLoading || categoriesFetching ? (
+				<Loading />
+			) : categoriesError ? (
+				<ErrorText error={"An error occured while fetching categories"} />
+			) : categories?.length ? (
 				categories.map((category: Category) => (
 					<GroupCard
 						key={category.categoryId}
 						id={category.categoryId}
 						name={category.name}
 						type="Category"
-						role={group.role}
+						role={group?.role}
 						groupId={Number(groupId)}
 						navigateLink={`/groups/${groupId}/category/${category.categoryId}`}
 						highlight={location.state?.categoryId === category.categoryId}
@@ -138,9 +156,6 @@ function Group() {
 				))
 			) : (
 				<p>No categories yet</p>
-			)}
-			{categoriesError && (
-				<ErrorText error={"An error occured while fetching categories"} />
 			)}
 		</>
 	);

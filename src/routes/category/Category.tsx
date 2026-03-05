@@ -32,13 +32,19 @@ function Category() {
 	const {
 		data: category,
 		isLoading: categoryLoading,
-		error,
+		error: categoryError,
+		isFetching: categoryFetching,
 	} = useGetCategoryByIdQuery({
 		groupId,
 		categoryId,
 	});
 
-	const { data: itemsResponse } = useGetItemsQuery({
+	const {
+		data: itemsResponse,
+		isLoading: itemsLoading,
+		isFetching: itemsFetching,
+		isError: itemsError,
+	} = useGetItemsQuery({
 		groupId: Number(groupId),
 		categoryId: Number(categoryId),
 		page: initialPage,
@@ -81,31 +87,38 @@ function Category() {
 
 	const items = itemsResponse?.items || [];
 
-	if (categoryLoading) return <Loading />;
-
 	return (
 		<div>
-			<div className="buttonsContainer">
-				<IconButton
-					icon={<IoMdAddCircleOutline />}
-					title="Add an item"
-					onClick={() => setIsModalOpen(true)}
-				/>
-
-				{selectedItems?.length > 0 && (
-					<IconButton
-						icon={<RiDeleteBin6Line />}
-						title="Delete selected items"
-						variant="danger"
-						onClick={() => setIsDeleteModalOpen(true)}
-					/>
-				)}
-			</div>
-			<h2>Category {category?.name}</h2>
-			{error && (
+			{categoryLoading || categoryFetching ? (
+				<Loading />
+			) : categoryError ? (
 				<ErrorText error={"An error occured while fetching category"} />
+			) : (
+				<div className="buttonsContainer">
+					<IconButton
+						icon={<IoMdAddCircleOutline />}
+						title="Add an item"
+						onClick={() => setIsModalOpen(true)}
+					/>
+
+					{selectedItems?.length > 0 && (
+						<IconButton
+							icon={<RiDeleteBin6Line />}
+							title="Delete selected items"
+							variant="danger"
+							onClick={() => setIsDeleteModalOpen(true)}
+						/>
+					)}
+				</div>
 			)}
-			{items && items?.length > 0 ? (
+
+			<h2>Category {category?.name}</h2>
+
+			{itemsLoading || itemsFetching ? (
+				<Loading />
+			) : itemsError ? (
+				<ErrorText error="An error occured while loading items" />
+			) : items && items?.length > 0 ? (
 				<>
 					<table className={styles.table}>
 						<thead>
@@ -150,6 +163,7 @@ function Category() {
 			) : (
 				<p>No items yet</p>
 			)}
+
 			{isModalOpen && (
 				<Modal
 					title="Add an item"
