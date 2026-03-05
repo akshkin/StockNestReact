@@ -64,10 +64,13 @@ function ItemForm({
 		if (!("error" in res)) {
 			return closeModal();
 		} else {
-			if ("data" in res?.error && typeof res?.error?.data === "string") {
-				setFormError(res?.error?.data);
-			} else {
-				setFormError("An error occured while saving");
+			if ("error" in res) {
+				const err = res?.error;
+				if (err && "data" in err && typeof err?.data === "string") {
+					setFormError(err?.data);
+				} else {
+					setFormError("An error occured while saving");
+				}
 			}
 		}
 	}

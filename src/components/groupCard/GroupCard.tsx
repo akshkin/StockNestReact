@@ -8,11 +8,13 @@ import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import GroupCategoryAddEditForm from "../groupCategoryForm/GroupCategoryAddEditForm";
-import { groupSchema } from "../../schemas";
+import { groupCategorySchema } from "../../schemas";
 import {
 	useDeleteCategoryMutation,
 	useUpdateCategoryMutation,
 } from "../../api/categoriesApi";
+import ConfirmDelete from "../confirmDelete/ConfirmDelete";
+import ErrorText from "../errorText/ErrorText";
 
 type Mode = "Edit" | "Delete";
 
@@ -28,11 +30,14 @@ type CardProps = {
 function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [mode, setMode] = useState<Mode>("Edit");
+	const [error, setError] = useState<string | null>(null);
 
-	const [deleteGroup] = useDeleteGroupMutation();
+	const [deleteGroup, { isLoading: deleteGroupLoading }] =
+		useDeleteGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
 	const [updateCategory] = useUpdateCategoryMutation();
-	const [deleteCategory] = useDeleteCategoryMutation();
+	const [deleteCategory, { isLoading: deleteCategoryLoading }] =
+		useDeleteCategoryMutation();
 
 	const isGroup = type === "Group";
 
@@ -42,25 +47,25 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 	}
 
 	async function handleDelete() {
+		let res;
 		if (isGroup) {
-			await deleteGroup({ id: id });
+			res = await deleteGroup({ id: id });
 		} else {
-			await deleteCategory({ groupId, categoryId: id });
+			res = await deleteCategory({ groupId, categoryId: id });
 		}
-		setIsModalOpen(false);
+		if (!("error" in res)) {
+			setIsModalOpen(false);
+		} else if ("error" in res) {
+			const error = res?.error;
+			if (error && "data" in error) {
+				if (typeof error?.data === "string") {
+					setError(error?.data);
+				} else {
+					setError("An error occured!");
+				}
+			}
+		}
 	}
-
-	const deleteModalContent = () => (
-		<div className={styles.buttonsContainer}>
-			<button className={styles.deleteButton} onClick={handleDelete}>
-				Confirm Delete
-			</button>
-
-			<button type="button" onClick={() => setIsModalOpen(false)}>
-				Cancel
-			</button>
-		</div>
-	);
 
 	const modalTitle =
 		mode === "Delete"
@@ -69,14 +74,21 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 
 	const childContent =
 		mode === "Delete" ? (
-			deleteModalContent()
+			<>
+				<ConfirmDelete
+					handleDelete={handleDelete}
+					closeModal={() => setIsModalOpen(false)}
+					isLoading={isGroup ? deleteGroupLoading : deleteCategoryLoading}
+				/>
+				{error && <ErrorText error={error} />}
+			</>
 		) : (
 			// edit group or category
 			<GroupCategoryAddEditForm
 				groupId={isGroup ? id : groupId}
 				categoryId={isGroup ? undefined : id}
 				label={type}
-				schema={groupSchema}
+				schema={groupCategorySchema}
 				onUpdate={isGroup ? updateGroup : updateCategory}
 				closeModal={() => setIsModalOpen(false)}
 				initialValue={{ name: name }}
@@ -94,22 +106,23 @@ function GroupCard({ id, name, role, type, navigateLink, groupId }: CardProps) {
 			</header>
 			{(role && role === "Owner") || role === "Co-Owner" ? (
 				<div className={styles.buttonsContainer}>
-					<button onClick={() => openModal("Edit")}>
-						<RiEditLine /> Edit
+					<button className="action-btn" onClick={() => openModal("Edit")}>
+						<RiEditLine /> <span className="label">Edit</span>
 					</button>
 					<button
-						className={styles.deleteButton}
+						className="action-btn danger"
 						onClick={() => openModal("Delete")}
 					>
 						<RiDeleteBin6Line />
-						Delete
+						<span className="label">Delete</span>
 					</button>
 				</div>
 			) : (
 				role &&
 				role === "Member" && (
-					<button onClick={() => openModal("Edit")}>
-						<RiEditLine /> Edit
+					<button className="action-btn" onClick={() => openModal("Edit")}>
+						<RiEditLine />
+						<span className="label">Edit</span>
 					</button>
 				)
 			)}

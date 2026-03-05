@@ -6,8 +6,8 @@ import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import styles from "./userInfoCard.module.scss";
 import { useState } from "react";
 import Modal from "../modal/Modal";
-import Loading from "../loading/Loading";
 import ErrorText from "../errorText/ErrorText";
+import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 
 type UserCardInfoProps = {
 	groupId: number;
@@ -28,22 +28,6 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 		if (!error) setIsModalOpen(false);
 	}
 
-	const modalChild = (
-		<>
-			<div>
-				<button onClick={handleDelete}>
-					{isLoading ? <Loading /> : "Confirm"}
-				</button>
-				<button onClick={() => setIsModalOpen(false)}>Cancel</button>
-			</div>
-			{error && (
-				<ErrorText error="An error occured while removing the member" />
-			)}
-		</>
-	);
-
-	console.log(myRole, isMe);
-
 	return (
 		<div className={styles.userCard}>
 			<span className={styles.avatar}></span>
@@ -55,7 +39,10 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 						{/* <button>
 						<RiEditLine color="blue" />
 					</button>{" "} */}
-						<button onClick={() => setIsModalOpen(true)}>
+						<button
+							className={styles.deleteIcon}
+							onClick={() => setIsModalOpen(true)}
+						>
 							<RiDeleteBin6Line color="red" />{" "}
 						</button>
 					</div>
@@ -64,7 +51,18 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 				<Modal
 					title="Are you sure you want to remove this member from the group?"
 					closeModal={() => setIsModalOpen(false)}
-					children={modalChild}
+					children={
+						<>
+							<ConfirmDelete
+								handleDelete={handleDelete}
+								closeModal={() => setIsModalOpen(false)}
+								isLoading={isLoading}
+							/>
+							{error && (
+								<ErrorText error="An error occured while removing the member" />
+							)}
+						</>
+					}
 				/>
 			)}
 		</div>

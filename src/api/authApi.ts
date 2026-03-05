@@ -27,7 +27,7 @@ export const authApi = apiSlice.injectEndpoints({
 				body: data,
 			}),
 		}),
-		refresh: builder.mutation({
+		refresh: builder.query({
 			query: () => ({
 				url: "/account/refresh",
 				method: "GET",
@@ -39,12 +39,19 @@ export const authApi = apiSlice.injectEndpoints({
 				method: "POST",
 			}),
 		}),
+		getMe: builder.query({
+			query: () => ({
+				url: "/account/me",
+				method: "GET",
+			}),
+		}),
 	}),
 });
 
 export const {
 	useLoginMutation,
 	useRegisterMutation,
-	useRefreshMutation,
+	useRefreshQuery,
 	useLogoutMutation,
+	useGetMeQuery,
 } = authApi;

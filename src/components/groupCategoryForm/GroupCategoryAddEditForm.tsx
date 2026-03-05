@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import InputField from "../inputField/InputField";
-import { useGetGroupsQuery } from "../../api/groupsApi";
 import ErrorText from "../errorText/ErrorText";
 import { useZodForm } from "../../hooks/useZodForm";
+import type { ZodSchema } from "zod";
 
 type FormProps<T> = {
 	mode?: string;
 	initialValue: T;
 	label: "Group" | "Category"; // "Group", "Category",
-	schema: any; // eslint-disable-line
+	schema: ZodSchema<T>;
 	groupId?: number;
 	categoryId?: number;
 	onCreate?: ({
@@ -49,8 +49,6 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const { refetch } = useGetGroupsQuery({});
-
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		setIsSubmitting(true);
@@ -84,7 +82,6 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 		}
 
 		if (!("error" in res)) {
-			await refetch();
 			closeModal();
 		} else {
 			if (typeof res.error.data === "string") {

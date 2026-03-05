@@ -1,0 +1,32 @@
+.table {
+	width: 100%;
+	table-layout: fixed;
+
+	tbody tr:nth-child(even) {
+		background: #fafafa;
+	}
+	th {
+		text-align: left;
+	}
+
+	.columnOne {
+		width: 30px;
+	}
+
+	.qty {
+		width: 10%;
+	}
+
+	.edit {
+		width: 15%;
+	}
+
+	td,
+	th {
+		padding: 0.2em;
+	}
+
+	tbody tr:hover {
+		background: #f3f4f6;
+	}
+}

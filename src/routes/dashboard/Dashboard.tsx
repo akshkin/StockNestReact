@@ -11,7 +11,9 @@ import Loading from "../../components/loading/Loading";
 import { useState } from "react";
 import Modal from "../../components/modal/Modal";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
-import { groupSchema } from "../../schemas";
+import { groupCategorySchema } from "../../schemas";
+import IconButton from "../../components/iconButton/IconButton";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const defaultGroupData = {
 	name: "",
@@ -28,13 +30,12 @@ function Dashboard() {
 
 	const location = useLocation();
 	const message = location.state?.message;
-	const { data: groups, isLoading, error, refetch } = useGetGroupsQuery({});
+	const { data: groups, isLoading, error } = useGetGroupsQuery({});
 	const [createNewGroup] = useCreateNewGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
 
 	function closeModal() {
 		setIsModalOpen(false);
-		refetch(); // Refetch groups after closing the modal to get the updated list
 	}
 
 	return (
@@ -47,7 +48,13 @@ function Dashboard() {
 
 			{error && <ErrorText error={"An error occuring while fetching groups"} />}
 
-			<button onClick={() => setIsModalOpen(true)}>Create a new group</button>
+			<IconButton
+				icon={<IoMdAddCircleOutline />}
+				title="Create a new group"
+				onClick={() => setIsModalOpen(true)}
+			/>
+
+			{/* <button onClick={() => setIsModalOpen(true)}>Create a new group</button> */}
 			{isModalOpen && (
 				<Modal
 					title="Create a new group"
@@ -56,7 +63,7 @@ function Dashboard() {
 						<GroupCategoryAddEditForm
 							label="Group"
 							initialValue={defaultGroupData}
-							schema={groupSchema}
+							schema={groupCategorySchema}
 							onCreate={createNewGroup}
 							onUpdate={updateGroup}
 							closeModal={closeModal}
