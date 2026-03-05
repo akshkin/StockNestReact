@@ -1,0 +1,25 @@
+.hero {
+	height: 70vh;
+	width: 100%;
+	background: linear-gradient(rgb(9, 147, 246), rgb(0, 102, 255));
+	display: grid;
+	place-items: center;
+
+	.title {
+		color: white;
+		padding: 1em;
+	}
+
+	.getStartedButton {
+		color: white;
+		border: 1px solid white;
+		background-color: transparent;
+		border-radius: var(--radius-sm);
+		padding: 0.5em 1.2em;
+		transition: color 0.3s ease;
+
+		&:hover {
+			color: var(--color-secondary);
+		}
+	}
+}
