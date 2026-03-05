@@ -2,7 +2,7 @@ import styles from "./sidebar.module.scss";
 import { NavLink } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
 import { HiUserGroup } from "react-icons/hi2";
-import { MdCategory } from "react-icons/md";
+import NotificationIcon from "../notification/NotificationIcon";
 
 function Sidebar() {
 	return (
@@ -38,7 +38,7 @@ function Sidebar() {
 								`${styles.dashlink} ${isActive ? styles.active : ""}`
 							}
 						>
-							<MdCategory className={styles.icon} />
+							<NotificationIcon />
 							<span className={styles.text}>Notifications</span>
 						</NavLink>
 					</li>
