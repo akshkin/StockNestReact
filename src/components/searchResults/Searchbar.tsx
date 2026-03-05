@@ -13,7 +13,9 @@ function Searchbar() {
 	const [isSearchResultsOpen, setIsSearchResultsOpen] = useState(false);
 	const searchInputRef = useRef<HTMLDivElement | null>(null);
 
-	const { data: searchResults } = useGetSearchResultsQuery(searchQuery);
+	const { data: searchResults } = useGetSearchResultsQuery(searchQuery, {
+		skip: !searchQuery.trim(),
+	});
 
 	useEffect(() => {
 		const delayDebounceFubction = setTimeout(() => {
