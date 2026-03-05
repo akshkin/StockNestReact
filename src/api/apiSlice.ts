@@ -62,5 +62,5 @@ export const apiSlice = createApi({
 		"NotificationCount",
 	],
 	refetchOnFocus: true,
-	endpoints: (builder) => ({}),
+	endpoints: () => ({}),
 });

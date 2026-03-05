@@ -9,7 +9,7 @@ export const authApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: credentials,
 			}),
-			onQueryStarted: async (arg, { queryFulfilled, dispatch }) => {
+			onQueryStarted: async (_, { queryFulfilled, dispatch }) => {
 				try {
 					const { data } = await queryFulfilled;
 					console.log(data);
@@ -39,7 +39,7 @@ export const authApi = apiSlice.injectEndpoints({
 				url: "/account/logout",
 				method: "POST",
 			}),
-			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+			async onQueryStarted(_, { dispatch, queryFulfilled }) {
 				try {
 					const { data } = await queryFulfilled;
 					console.log(data);
@@ -57,7 +57,7 @@ export const authApi = apiSlice.injectEndpoints({
 				url: "/account/me",
 				method: "GET",
 			}),
-			async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+			async onQueryStarted(_, { dispatch, queryFulfilled }) {
 				try {
 					const { data } = await queryFulfilled;
 					dispatch(setCredentials(data.name));

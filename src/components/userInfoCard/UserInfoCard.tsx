@@ -2,7 +2,7 @@ import {
 	useRemoveGroupMemberMutation,
 	type GroupMember,
 } from "../../api/groupsApi";
-import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import styles from "./userInfoCard.module.scss";
 import { useState } from "react";
 import Modal from "../modal/Modal";
