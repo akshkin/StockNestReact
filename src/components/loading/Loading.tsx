@@ -1,4 +1,3 @@
-import React from "react";
 import { VscLoading } from "react-icons/vsc";
 import styles from "./loading.module.scss";
 

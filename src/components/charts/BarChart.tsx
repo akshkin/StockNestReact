@@ -52,7 +52,7 @@ function BarChart({ labels, datasets }: ChartProps) {
 				text: "Items in a category per group",
 			},
 		},
-		onClick: (event: any, elements: any) => {
+		onClick: (_: any, elements: any) => {
 			if (!elements.length) return;
 
 			const { datasetIndex, index } = elements[0];
