@@ -10,7 +10,7 @@ import Category from "./routes/category/Category";
 import GroupLayout from "./routes/group/GroupLayout";
 import Groups from "./routes/group/Groups";
 import Notifications from "./routes/notifications/Notifications";
-import Home from "./routes/home/Home";
+import Home from "./routes/home/home";
 
 function App() {
 	return (

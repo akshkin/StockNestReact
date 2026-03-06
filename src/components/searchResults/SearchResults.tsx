@@ -39,25 +39,29 @@ function SearchResults({ results, resetSearch }: SearchResultsProps) {
 
 	return (
 		<div className={styles.searchResultsContainer}>
-			{results.map((result) => {
-				const { type, name, groupId, categoryId, itemId } = result;
-				return (
-					<Link
-						key={`${type}-${groupId}-${categoryId}-${itemId}`}
-						className={styles.searchResult}
-						to={handleClick(result)}
-						onClick={resetSearch}
-					>
-						<p>{name}</p>
-						<span
-							className={`${styles.type} ${styles[type.toLocaleLowerCase()]}`}
+			{results.length > 0 ? (
+				results.map((result) => {
+					const { type, name, groupId, categoryId, itemId } = result;
+					return (
+						<Link
+							key={`${type}-${groupId}-${categoryId}-${itemId}`}
+							className={styles.searchResult}
+							to={handleClick(result)}
+							onClick={resetSearch}
 						>
-							{" "}
-							{type}
-						</span>
-					</Link>
-				);
-			})}
+							<p>{name}</p>
+							<span
+								className={`${styles.type} ${styles[type.toLocaleLowerCase()]}`}
+							>
+								{" "}
+								{type}
+							</span>
+						</Link>
+					);
+				})
+			) : (
+				<p>No results found</p>
+			)}
 		</div>
 	);
 }

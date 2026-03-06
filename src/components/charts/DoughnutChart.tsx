@@ -14,6 +14,7 @@ function DoughnutChart({ labels, datasets }: ChartProps) {
 	};
 
 	const options = {
+		//eslint-disable-next-line
 		onClick: (_: any, elements: any) => {
 			if (!elements.length) return;
 
