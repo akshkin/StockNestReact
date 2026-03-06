@@ -16,6 +16,13 @@
 	box-sizing: border-box;
 }
 
+html,
+body {
+	transition:
+		background-color 0.25s ease,
+		color 0.25s ease;
+}
+
 a {
 	text-decoration: none;
 }
