@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type Theme = "light" | "dark" | "system";
+export type Theme = "light" | "dark" | "system";
 
 function useTheme() {
 	const [theme, setTheme] = useState(
@@ -21,12 +21,12 @@ function useTheme() {
 		}
 	}, [theme]);
 
-	function setUserPreferedTheme(theme: Theme) {
+	function setUserPreferredTheme(theme: Theme) {
 		setTheme(theme);
 		localStorage.setItem("theme", theme);
 	}
 
-	return { theme, setUserPreferedTheme };
+	return { theme, setUserPreferredTheme };
 }
 
 export default useTheme;

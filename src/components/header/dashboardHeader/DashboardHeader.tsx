@@ -4,11 +4,10 @@ import styles from "../header.module.scss";
 import { useLogoutMutation } from "../../../api/authApi";
 import Searchbar from "../../searchResults/Searchbar";
 import NotificationIcon from "../../notification/NotificationIcon";
-import useTheme from "../../../hooks/useTheme";
+import ThemeIcon from "../../theme/ThemeIcon";
 
 function DashboardHeader() {
 	const navigate = useNavigate();
-	const { theme, setUserPreferedTheme } = useTheme();
 
 	const [logout] = useLogoutMutation();
 
@@ -27,9 +26,7 @@ function DashboardHeader() {
 				</div>
 				<ul>
 					<li>
-						<span onClick={() => setUserPreferedTheme("light")}>🌞</span>
-						<span onClick={() => setUserPreferedTheme("dark")}>🌆</span>
-						<span onClick={() => setUserPreferedTheme("system")}>Sys</span>
+						<ThemeIcon />
 					</li>
 					<li>
 						<NotificationIcon />
