@@ -30,7 +30,13 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 
 	return (
 		<div className={styles.userCard}>
-			<span className={styles.avatar}></span>
+			<span className={styles.avatar}>
+				<img
+					className={styles.avatar}
+					alt="name avatar"
+					src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`}
+				/>
+			</span>
 			<p className={styles.name}>{fullName}</p>
 			<p className={styles.role}>{role}</p>
 			{(myRole === "Owner" || myRole === "Co-Owner") &&
