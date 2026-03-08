@@ -50,6 +50,12 @@ export const itemsApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Items"],
 		}),
+		getItemPageIndex: builder.query({
+			query: ({ groupId, categoryId, itemId }) => ({
+				url: `items/group/${groupId}/category/${categoryId}/item/${itemId}/page-index`,
+				method: "GET",
+			}),
+		}),
 	}),
 });
 
@@ -58,4 +64,5 @@ export const {
 	useGetItemsQuery,
 	useUpdateItemMutation,
 	useDeleteItemsMutation,
+	useLazyGetItemPageIndexQuery,
 } = itemsApi;
