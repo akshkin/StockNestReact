@@ -34,7 +34,7 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 				<img
 					className={styles.avatar}
 					alt="name avatar"
-					src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`}
+					src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.fullName)}`}
 				/>
 			</span>
 			<p className={styles.name}>{fullName}</p>
