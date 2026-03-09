@@ -3,6 +3,7 @@ import InputField from "../inputField/InputField";
 import ErrorText from "../errorText/ErrorText";
 import { useZodForm } from "../../hooks/useZodForm";
 import type { ZodSchema } from "zod";
+import { toast } from "react-toastify";
 
 type FormProps<T> = {
 	mode?: string;
@@ -68,6 +69,7 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 					formData: data,
 				});
 			}
+			toast.success("Succesfully saved changes!");
 		} else {
 			if (onCreate) {
 				// create category or group
@@ -83,6 +85,7 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 
 		if (!("error" in res)) {
 			closeModal();
+			toast.success(`Succesfully created ${label}!`);
 		} else {
 			if (typeof res.error.data === "string") {
 				setError(res.error.data);

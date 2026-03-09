@@ -8,6 +8,7 @@ import {
 } from "../../api/itemsApi";
 import ErrorText from "../errorText/ErrorText";
 import { itemSchema } from "../../schemas";
+import { toast } from "react-toastify";
 
 type itemSchema = z.infer<typeof itemSchema>;
 
@@ -62,6 +63,11 @@ function ItemForm({
 		}
 
 		if (!("error" in res)) {
+			if (isEditing) {
+				toast.success("Successfully updated item!");
+			} else {
+				toast.success("Successfuly created item");
+			}
 			return closeModal();
 		} else {
 			if ("error" in res) {

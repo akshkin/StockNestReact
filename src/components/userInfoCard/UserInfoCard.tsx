@@ -8,6 +8,7 @@ import { useState } from "react";
 import Modal from "../modal/Modal";
 import ErrorText from "../errorText/ErrorText";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
+import { toast } from "react-toastify";
 
 type UserCardInfoProps = {
 	groupId: number;
@@ -25,7 +26,10 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 	async function handleDelete() {
 		await removeGroupMember({ groupId, userId });
 
-		if (!error) setIsModalOpen(false);
+		if (!error) {
+			setIsModalOpen(false);
+			toast.success("Successfully removed member from the group");
+		}
 	}
 
 	return (

@@ -15,6 +15,7 @@ import {
 } from "../../api/categoriesApi";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import ErrorText from "../errorText/ErrorText";
+import { toast } from "react-toastify";
 
 type Mode = "Edit" | "Delete";
 
@@ -62,8 +63,14 @@ function GroupCard({
 		} else {
 			res = await deleteCategory({ groupId, categoryId: id });
 		}
+
 		if (!("error" in res)) {
 			setIsModalOpen(false);
+			if (isGroup) {
+				toast.success("Successfully deleted group");
+			} else {
+				toast.success("Successfully deleted category");
+			}
 		} else if ("error" in res) {
 			const error = res?.error;
 			if (error && "data" in error) {

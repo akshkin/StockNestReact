@@ -17,6 +17,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import ConfirmDelete from "../../components/confirmDelete/ConfirmDelete";
 import styles from "./category.module.scss";
 import Pagination from "../../components/pagination/Pagination";
+import { toast } from "react-toastify";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -76,6 +77,7 @@ function Category() {
 		if (!("error" in response)) {
 			setSelectedItems([]);
 			setIsDeleteModalOpen(false);
+			toast.success("Successfully deleted item(s)!");
 		}
 	}
 
