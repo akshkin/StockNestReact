@@ -15,14 +15,10 @@ function Searchbar() {
 
 	const [triggerSearch, { data: searchResults }] =
 		useLazyGetSearchResultsQuery();
-	// searchQuery,
-	// {
-	// 	skip: !searchQuery.trim(),
-	// },
 
 	useEffect(() => {
 		const delayDebounceFubction = setTimeout(() => {
-			if (searchQuery) {
+			if (searchQuery.trim().length > 0) {
 				const parsed = queryString.parse(window.location.search);
 				const newQuery = queryString.stringify({
 					...parsed,

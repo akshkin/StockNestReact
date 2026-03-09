@@ -39,7 +39,6 @@ function SearchResults({ results, resetSearch }: SearchResultsProps) {
 					categoryId: Number(categoryId),
 					itemId: Number(itemId),
 				}).unwrap();
-
 				navigate(`/groups/${groupId}/category/${categoryId}?page=${response}`, {
 					state: itemId,
 				});
