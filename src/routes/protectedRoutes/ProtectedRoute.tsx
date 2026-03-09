@@ -4,6 +4,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import styles from "./protectRoute.module.css";
 import { useGetMeQuery } from "../../api/authApi";
 import Loading from "../../components/loading/Loading";
+import { ToastContainer } from "react-toastify";
 
 function ProtectedRoute() {
 	const { error: getMeError, isLoading, isFetching } = useGetMeQuery({});
@@ -28,6 +29,18 @@ function ProtectedRoute() {
 					<Outlet />
 				</main>
 			</div>
+			<ToastContainer
+				position="bottom-right"
+				autoClose={5000}
+				hideProgressBar={true}
+				newestOnTop={true}
+				closeOnClick={false}
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme="light"
+			/>
 		</div>
 	);
 }
