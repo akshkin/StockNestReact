@@ -1,5 +1,5 @@
 import logo from "@/assets/images/logo.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../header.module.scss";
 import { useLogoutMutation } from "../../../api/authApi";
 import Searchbar from "../../searchResults/Searchbar";
@@ -29,7 +29,9 @@ function DashboardHeader() {
 						<ThemeIcon />
 					</li>
 					<li>
-						<NotificationIcon />
+						<Link to="/notifications?page=1&tab=unread">
+							<NotificationIcon />
+						</Link>
 					</li>
 					<li>
 						<button

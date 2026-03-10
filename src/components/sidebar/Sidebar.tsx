@@ -33,7 +33,7 @@ function Sidebar() {
 					</li>
 					<li>
 						<NavLink
-							to="/notifications?page=1"
+							to="/notifications?page=1&tab=unread"
 							className={({ isActive }) =>
 								`${styles.dashlink} ${isActive ? styles.active : ""}`
 							}
@@ -41,6 +41,9 @@ function Sidebar() {
 							<NotificationIcon />
 							<span className={styles.text}>Notifications</span>
 						</NavLink>
+					</li>
+					<li>
+						<NavLink to="/profile">Profile</NavLink>
 					</li>
 				</ul>
 			</nav>
