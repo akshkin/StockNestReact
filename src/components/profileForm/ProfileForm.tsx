@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import Modal from "../modal/Modal";
 import { supabase } from "../../lib/supabase";
+import { useZodForm } from "../../hooks/useZodForm";
+import { profileSchema } from "../../schemas";
+import type z from "zod";
 
 type ProfileFormProps = {
 	closeModal: () => void;
@@ -24,12 +27,23 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	const [removeProfileImage, setRemoveProfileImage] = useState(false);
 	const [isRemoveProfileImageModalOpen, setIsRemoveProfileImageModalOpen] =
 		useState(false);
+	const [fileSizeError, setFileSizeError] = useState("");
 
-	const [profileData, setProfileData] = useState({
+	// const [profileData, setProfileData] = useState({
+	// 	firstName: profile?.firstName,
+	// 	lastName: profile?.lastName,
+	// });
+	const initialValues = {
 		firstName: profile?.firstName,
 		lastName: profile?.lastName,
-		profileImageUrl: profile?.profileImageUrl,
-	});
+	};
+
+	type profileSchema = z.infer<typeof profileSchema>;
+
+	const { data, update, errors, isValid } = useZodForm<profileSchema>(
+		profileSchema,
+		initialValues,
+	);
 
 	const [triggerUpload, { isLoading: imageLoading, isError: imageError }] =
 		useLazyUploadImageQuery();
@@ -45,23 +59,28 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	}
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+		setFileSizeError("");
 		const selected = e.target.files?.[0];
+		const maxFileSize = 1 * 1024 * 1024;
 		if (selected) {
+			if (selected?.size > maxFileSize) {
+				setFileSizeError("File should be less than 1MB");
+				return;
+			}
 			setFile(selected);
 		}
 	}
-
-	console.log(profile.profileImageUrl);
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 
 		if (file) {
+			//remove file from bucket to replace with new image
 			if (profile.profileImageUrl) {
 				await removeProfileImageFromSupabase();
 			}
-			// get signed url from server
 
+			// get signed url from server
 			const response = await triggerUpload({}).unwrap();
 
 			if (!("error" in response)) {
@@ -80,19 +99,21 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 				}
 
 				await updateProfile({
-					...profileData,
+					...data,
 					profileImageUrl: response.filePath,
 				});
 			}
 		} else if (removeProfileImage) {
+			// if user has chosen to remove profile image
 			await removeProfileImageFromSupabase();
 			await updateProfile({
-				...profileData,
+				...data,
 				profileImageUrl: null,
 			});
 		} else {
+			// if user just updates first name and last name
 			await updateProfile({
-				...profileData,
+				...data,
 			});
 		}
 		if (imageError || isError) {
@@ -147,28 +168,30 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 				<span className={styles.fileName}>
 					{file ? file?.name : "No file chosen"}
 				</span>
+				<small className={styles.smallText}>Max file size should be 1MB</small>
+
+				{fileSizeError && <ErrorText error={fileSizeError} />}
 
 				<InputField
 					label="First Name"
 					name="firstName"
-					value={profileData.firstName}
+					value={data.firstName}
 					type="text"
 					placeholder="John"
-					onChange={(e) =>
-						setProfileData({ ...profileData, firstName: e.target.value })
-					}
+					onChange={(e) => update("firstName", e.target.value)}
+					error={errors.firstName}
 				/>
+
 				<InputField
 					label="Last Name"
 					name="lastName"
-					value={profileData.lastName}
+					value={data.lastName}
 					type="text"
 					placeholder="Doe"
-					onChange={(e) =>
-						setProfileData({ ...profileData, lastName: e.target.value })
-					}
+					onChange={(e) => update("lastName", e.target.value)}
+					error={errors.lastName}
 				/>
-				<button type="submit" disabled={isLoading || imageLoading}>
+				<button type="submit" disabled={isLoading || imageLoading || !isValid}>
 					Submit
 				</button>
 				<ErrorText error={error ?? ""} />

@@ -12,6 +12,12 @@
 	cursor: pointer;
 }
 
+.smallText {
+	font-size: 0.75rem;
+	color: var(--color-border);
+	margin: 0;
+}
+
 .imageWithButton {
 	display: flex;
 	align-items: start;

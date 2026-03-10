@@ -49,3 +49,14 @@ export const itemSchema = z.object({
 		.max(100, "Item name must be less than 100 characters"),
 	quantity: z.number().nonnegative("Quantity must be 0 or more"),
 });
+
+export const profileSchema = z.object({
+	firstName: z
+		.string()
+		.min(2, "First name must be at least 2 characters")
+		.max(100, "First name must be less than 100 characters"),
+	lastName: z
+		.string()
+		.min(2, "Last name must be at least 2 characters")
+		.max(100, "Last name must be less than 100 characters"),
+});
