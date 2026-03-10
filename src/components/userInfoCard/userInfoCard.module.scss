@@ -5,11 +5,17 @@
 	align-items: center;
 	gap: 0.5em;
 
+	.smallText {
+		font-size: 0.75rem;
+		font-style: italic;
+	}
+
 	.avatar {
 		height: 30px;
 		width: 30px;
 		border-radius: var(--radius-sm);
 		background-color: var(--color-secondary);
+		object-fit: cover;
 	}
 
 	.role {

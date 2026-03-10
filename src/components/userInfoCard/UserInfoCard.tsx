@@ -18,7 +18,7 @@ type UserCardInfoProps = {
 
 function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const { fullName, role, isMe, userId } = user;
+	const { fullName, role, isMe, userId, profileImageUrl } = user;
 
 	const [removeGroupMember, { isLoading, error }] =
 		useRemoveGroupMemberMutation();
@@ -32,16 +32,19 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
 		}
 	}
 
+	const bucketUrl = import.meta.env.VITE_BUCKET_URL;
+	const imageSrc = profileImageUrl
+		? `${bucketUrl}/${profileImageUrl}`
+		: `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.fullName)}`;
+
 	return (
 		<div className={styles.userCard}>
 			<span className={styles.avatar}>
-				<img
-					className={styles.avatar}
-					alt="name avatar"
-					src={`https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(user.fullName)}`}
-				/>
+				<img className={styles.avatar} alt="name avatar" src={imageSrc} />
 			</span>
-			<p className={styles.name}>{fullName}</p>
+			<p className={styles.name}>
+				{fullName} {isMe && <span className={styles.smallText}>(You)</span>}
+			</p>
 			<p className={styles.role}>{role}</p>
 			{(myRole === "Owner" || myRole === "Co-Owner") &&
 				!isMe && ( // show delete button only to owner of the group
