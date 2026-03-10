@@ -11,6 +11,7 @@ import GroupLayout from "./routes/group/GroupLayout";
 import Groups from "./routes/group/Groups";
 import Notifications from "./routes/notifications/Notifications";
 import Home from "./routes/home/home";
+import Profile from "./routes/profile/Profile";
 
 function App() {
 	return (
@@ -32,6 +33,7 @@ function App() {
 						/>
 					</Route>
 					<Route path="notifications" element={<Notifications />} />
+					<Route path="profile" element={<Profile />} />
 					<Route path="*" element={<h1>404 Not Found</h1>} />
 				</Route>
 			</Routes>
