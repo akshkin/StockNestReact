@@ -19,14 +19,10 @@ export const registerSchema = z.object({
 		.string()
 		.min(6)
 		.regex(
-			/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).*[A-Za-z\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{6,}$/,
-			"Password must be at least 6 characters and contain both letters and numbers and one special character",
+			/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{6,}$/,
+			"Password must be at least 6 characters and contain both letters (atleast 1 uppercase) and numbers and one special character",
 		),
 });
-// .refine((data) => data.password === data.confirmPassword, {
-// 	message: "Passwords do not match",
-// 	path: ["confirmPassword"],
-// });
 
 export const groupCategorySchema = z.object({
 	name: z
