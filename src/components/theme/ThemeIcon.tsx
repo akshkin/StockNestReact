@@ -69,11 +69,12 @@ function ThemeIcon() {
 		setUserPreferredTheme(choice);
 		setIsDropdownOpen(false);
 	}
+
 	return (
 		<div className={styles.themeDropdown}>
 			<button
 				className={styles.trigger}
-				onClick={() => setIsDropdownOpen(true)}
+				onClick={() => setIsDropdownOpen((prev) => !prev)}
 			>
 				{theme === "light" && <PiSunDimFill />}
 				{theme === "dark" && <PiMoonFill />}
