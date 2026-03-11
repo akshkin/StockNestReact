@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 type itemSchema = z.infer<typeof itemSchema>;
 
 type ItemFormProps = {
-	mode: string; //edit, add
+	mode: "Add" | "Edit"; //edit, add
 	groupId: number;
 	categoryId: number;
 	itemId?: number;
@@ -109,7 +109,7 @@ function ItemForm({
 			/>
 			{formError && <ErrorText error={formError} />}
 			<button disabled={!isValid} onClick={handleSubmit}>
-				{isEditing ? "Edit" : "Add"}
+				{isEditing ? "Save" : "Add"}
 			</button>
 		</form>
 	);

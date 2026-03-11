@@ -28,6 +28,10 @@ function Category() {
 	const [isMainChecked, setIsMainChecked] = useState(false);
 	const location = useLocation();
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [selectedItem, setSelectedItem] = useState<
+		{ id: number; name: string; quantity: number } | undefined
+	>(undefined);
+	const [mode, setMode] = useState<"Add" | "Edit">();
 
 	const initialPage = Number(searchParams.get("page") ?? 1);
 
@@ -82,6 +86,26 @@ function Category() {
 		}
 	}
 
+	function openModal() {
+		setMode("Add");
+		setIsModalOpen(true);
+	}
+
+	function openEditItemModal(id: number, name: string, quantity: number) {
+		setSelectedItem({
+			id,
+			name,
+			quantity,
+		});
+		setMode("Edit");
+		setIsModalOpen(true);
+	}
+
+	function closeModal() {
+		setSelectedItem(undefined);
+		setIsModalOpen(false);
+	}
+
 	function onPageChange(newPage: number) {
 		const params = new URLSearchParams(searchParams.toString());
 		params.set("page", newPage.toString());
@@ -93,6 +117,8 @@ function Category() {
 	const { ownerPermission, canCreateEdit } = getPermissions(
 		itemsResponse?.myRole,
 	);
+
+	const isEditing = mode === "Edit";
 
 	return (
 		<div>
@@ -106,7 +132,7 @@ function Category() {
 						<IconButton
 							icon={<IoMdAddCircleOutline />}
 							title="Add an item"
-							onClick={() => setIsModalOpen(true)}
+							onClick={openModal}
 						/>
 					)}
 
@@ -159,6 +185,7 @@ function Category() {
 									isMainChecked={isMainChecked}
 									highlight={location.state?.itemId === item.itemId}
 									role={itemsResponse?.myRole || "Viewer"}
+									openEditItemModal={openEditItemModal}
 								/>
 							))}
 						</tbody>
@@ -178,14 +205,23 @@ function Category() {
 
 			{isModalOpen && (
 				<Modal
-					title="Add an item"
+					title={`${isEditing ? "Edit item" : "Add an item"}`}
 					closeModal={() => setIsModalOpen(false)}
 					children={
 						<ItemForm
-							mode="Add"
+							mode={mode!}
 							groupId={Number(groupId)}
 							categoryId={Number(categoryId)}
-							closeModal={() => setIsModalOpen(false)}
+							closeModal={closeModal}
+							initialValues={
+								selectedItem?.id
+									? {
+											name: selectedItem?.name,
+											quantity: selectedItem?.quantity,
+										}
+									: undefined
+							}
+							itemId={selectedItem?.id}
 						/>
 					}
 				/>
