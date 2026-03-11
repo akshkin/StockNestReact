@@ -42,6 +42,7 @@ function ItemForm({
 			: {
 					...defaultValues,
 				},
+		() => setFormError(null),
 	);
 
 	const [createItem] = useCreateItemMutation();
@@ -109,7 +110,7 @@ function ItemForm({
 			/>
 			{formError && <ErrorText error={formError} />}
 			<button disabled={!isValid} onClick={handleSubmit}>
-				{isEditing ? "Save" : "Add"}
+				{isEditing ? "Update" : "Add"}
 			</button>
 		</form>
 	);

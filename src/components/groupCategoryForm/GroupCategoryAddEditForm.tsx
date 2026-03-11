@@ -44,12 +44,16 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 	onUpdate,
 }: FormProps<T>) {
 	const isEditing = mode === "Edit";
-
-	const { data, update, errors, isValid } = useZodForm<T>(schema, {
-		...initialValue,
-	} as T);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const { data, update, errors, isValid } = useZodForm<T>(
+		schema,
+		{
+			...initialValue,
+		} as T,
+		() => setError(null),
+	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
@@ -84,6 +88,7 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 		}
 		if ("error" in res) {
 			setError(extractErrorMessage(res.error));
+			setIsSubmitting(false);
 			return;
 		}
 		if (!("error" in res)) {

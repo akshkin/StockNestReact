@@ -29,10 +29,6 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 		useState(false);
 	const [fileSizeError, setFileSizeError] = useState("");
 
-	// const [profileData, setProfileData] = useState({
-	// 	firstName: profile?.firstName,
-	// 	lastName: profile?.lastName,
-	// });
 	const initialValues = {
 		firstName: profile?.firstName,
 		lastName: profile?.lastName,
@@ -43,6 +39,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	const { data, update, errors, isValid } = useZodForm<profileSchema>(
 		profileSchema,
 		initialValues,
+		() => setError(null),
 	);
 
 	const [triggerUpload, { isLoading: imageLoading, isError: imageError }] =
