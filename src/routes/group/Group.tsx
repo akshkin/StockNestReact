@@ -82,6 +82,7 @@ function Group() {
 	}
 
 	function closeCategoryModal() {
+		setSelectedCategory(undefined);
 		setIsCategoryModalOpen(false);
 	}
 

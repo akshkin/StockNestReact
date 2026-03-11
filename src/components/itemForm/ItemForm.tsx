@@ -9,6 +9,7 @@ import {
 import ErrorText from "../errorText/ErrorText";
 import { itemSchema } from "../../schemas";
 import { toast } from "react-toastify";
+import { extractErrorMessage } from "../../helpers/utils";
 
 type itemSchema = z.infer<typeof itemSchema>;
 
@@ -72,12 +73,8 @@ function ItemForm({
 			return closeModal();
 		} else {
 			if ("error" in res) {
-				const err = res?.error;
-				if (err && "data" in err && typeof err?.data === "string") {
-					setFormError(err?.data);
-				} else {
-					setFormError("An error occured while saving");
-				}
+				const err = extractErrorMessage(res?.error);
+				setFormError(err);
 			}
 		}
 	}
