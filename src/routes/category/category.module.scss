@@ -1,6 +1,7 @@
 .table {
 	width: 100%;
 	table-layout: fixed;
+	max-width: 1000px;
 
 	tbody tr:nth-child(even) {
 		background-color: var(--color-light-grey);
