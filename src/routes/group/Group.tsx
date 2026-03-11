@@ -23,6 +23,7 @@ import GroupCard from "../../components/groupCard/GroupCard";
 import { IoMdPersonAdd, IoMdAddCircleOutline } from "react-icons/io";
 import IconButton from "../../components/iconButton/IconButton";
 import AddMemberForm from "./AddMemberForm";
+import { getPermissions } from "../../helpers/utils";
 
 type categorySchema = z.infer<typeof groupCategorySchema>;
 
@@ -65,6 +66,13 @@ function Group() {
 		setIsModalOpen(false);
 	}
 
+	function closeCategoryModal() {
+		setIsCategoryModalOpen(false);
+	}
+
+	const role = group?.role;
+	const { ownerPermission, canCreateEdit } = getPermissions(role);
+
 	return (
 		<>
 			<h2 className={styles.title}>Group: {group?.name}</h2>
@@ -75,26 +83,28 @@ function Group() {
 				<ErrorText error="An error occurred while fetching the group details." />
 			) : (
 				<div className="buttonsContainer">
-					{(group?.role === "Owner" || group?.role === "Co-Owner") && (
+					{ownerPermission && (
 						<IconButton
 							icon={<IoMdPersonAdd />}
 							title="Add a person to a group"
 							onClick={() => setIsModalOpen(true)}
 						/>
 					)}
-					<IconButton
-						icon={<IoMdAddCircleOutline />}
-						title="Create a category"
-						onClick={() => setIsCategoryModalOpen(true)}
-						variant="dark"
-					/>
+					{canCreateEdit && (
+						<IconButton
+							icon={<IoMdAddCircleOutline />}
+							title="Create a category"
+							onClick={() => setIsCategoryModalOpen(true)}
+							variant="dark"
+						/>
+					)}
 				</div>
 			)}
 
 			{isCategoryModalOpen && (
 				<Modal
 					title="Add a category"
-					closeModal={() => setIsCategoryModalOpen(false)}
+					closeModal={closeCategoryModal}
 					children={
 						<GroupCategoryAddEditForm
 							initialValue={defaultCategoryData}
@@ -103,7 +113,7 @@ function Group() {
 							schema={groupCategorySchema}
 							onCreate={createCategory}
 							onUpdate={updateCategory}
-							closeModal={() => setIsCategoryModalOpen(false)}
+							closeModal={closeCategoryModal}
 						/>
 					}
 				/>

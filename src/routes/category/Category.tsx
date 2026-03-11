@@ -18,6 +18,7 @@ import ConfirmDelete from "../../components/confirmDelete/ConfirmDelete";
 import styles from "./category.module.scss";
 import Pagination from "../../components/pagination/Pagination";
 import { toast } from "react-toastify";
+import { getPermissions } from "../../helpers/utils";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -89,6 +90,10 @@ function Category() {
 
 	const items = itemsResponse?.items || [];
 
+	const { ownerPermission, canCreateEdit } = getPermissions(
+		itemsResponse?.myRole,
+	);
+
 	return (
 		<div>
 			{categoryLoading || categoryFetching ? (
@@ -97,13 +102,15 @@ function Category() {
 				<ErrorText error={"An error occured while fetching category"} />
 			) : (
 				<div className="buttonsContainer">
-					<IconButton
-						icon={<IoMdAddCircleOutline />}
-						title="Add an item"
-						onClick={() => setIsModalOpen(true)}
-					/>
+					{canCreateEdit && (
+						<IconButton
+							icon={<IoMdAddCircleOutline />}
+							title="Add an item"
+							onClick={() => setIsModalOpen(true)}
+						/>
+					)}
 
-					{selectedItems?.length > 0 && (
+					{selectedItems?.length > 0 && ownerPermission && (
 						<IconButton
 							icon={<RiDeleteBin6Line />}
 							title="Delete selected items"
@@ -125,16 +132,18 @@ function Category() {
 					<table className={styles.table}>
 						<thead>
 							<tr>
-								<th className={styles.columnOne}>
-									<input
-										type="checkbox"
-										checked={isMainChecked}
-										onChange={(e) => handleChange(e)}
-									/>
-								</th>
+								{canCreateEdit && (
+									<th className={styles.columnOne}>
+										<input
+											type="checkbox"
+											checked={isMainChecked}
+											onChange={(e) => handleChange(e)}
+										/>
+									</th>
+								)}
 								<th>Item Name</th>
 								<th className={styles.qty}>Qty</th>
-								<th className={styles.edit}>Edit</th>
+								{canCreateEdit && <th className={styles.edit}>Edit</th>}
 							</tr>
 						</thead>
 						<tbody>
@@ -149,6 +158,7 @@ function Category() {
 									setSelectedItems={setSelectedItems}
 									isMainChecked={isMainChecked}
 									highlight={location.state?.itemId === item.itemId}
+									role={itemsResponse?.myRole || "Viewer"}
 								/>
 							))}
 						</tbody>

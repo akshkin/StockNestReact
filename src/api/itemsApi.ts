@@ -12,6 +12,7 @@ export type ItemsResponseType = {
 	pageSize: number;
 	pageNumber: number;
 	totalCount: number;
+	myRole: string;
 };
 
 export const itemsApi = apiSlice.injectEndpoints({

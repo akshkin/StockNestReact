@@ -3,6 +3,7 @@ import { RiEditLine } from "react-icons/ri";
 import Modal from "../modal/Modal";
 import ItemForm from "../itemForm/ItemForm";
 import styles from "./itemCard.module.scss";
+import { getPermissions } from "../../helpers/utils";
 
 type ItemCardProps = {
 	groupId: number;
@@ -12,6 +13,7 @@ type ItemCardProps = {
 	quantity: number;
 	setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
 	isMainChecked: boolean; // main checkbox in the table header
+	role: string;
 	highlight?: boolean; // whether the item is the one that was just created or updated, used to highlight the item card
 };
 
@@ -23,6 +25,7 @@ function ItemCard({
 	quantity,
 	setSelectedItems,
 	isMainChecked,
+	role,
 	highlight = false,
 }: ItemCardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,16 +51,20 @@ function ItemCard({
 		return `hsl(${hue}, 70%, 80%)`;
 	}
 
+	const { ownerPermission, canCreateEdit } = getPermissions(role);
+
 	return (
 		<tr className={`${styles.itemCard} ${highlight && styles.highlight}`}>
-			<td>
-				<input
-					type="checkbox"
-					name="isChecked"
-					checked={isMainChecked ? true : isChecked} // set checked to true if main checkbox is checked
-					onChange={(e) => handleChange(e)}
-				/>
-			</td>
+			{ownerPermission && (
+				<td>
+					<input
+						type="checkbox"
+						name="isChecked"
+						checked={isMainChecked ? true : isChecked} // set checked to true if main checkbox is checked
+						onChange={(e) => handleChange(e)}
+					/>
+				</td>
+			)}
 			<td className={styles.nameColumn}>
 				<span
 					className={styles.colorAccent}
@@ -68,11 +75,13 @@ function ItemCard({
 			<td className={styles.quantity}>
 				<p>{quantity}</p>
 			</td>
-			<td className={styles.edit}>
-				<button className="action-btn" onClick={() => setIsModalOpen(true)}>
-					<RiEditLine /> <span className="label">Edit</span>
-				</button>
-			</td>
+			{canCreateEdit && (
+				<td className={styles.edit}>
+					<button className="action-btn" onClick={() => setIsModalOpen(true)}>
+						<RiEditLine /> <span className="label">Edit</span>
+					</button>
+				</td>
+			)}
 
 			{isModalOpen && (
 				<Modal

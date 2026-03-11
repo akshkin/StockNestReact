@@ -56,3 +56,10 @@ export function navigateFromNotification(
 
 	routes[n.type]?.();
 }
+
+export function getPermissions(role?: string) {
+	const ownerPermission = role === "Owner" || role === "Co-Owner";
+	const canCreateEdit = role !== "Viewer";
+
+	return { ownerPermission, canCreateEdit };
+}

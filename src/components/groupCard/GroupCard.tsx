@@ -16,6 +16,7 @@ import {
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import ErrorText from "../errorText/ErrorText";
 import { toast } from "react-toastify";
+import { getPermissions } from "../../helpers/utils";
 
 type Mode = "Edit" | "Delete";
 
@@ -112,6 +113,8 @@ function GroupCard({
 			/>
 		);
 
+	const { ownerPermission, canCreateEdit } = getPermissions(role);
+
 	return (
 		<div className={`${styles.groupCard} ${highlight ? styles.highlight : ""}`}>
 			<header>
@@ -120,27 +123,21 @@ function GroupCard({
 				</Link>
 				{isGroup && <span className={styles.role}>{role}</span>}
 			</header>
-			{(role && role === "Owner") || role === "Co-Owner" ? (
+			{canCreateEdit && (
 				<div className={styles.buttonsContainer}>
 					<button className="action-btn" onClick={() => openModal("Edit")}>
 						<RiEditLine /> <span className="label">Edit</span>
 					</button>
-					<button
-						className="action-btn danger"
-						onClick={() => openModal("Delete")}
-					>
-						<RiDeleteBin6Line />
-						<span className="label">Delete</span>
-					</button>
+					{ownerPermission && (
+						<button
+							className="action-btn danger"
+							onClick={() => openModal("Delete")}
+						>
+							<RiDeleteBin6Line />
+							<span className="label">Delete</span>
+						</button>
+					)}
 				</div>
-			) : (
-				role &&
-				role === "Member" && (
-					<button className="action-btn" onClick={() => openModal("Edit")}>
-						<RiEditLine />
-						<span className="label">Edit</span>
-					</button>
-				)
 			)}
 			{isModalOpen && (
 				<Modal
