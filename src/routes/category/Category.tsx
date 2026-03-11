@@ -206,7 +206,7 @@ function Category() {
 			{isModalOpen && (
 				<Modal
 					title={`${isEditing ? "Edit item" : "Add an item"}`}
-					closeModal={() => setIsModalOpen(false)}
+					closeModal={closeModal}
 					children={
 						<ItemForm
 							mode={mode!}

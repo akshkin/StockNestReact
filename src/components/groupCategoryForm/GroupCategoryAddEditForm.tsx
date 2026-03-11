@@ -83,8 +83,8 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 		}
 		if ("error" in res) {
 			setError(res.error.data);
-			if (typeof res.error.data === "string") {
-				setError(res.error.data);
+			if (typeof res.error.data.message === "string") {
+				setError(res.error.data.message);
 			} else {
 				setError("An error occured");
 			}
