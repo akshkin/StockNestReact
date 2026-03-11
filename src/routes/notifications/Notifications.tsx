@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
 	useGetNotificationsQuery,
+	useGetUnreadNotificationsCountQuery,
 	useGetUnreadNotificationsQuery,
 	useSetAllNotificationsAsSeenMutation,
 } from "../../api/notificationsApi";
@@ -36,6 +37,8 @@ function Notifications() {
 	} = useGetUnreadNotificationsQuery(currentPage);
 
 	const [setNotificationsAsSeen] = useSetAllNotificationsAsSeenMutation();
+	const { data: unreadNotificationsCount } =
+		useGetUnreadNotificationsCountQuery();
 
 	const notificationsToDisplay =
 		initialTab === "unread" ? unreadNotifications?.items : notifications?.items;
@@ -87,7 +90,7 @@ function Notifications() {
 							onClick={() => setActiveTab("unread")}
 						>
 							Unread <span className={styles.hide}>notifications</span>(
-							{unreadNotifications?.items?.length || 0})
+							{unreadNotificationsCount})
 						</button>
 					</li>
 					<li
