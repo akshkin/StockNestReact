@@ -98,10 +98,18 @@ function ItemForm({
 				placeholder="Enter quantity of item"
 				onChange={(e) => update("quantity", e.target.value)}
 				error={errors.quantity}
+				inputMode="numeric"
+				pattern="[0-9]"
+				onBeforeInput={(e) => {
+					// disable typing non-numeric input
+					if (!/^\d$/.test(e.data)) {
+						e.preventDefault();
+					}
+				}}
 			/>
 			{formError && <ErrorText error={formError} />}
 			<button disabled={!isValid} onClick={handleSubmit}>
-				Add
+				{isEditing ? "Edit" : "Add"}
 			</button>
 		</form>
 	);
