@@ -1,24 +1,14 @@
 import { useState } from "react";
-import {
-	useDeleteGroupMutation,
-	useUpdateGroupMutation,
-} from "../../api/groupsApi";
+import { useDeleteGroupMutation } from "../../api/groupsApi";
 import Modal from "../modal/Modal";
 import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
-import GroupCategoryAddEditForm from "../groupCategoryForm/GroupCategoryAddEditForm";
-import { groupCategorySchema } from "../../schemas";
-import {
-	useDeleteCategoryMutation,
-	useUpdateCategoryMutation,
-} from "../../api/categoriesApi";
+import { useDeleteCategoryMutation } from "../../api/categoriesApi";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import ErrorText from "../errorText/ErrorText";
 import { toast } from "react-toastify";
 import { getPermissions } from "../../helpers/utils";
-
-type Mode = "Edit" | "Delete";
 
 type CardProps = {
 	id: number;
@@ -28,6 +18,7 @@ type CardProps = {
 	navigateLink: string;
 	groupId?: number; // needed for category
 	highlight?: boolean; // whether the card is the one that was just created or updated, used to highlight the card
+	openEditModal: (id: number, name: string) => void;
 };
 
 function GroupCard({
@@ -38,22 +29,19 @@ function GroupCard({
 	navigateLink,
 	groupId,
 	highlight = false,
+	openEditModal,
 }: CardProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [mode, setMode] = useState<Mode>("Edit");
 	const [error, setError] = useState<string | null>(null);
 
 	const [deleteGroup, { isLoading: deleteGroupLoading }] =
 		useDeleteGroupMutation();
-	const [updateGroup] = useUpdateGroupMutation();
-	const [updateCategory] = useUpdateCategoryMutation();
 	const [deleteCategory, { isLoading: deleteCategoryLoading }] =
 		useDeleteCategoryMutation();
 
 	const isGroup = type === "Group";
 
-	function openModal(mode: Mode) {
-		setMode(mode);
+	function openModal() {
 		setIsModalOpen(true);
 	}
 
@@ -84,35 +72,6 @@ function GroupCard({
 		}
 	}
 
-	const modalTitle =
-		mode === "Delete"
-			? `Are you sure you want to delete this ${type}?`
-			: `Edit ${type} Name`;
-
-	const childContent =
-		mode === "Delete" ? (
-			<>
-				<ConfirmDelete
-					handleDelete={handleDelete}
-					closeModal={() => setIsModalOpen(false)}
-					isLoading={isGroup ? deleteGroupLoading : deleteCategoryLoading}
-				/>
-				{error && <ErrorText error={error} />}
-			</>
-		) : (
-			// edit group or category
-			<GroupCategoryAddEditForm
-				groupId={isGroup ? id : groupId}
-				categoryId={isGroup ? undefined : id}
-				label={type}
-				schema={groupCategorySchema}
-				onUpdate={isGroup ? updateGroup : updateCategory}
-				closeModal={() => setIsModalOpen(false)}
-				initialValue={{ name: name }}
-				mode="Edit"
-			/>
-		);
-
 	const { ownerPermission, canCreateEdit } = getPermissions(role);
 
 	return (
@@ -125,14 +84,14 @@ function GroupCard({
 			</header>
 			{canCreateEdit && (
 				<div className={styles.buttonsContainer}>
-					<button className="action-btn" onClick={() => openModal("Edit")}>
+					<button
+						className="action-btn"
+						onClick={() => openEditModal(id, name)}
+					>
 						<RiEditLine /> <span className="label">Edit</span>
 					</button>
 					{ownerPermission && (
-						<button
-							className="action-btn danger"
-							onClick={() => openModal("Delete")}
-						>
+						<button className="action-btn danger" onClick={openModal}>
 							<RiDeleteBin6Line />
 							<span className="label">Delete</span>
 						</button>
@@ -141,9 +100,18 @@ function GroupCard({
 			)}
 			{isModalOpen && (
 				<Modal
-					title={modalTitle}
+					title={`Are you sure you want to delete this ${type}?`}
 					closeModal={() => setIsModalOpen(false)}
-					children={childContent}
+					children={
+						<>
+							<ConfirmDelete
+								handleDelete={handleDelete}
+								closeModal={() => setIsModalOpen(false)}
+								isLoading={isGroup ? deleteGroupLoading : deleteCategoryLoading}
+							/>
+							{error && <ErrorText error={error} />}
+						</>
+					}
 				/>
 			)}{" "}
 		</div>

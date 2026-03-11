@@ -21,15 +21,33 @@ const defaultGroupData = {
 
 function Groups() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedGroup, setSelectedGroup] = useState<
+		{ id: number; name: string } | undefined
+	>(undefined);
+	const [mode, setMode] = useState<"Add" | "Edit">();
 
 	const { data: groups, isLoading, error } = useGetGroupsQuery({});
 	const [createNewGroup] = useCreateNewGroupMutation();
 	const [updateGroup] = useUpdateGroupMutation();
 	const location = useLocation();
 
+	function openEditModal(id: number, name: string) {
+		setMode("Edit");
+		setSelectedGroup({ id, name });
+		setIsModalOpen(true);
+	}
+
+	function openModal() {
+		setMode("Add");
+		setIsModalOpen(true);
+	}
+
 	function closeModal() {
+		setSelectedGroup(undefined);
 		setIsModalOpen(false);
 	}
+
+	const isEditing = mode === "Edit";
 
 	return (
 		<section>
@@ -40,21 +58,27 @@ function Groups() {
 			<IconButton
 				icon={<IoMdAddCircleOutline />}
 				title="Create a new group"
-				onClick={() => setIsModalOpen(true)}
+				onClick={openModal}
 			/>
 
 			{isModalOpen && (
 				<Modal
-					title="Create a new group"
+					title={`${isEditing ? "Edit group" : "Create a new group"}`}
 					closeModal={closeModal}
 					children={
 						<GroupCategoryAddEditForm
 							label="Group"
-							initialValue={defaultGroupData}
+							groupId={isEditing ? selectedGroup?.id : undefined}
+							initialValue={
+								selectedGroup?.id
+									? { name: selectedGroup.name }
+									: defaultGroupData
+							}
 							schema={groupCategorySchema}
 							onCreate={createNewGroup}
 							onUpdate={updateGroup}
 							closeModal={closeModal}
+							mode={mode}
 						/>
 					}
 				/>
@@ -70,6 +94,7 @@ function Groups() {
 						role={group.role}
 						navigateLink={`/groups/${group.groupId}`}
 						highlight={location.state?.groupId === group.groupId}
+						openEditModal={openEditModal}
 					/>
 				))
 			) : (

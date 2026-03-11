@@ -35,6 +35,10 @@ function Group() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+	const [selectedCategory, setSelectedCategory] = useState<
+		{ id: number; name: string } | undefined
+	>();
+	const [mode, setMode] = useState<"Edit" | "Add">();
 
 	const {
 		data: group,
@@ -66,12 +70,24 @@ function Group() {
 		setIsModalOpen(false);
 	}
 
+	function openCategoryModal() {
+		setMode("Add");
+		setIsCategoryModalOpen(true);
+	}
+
+	function openEditModal(id: number, name: string) {
+		setSelectedCategory({ id, name });
+		setMode("Edit");
+		setIsCategoryModalOpen(true);
+	}
+
 	function closeCategoryModal() {
 		setIsCategoryModalOpen(false);
 	}
 
 	const role = group?.role;
 	const { ownerPermission, canCreateEdit } = getPermissions(role);
+	const isEditing = mode === "Edit";
 
 	return (
 		<>
@@ -94,7 +110,7 @@ function Group() {
 						<IconButton
 							icon={<IoMdAddCircleOutline />}
 							title="Create a category"
-							onClick={() => setIsCategoryModalOpen(true)}
+							onClick={openCategoryModal}
 							variant="dark"
 						/>
 					)}
@@ -103,17 +119,23 @@ function Group() {
 
 			{isCategoryModalOpen && (
 				<Modal
-					title="Add a category"
+					title={`${isEditing ? "Edit category" : "Create a category"}`}
 					closeModal={closeCategoryModal}
 					children={
 						<GroupCategoryAddEditForm
-							initialValue={defaultCategoryData}
+							initialValue={
+								selectedCategory?.id
+									? { name: selectedCategory.name }
+									: defaultCategoryData
+							}
 							label="Category"
 							groupId={Number(groupId)}
+							categoryId={isEditing ? selectedCategory?.id : undefined}
 							schema={groupCategorySchema}
 							onCreate={createCategory}
 							onUpdate={updateCategory}
 							closeModal={closeCategoryModal}
+							mode={mode}
 						/>
 					}
 				/>
@@ -162,6 +184,7 @@ function Group() {
 						groupId={Number(groupId)}
 						navigateLink={`/groups/${groupId}/category/${category.categoryId}`}
 						highlight={location.state?.categoryId === category.categoryId}
+						openEditModal={openEditModal}
 					/>
 				))
 			) : (
