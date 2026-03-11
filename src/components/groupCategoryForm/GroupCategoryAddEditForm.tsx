@@ -4,6 +4,7 @@ import ErrorText from "../errorText/ErrorText";
 import { useZodForm } from "../../hooks/useZodForm";
 import type { ZodSchema } from "zod";
 import { toast } from "react-toastify";
+import { extractErrorMessage } from "../../helpers/utils";
 
 type FormProps<T> = {
 	mode?: string;
@@ -82,13 +83,7 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 			}
 		}
 		if ("error" in res) {
-			setError(res.error.data);
-			if (typeof res.error.data.message === "string") {
-				setError(res.error.data.message);
-			} else {
-				setError("An error occured");
-			}
-			setIsSubmitting(false);
+			setError(extractErrorMessage(res.error));
 			return;
 		}
 		if (!("error" in res)) {

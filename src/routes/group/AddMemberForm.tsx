@@ -5,7 +5,7 @@ import type z from "zod";
 import InputField from "../../components/inputField/InputField";
 import ErrorText from "../../components/errorText/ErrorText";
 import styles from "./group.module.scss";
-import { zodErrorsToObject } from "../../helpers/utils";
+import { extractErrorMessage, zodErrorsToObject } from "../../helpers/utils";
 import { toast } from "react-toastify";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
@@ -99,9 +99,8 @@ function AddMemberForm({ groupId, closeModal }: AddMemberFormProps) {
 			{inviteError && (
 				<ErrorText
 					error={
-						"data" in inviteError
-							? inviteError.data?.toString()
-							: "An error occurred while inviting the member"
+						extractErrorMessage(inviteError) ??
+						"An error occurred while inviting the member"
 					}
 				/>
 			)}
