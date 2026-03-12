@@ -23,6 +23,7 @@ import GroupCard from "../../components/groupCard/GroupCard";
 import { IoMdPersonAdd, IoMdAddCircleOutline } from "react-icons/io";
 import IconButton from "../../components/iconButton/IconButton";
 import AddMemberForm from "./AddMemberForm";
+import { extractErrorMessage, getPermissions } from "../../helpers/utils";
 
 type categorySchema = z.infer<typeof groupCategorySchema>;
 
@@ -34,6 +35,10 @@ function Group() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+	const [selectedCategory, setSelectedCategory] = useState<
+		{ id: number; name: string } | undefined
+	>();
+	const [mode, setMode] = useState<"Edit" | "Add">();
 
 	const {
 		data: group,
@@ -65,6 +70,29 @@ function Group() {
 		setIsModalOpen(false);
 	}
 
+	function openCategoryModal() {
+		setMode("Add");
+		setIsCategoryModalOpen(true);
+	}
+
+	function openEditModal(id: number, name: string) {
+		setSelectedCategory({ id, name });
+		setMode("Edit");
+		setIsCategoryModalOpen(true);
+	}
+
+	function closeCategoryModal() {
+		setSelectedCategory(undefined);
+		setIsCategoryModalOpen(false);
+	}
+
+	const role = group?.role;
+	const { ownerPermission, canCreateEdit } = getPermissions(role);
+	const isEditing = mode === "Edit";
+
+	if (extractErrorMessage(error) === "Group not found")
+		return <ErrorText error={extractErrorMessage(error)} />;
+
 	return (
 		<>
 			<h2 className={styles.title}>Group: {group?.name}</h2>
@@ -72,38 +100,46 @@ function Group() {
 			{isLoading || isFetching ? (
 				<Loading />
 			) : error ? (
-				<ErrorText error="An error occurred while fetching the group details." />
+				<ErrorText error={extractErrorMessage(error)} />
 			) : (
 				<div className="buttonsContainer">
-					{(group?.role === "Owner" || group?.role === "Co-Owner") && (
+					{ownerPermission && (
 						<IconButton
 							icon={<IoMdPersonAdd />}
 							title="Add a person to a group"
 							onClick={() => setIsModalOpen(true)}
 						/>
 					)}
-					<IconButton
-						icon={<IoMdAddCircleOutline />}
-						title="Create a category"
-						onClick={() => setIsCategoryModalOpen(true)}
-						variant="dark"
-					/>
+					{canCreateEdit && (
+						<IconButton
+							icon={<IoMdAddCircleOutline />}
+							title="Create a category"
+							onClick={openCategoryModal}
+							variant="dark"
+						/>
+					)}
 				</div>
 			)}
 
 			{isCategoryModalOpen && (
 				<Modal
-					title="Add a category"
-					closeModal={() => setIsCategoryModalOpen(false)}
+					title={`${isEditing ? "Edit category" : "Create a category"}`}
+					closeModal={closeCategoryModal}
 					children={
 						<GroupCategoryAddEditForm
-							initialValue={defaultCategoryData}
+							initialValue={
+								selectedCategory?.id
+									? { name: selectedCategory.name }
+									: defaultCategoryData
+							}
 							label="Category"
 							groupId={Number(groupId)}
+							categoryId={isEditing ? selectedCategory?.id : undefined}
 							schema={groupCategorySchema}
 							onCreate={createCategory}
 							onUpdate={updateCategory}
-							closeModal={() => setIsCategoryModalOpen(false)}
+							closeModal={closeCategoryModal}
+							mode={mode}
 						/>
 					}
 				/>
@@ -152,6 +188,7 @@ function Group() {
 						groupId={Number(groupId)}
 						navigateLink={`/groups/${groupId}/category/${category.categoryId}`}
 						highlight={location.state?.categoryId === category.categoryId}
+						openEditModal={openEditModal}
 					/>
 				))
 			) : (

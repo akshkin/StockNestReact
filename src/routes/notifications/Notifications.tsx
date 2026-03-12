@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
 	useGetNotificationsQuery,
+	useGetUnreadNotificationsCountQuery,
 	useGetUnreadNotificationsQuery,
 	useSetAllNotificationsAsSeenMutation,
 } from "../../api/notificationsApi";
@@ -36,9 +37,11 @@ function Notifications() {
 	} = useGetUnreadNotificationsQuery(currentPage);
 
 	const [setNotificationsAsSeen] = useSetAllNotificationsAsSeenMutation();
+	const { data: unreadNotificationsCount } =
+		useGetUnreadNotificationsCountQuery();
 
 	const notificationsToDisplay =
-		initialTab === "unread" ? unreadNotifications?.items : notifications?.items;
+		initialTab === "unread" ? unreadNotifications : notifications;
 
 	function setActiveTab(tab: "unread" | "all") {
 		setInitialTab(tab);
@@ -56,17 +59,15 @@ function Notifications() {
 		setSearchParams(params);
 	}
 
-	let isCountMoreThanPageSize;
-	if (initialTab === "unread") {
-		isCountMoreThanPageSize =
-			unreadNotifications?.totalCount && unreadNotifications?.totalCount > 10;
-	} else {
-		isCountMoreThanPageSize =
-			notifications?.totalCount && notifications?.totalCount > 10;
-	}
+	const isCountMoreThanPageSize =
+		notificationsToDisplay?.totalCount &&
+		notificationsToDisplay?.totalCount > 10;
 
 	const loadingState =
 		isLoading || unreadLoading || isFetching || unreadIsFetching;
+
+	const totalPages =
+		notificationsToDisplay && notificationsToDisplay?.totalPagesCount;
 
 	return (
 		<>
@@ -87,7 +88,7 @@ function Notifications() {
 							onClick={() => setActiveTab("unread")}
 						>
 							Unread <span className={styles.hide}>notifications</span>(
-							{unreadNotifications?.items?.length || 0})
+							{unreadNotificationsCount})
 						</button>
 					</li>
 					<li
@@ -117,8 +118,8 @@ function Notifications() {
 
 				{loadingState && <Loading />}
 
-				{notificationsToDisplay && notificationsToDisplay?.length > 0 ? (
-					notificationsToDisplay?.map((notification) => (
+				{notificationsToDisplay && notificationsToDisplay?.items.length > 0 ? (
+					notificationsToDisplay?.items.map((notification) => (
 						<NotificationCard key={notification.id} {...notification} />
 					))
 				) : (
@@ -132,8 +133,9 @@ function Notifications() {
 				{isCountMoreThanPageSize ? (
 					<Pagination
 						currentPage={currentPage}
-						hasNextPage={!!notifications?.hasNextPage}
+						hasNextPage={!!notificationsToDisplay?.hasNextPage}
 						onPageChange={onPageChange}
+						totalPagesCount={totalPages!}
 					/>
 				) : null}
 

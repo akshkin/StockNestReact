@@ -1,11 +1,17 @@
 import { useState } from "react";
 import type { ZodSchema } from "zod";
 
-export function useZodForm<T>(schema: ZodSchema<T>, initialValues: T) {
+export function useZodForm<T>(
+	schema: ZodSchema<T>,
+	initialValues: T,
+	onFieldChange?: () => void,
+) {
 	const [data, setData] = useState<T>(initialValues);
 	const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
 
 	function update(field: keyof T, value: string) {
+		if (onFieldChange) onFieldChange(); // clear error shown when user types again
+
 		let parsedValue;
 		// parse only fields that have a number as value type
 		if (typeof value === "string") {

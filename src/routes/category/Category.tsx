@@ -17,6 +17,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import ConfirmDelete from "../../components/confirmDelete/ConfirmDelete";
 import styles from "./category.module.scss";
 import Pagination from "../../components/pagination/Pagination";
+import { toast } from "react-toastify";
+import { getPermissions } from "../../helpers/utils";
 
 function Category() {
 	const { groupId, categoryId } = useParams();
@@ -26,6 +28,10 @@ function Category() {
 	const [isMainChecked, setIsMainChecked] = useState(false);
 	const location = useLocation();
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [selectedItem, setSelectedItem] = useState<
+		{ id: number; name: string; quantity: number } | undefined
+	>(undefined);
+	const [mode, setMode] = useState<"Add" | "Edit">();
 
 	const initialPage = Number(searchParams.get("page") ?? 1);
 
@@ -76,7 +82,28 @@ function Category() {
 		if (!("error" in response)) {
 			setSelectedItems([]);
 			setIsDeleteModalOpen(false);
+			toast.success("Successfully deleted item(s)!");
 		}
+	}
+
+	function openModal() {
+		setMode("Add");
+		setIsModalOpen(true);
+	}
+
+	function openEditItemModal(id: number, name: string, quantity: number) {
+		setSelectedItem({
+			id,
+			name,
+			quantity,
+		});
+		setMode("Edit");
+		setIsModalOpen(true);
+	}
+
+	function closeModal() {
+		setSelectedItem(undefined);
+		setIsModalOpen(false);
 	}
 
 	function onPageChange(newPage: number) {
@@ -87,6 +114,12 @@ function Category() {
 
 	const items = itemsResponse?.items || [];
 
+	const { ownerPermission, canCreateEdit } = getPermissions(
+		itemsResponse?.myRole,
+	);
+
+	const isEditing = mode === "Edit";
+
 	return (
 		<div>
 			{categoryLoading || categoryFetching ? (
@@ -95,13 +128,15 @@ function Category() {
 				<ErrorText error={"An error occured while fetching category"} />
 			) : (
 				<div className="buttonsContainer">
-					<IconButton
-						icon={<IoMdAddCircleOutline />}
-						title="Add an item"
-						onClick={() => setIsModalOpen(true)}
-					/>
+					{canCreateEdit && (
+						<IconButton
+							icon={<IoMdAddCircleOutline />}
+							title="Add an item"
+							onClick={openModal}
+						/>
+					)}
 
-					{selectedItems?.length > 0 && (
+					{selectedItems?.length > 0 && ownerPermission && (
 						<IconButton
 							icon={<RiDeleteBin6Line />}
 							title="Delete selected items"
@@ -123,16 +158,18 @@ function Category() {
 					<table className={styles.table}>
 						<thead>
 							<tr>
-								<th className={styles.columnOne}>
-									<input
-										type="checkbox"
-										checked={isMainChecked}
-										onChange={(e) => handleChange(e)}
-									/>
-								</th>
+								{canCreateEdit && (
+									<th className={styles.columnOne}>
+										<input
+											type="checkbox"
+											checked={isMainChecked}
+											onChange={(e) => handleChange(e)}
+										/>
+									</th>
+								)}
 								<th>Item Name</th>
 								<th className={styles.qty}>Qty</th>
-								<th className={styles.edit}>Edit</th>
+								{canCreateEdit && <th className={styles.edit}>Edit</th>}
 							</tr>
 						</thead>
 						<tbody>
@@ -147,6 +184,8 @@ function Category() {
 									setSelectedItems={setSelectedItems}
 									isMainChecked={isMainChecked}
 									highlight={location.state?.itemId === item.itemId}
+									role={itemsResponse?.myRole || "Viewer"}
+									openEditItemModal={openEditItemModal}
 								/>
 							))}
 						</tbody>
@@ -157,6 +196,7 @@ function Category() {
 							currentPage={initialPage}
 							hasNextPage={!!itemsResponse?.hasNextPage}
 							onPageChange={onPageChange}
+							totalPagesCount={itemsResponse?.totalPagesCount}
 						/>
 					)}
 				</>
@@ -166,14 +206,23 @@ function Category() {
 
 			{isModalOpen && (
 				<Modal
-					title="Add an item"
-					closeModal={() => setIsModalOpen(false)}
+					title={`${isEditing ? "Edit item" : "Add an item"}`}
+					closeModal={closeModal}
 					children={
 						<ItemForm
-							mode="Add"
+							mode={mode!}
 							groupId={Number(groupId)}
 							categoryId={Number(categoryId)}
-							closeModal={() => setIsModalOpen(false)}
+							closeModal={closeModal}
+							initialValues={
+								selectedItem?.id
+									? {
+											name: selectedItem?.name,
+											quantity: selectedItem?.quantity,
+										}
+									: undefined
+							}
+							itemId={selectedItem?.id}
 						/>
 					}
 				/>

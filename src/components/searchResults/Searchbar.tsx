@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import InputField from "../inputField/InputField";
 import { useSearchParams } from "react-router-dom";
-import { useGetSearchResultsQuery } from "../../api/searchApi";
+import { useLazyGetSearchResultsQuery } from "../../api/searchApi";
 import SearchResults from "./SearchResults";
 import styles from "./searchResults.module.scss";
 import queryString from "query-string";
@@ -13,13 +13,12 @@ function Searchbar() {
 	const [isSearchResultsOpen, setIsSearchResultsOpen] = useState(false);
 	const searchInputRef = useRef<HTMLDivElement | null>(null);
 
-	const { data: searchResults } = useGetSearchResultsQuery(searchQuery, {
-		skip: !searchQuery.trim(),
-	});
+	const [triggerSearch, { data: searchResults }] =
+		useLazyGetSearchResultsQuery();
 
 	useEffect(() => {
 		const delayDebounceFubction = setTimeout(() => {
-			if (searchQuery) {
+			if (searchQuery.trim().length > 0) {
 				const parsed = queryString.parse(window.location.search);
 				const newQuery = queryString.stringify({
 					...parsed,
@@ -28,10 +27,11 @@ function Searchbar() {
 				const params = new URLSearchParams(newQuery);
 				setSearchParams(params, { replace: true });
 				setIsSearchResultsOpen(true);
+				triggerSearch(searchQuery);
 			}
 		}, 300);
 		return () => clearTimeout(delayDebounceFubction);
-	}, [searchQuery, setSearchParams]);
+	}, [searchQuery, setSearchParams, triggerSearch]);
 
 	const resetSearch = useCallback(() => {
 		setSearchQuery("");

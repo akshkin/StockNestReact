@@ -28,7 +28,17 @@ const baseQueryWithReauth = async (
 	/* Try refresh request only once and then retry original requests after a successful
 	 *   response from refresh request
 	 */
-	if (result?.error?.status === 401) {
+
+	const isLoginRequest =
+		(typeof args === "string" && args.includes("/account/login")) ||
+		(typeof args === "object" &&
+			args !== null &&
+			"url" in args &&
+			typeof args.url === "string" &&
+			args.url.includes("/account/login"));
+
+	// prevent refresh request when logging in
+	if (result?.error?.status === 401 && !isLoginRequest) {
 		if (!refreshPromise) {
 			refreshPromise = (async () =>
 				await baseQuery("/account/refresh", api, extraOptions))().finally(
@@ -60,7 +70,8 @@ export const apiSlice = createApi({
 		"GroupMembers",
 		"Notifications",
 		"NotificationCount",
+		"Profile",
 	],
-	refetchOnFocus: true,
+	// refetchOnFocus: true,
 	endpoints: () => ({}),
 });

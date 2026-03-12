@@ -12,6 +12,7 @@ export type GroupMember = {
 	role: string;
 	isMe: boolean;
 	userId: string;
+	profileImageUrl: string;
 };
 
 export const groupsApiSlice = apiSlice.injectEndpoints({

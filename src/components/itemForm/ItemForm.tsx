@@ -8,11 +8,13 @@ import {
 } from "../../api/itemsApi";
 import ErrorText from "../errorText/ErrorText";
 import { itemSchema } from "../../schemas";
+import { toast } from "react-toastify";
+import { extractErrorMessage } from "../../helpers/utils";
 
 type itemSchema = z.infer<typeof itemSchema>;
 
 type ItemFormProps = {
-	mode: string; //edit, add
+	mode: "Add" | "Edit"; //edit, add
 	groupId: number;
 	categoryId: number;
 	itemId?: number;
@@ -41,6 +43,7 @@ function ItemForm({
 			: {
 					...defaultValues,
 				},
+		() => setFormError(null),
 	);
 
 	const [createItem] = useCreateItemMutation();
@@ -62,15 +65,16 @@ function ItemForm({
 		}
 
 		if (!("error" in res)) {
+			if (isEditing) {
+				toast.success("Successfully updated item!");
+			} else {
+				toast.success("Successfuly created item");
+			}
 			return closeModal();
 		} else {
 			if ("error" in res) {
-				const err = res?.error;
-				if (err && "data" in err && typeof err?.data === "string") {
-					setFormError(err?.data);
-				} else {
-					setFormError("An error occured while saving");
-				}
+				const err = extractErrorMessage(res?.error);
+				setFormError(err);
 			}
 		}
 	}
@@ -92,10 +96,18 @@ function ItemForm({
 				placeholder="Enter quantity of item"
 				onChange={(e) => update("quantity", e.target.value)}
 				error={errors.quantity}
+				inputMode="numeric"
+				pattern="[0-9]"
+				onBeforeInput={(e) => {
+					// disable typing non-numeric input
+					if (!/^\d$/.test(e.data)) {
+						e.preventDefault();
+					}
+				}}
 			/>
 			{formError && <ErrorText error={formError} />}
 			<button disabled={!isValid} onClick={handleSubmit}>
-				Add
+				{isEditing ? "Update" : "Add"}
 			</button>
 		</form>
 	);

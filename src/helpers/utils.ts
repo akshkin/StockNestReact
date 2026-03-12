@@ -56,3 +56,22 @@ export function navigateFromNotification(
 
 	routes[n.type]?.();
 }
+
+export function getPermissions(role?: string) {
+	const ownerPermission = role === "Owner" || role === "Co-Owner";
+	const canCreateEdit = role !== "Viewer";
+
+	return { ownerPermission, canCreateEdit };
+}
+
+export function extractErrorMessage(error: unknown): string {
+	if (typeof error === "object" && error !== null && "data" in error) {
+		const err = error as { data?: unknown };
+
+		if (err.data && typeof err.data === "object" && "message" in err.data) {
+			return err.data.message as string;
+		}
+	}
+
+	return "An unexpected error occurred";
+}

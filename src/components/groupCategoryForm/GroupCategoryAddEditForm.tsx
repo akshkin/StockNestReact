@@ -3,6 +3,8 @@ import InputField from "../inputField/InputField";
 import ErrorText from "../errorText/ErrorText";
 import { useZodForm } from "../../hooks/useZodForm";
 import type { ZodSchema } from "zod";
+import { toast } from "react-toastify";
+import { extractErrorMessage } from "../../helpers/utils";
 
 type FormProps<T> = {
 	mode?: string;
@@ -42,12 +44,16 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 	onUpdate,
 }: FormProps<T>) {
 	const isEditing = mode === "Edit";
-
-	const { data, update, errors, isValid } = useZodForm<T>(schema, {
-		...initialValue,
-	} as T);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const { data, update, errors, isValid } = useZodForm<T>(
+		schema,
+		{
+			...initialValue,
+		} as T,
+		() => setError(null),
+	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault();
@@ -80,17 +86,21 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 				}
 			}
 		}
-
+		if ("error" in res) {
+			setError(extractErrorMessage(res.error));
+			setIsSubmitting(false);
+			return;
+		}
 		if (!("error" in res)) {
 			closeModal();
-		} else {
-			if (typeof res.error.data === "string") {
-				setError(res.error.data);
+			if (isEditing) {
+				toast.success("Succesfully saved changes!");
 			} else {
-				setError("An error occured");
+				toast.success(`Succesfully created ${label}!`);
 			}
 		}
 		setIsSubmitting(false);
+		return;
 	}
 
 	return (

@@ -9,6 +9,9 @@ type Props = {
 	placeholder: string;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	error?: string;
+	inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"] | undefined;
+	pattern?: string | undefined;
+	onBeforeInput?: React.InputEventHandler<HTMLInputElement> | undefined;
 };
 
 export default function InputField({
@@ -19,6 +22,9 @@ export default function InputField({
 	placeholder,
 	onChange,
 	error,
+	inputMode,
+	pattern,
+	onBeforeInput,
 }: Props) {
 	return (
 		<div className={styles.wrapper}>
@@ -30,6 +36,9 @@ export default function InputField({
 				value={value}
 				placeholder={placeholder}
 				onChange={onChange}
+				inputMode={inputMode}
+				pattern={pattern}
+				onBeforeInput={onBeforeInput}
 			/>
 			{error && <ErrorText error={error} />}
 		</div>

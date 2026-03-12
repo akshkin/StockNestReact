@@ -1,9 +1,10 @@
 .table {
 	width: 100%;
 	table-layout: fixed;
+	max-width: 1000px;
 
 	tbody tr:nth-child(even) {
-		background: #fafafa;
+		background-color: var(--color-light-grey);
 	}
 	th {
 		text-align: left;
@@ -26,7 +27,14 @@
 		padding: 0.2em;
 	}
 
+	tbody tr {
+		input {
+			cursor: pointer;
+		}
+		transition: filter 0.3s ease;
+	}
+
 	tbody tr:hover {
-		background: #f3f4f6;
+		filter: brightness(110%);
 	}
 }

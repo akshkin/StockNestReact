@@ -1,7 +1,7 @@
 import styles from "./sidebar.module.scss";
 import { NavLink } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
-import { HiUserGroup } from "react-icons/hi2";
+import { HiOutlineUser, HiUserGroup } from "react-icons/hi2";
 import NotificationIcon from "../notification/NotificationIcon";
 
 function Sidebar() {
@@ -33,13 +33,24 @@ function Sidebar() {
 					</li>
 					<li>
 						<NavLink
-							to="/notifications?page=1"
+							to="/notifications?page=1&tab=unread"
 							className={({ isActive }) =>
 								`${styles.dashlink} ${isActive ? styles.active : ""}`
 							}
 						>
 							<NotificationIcon />
 							<span className={styles.text}>Notifications</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to="/profile"
+							className={({ isActive }) =>
+								`${styles.dashlink} ${isActive ? styles.active : ""}`
+							}
+						>
+							<HiOutlineUser />
+							<span className={styles.text}>Profile</span>
 						</NavLink>
 					</li>
 				</ul>

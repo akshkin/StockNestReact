@@ -8,10 +8,10 @@
 	margin-block: 0.2em;
 	border-radius: var(--radius-sm);
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	transition: filter 0.2s ease;
 
 	&:hover {
-		background-color: #eee;
+		filter: brightness(120%);
 	}
 
 	.avatar {

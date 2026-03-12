@@ -52,6 +52,7 @@ function BarChart({ labels, datasets }: ChartProps) {
 				text: "Items in a category per group",
 			},
 		},
+		//eslint-disable-next-line
 		onClick: (_: any, elements: any) => {
 			if (!elements.length) return;
 

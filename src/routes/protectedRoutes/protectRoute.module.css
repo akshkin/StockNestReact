@@ -25,6 +25,12 @@
 			@media (max-width: 700px) {
 				margin-left: 60px;
 			}
+
+			/* remove margin left as the sidebar does not appear on mobile and add margin bottom instead */
+			@media (max-width: 500px) {
+				margin-left: 0;
+				margin-bottom: 60px;
+			}
 		}
 	}
 }
