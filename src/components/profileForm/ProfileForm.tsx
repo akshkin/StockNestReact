@@ -28,6 +28,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	const [isRemoveProfileImageModalOpen, setIsRemoveProfileImageModalOpen] =
 		useState(false);
 	const [fileSizeError, setFileSizeError] = useState("");
+	const [preview, setPreview] = useState<string | null>(null);
 
 	const initialValues = {
 		firstName: profile?.firstName,
@@ -47,11 +48,13 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	const [updateProfile, { isLoading, isError }] = useUpdateProfileMutation();
 
 	async function removeProfileImageFromSupabase() {
-		const { error } = await supabase.storage
-			.from("avatars")
-			.remove([profile.profileImageUrl]);
-		if (error) {
-			setError("An error occured");
+		if (profile.profileImageUrl) {
+			const { error } = await supabase.storage
+				.from("avatars")
+				.remove([profile.profileImageUrl]);
+			if (error) {
+				setError("An error occured");
+			}
 		}
 	}
 
@@ -65,6 +68,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 				return;
 			}
 			setFile(selected);
+			setPreview(URL.createObjectURL(selected));
 		}
 	}
 
@@ -123,6 +127,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	}
 
 	function handleRemoveProfileImage() {
+		setPreview(null);
 		setRemoveProfileImage(true);
 		setIsRemoveProfileImageModalOpen(false);
 	}
@@ -132,12 +137,16 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
-				{profile?.profileImageUrl && (
+				{(profile?.profileImageUrl || preview) && (
 					<div className={styles.imageWithButton}>
-						<img
-							className={styles.image}
-							src={`${bucketUrl}/${profile?.profileImageUrl}`}
-						/>
+						{preview ? (
+							<img className={styles.image} src={`${preview}`} />
+						) : (
+							<img
+								className={styles.image}
+								src={`${bucketUrl}/${profile?.profileImageUrl}`}
+							/>
+						)}
 						{!removeProfileImage && (
 							<button
 								type="button"

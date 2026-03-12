@@ -4,10 +4,17 @@ import styles from "./profile.module.scss";
 import { CiEdit } from "react-icons/ci";
 import Modal from "../../components/modal/Modal";
 import ProfileForm from "../../components/profileForm/ProfileForm";
+import Loading from "../../components/loading/Loading";
+import ErrorText from "../../components/errorText/ErrorText";
 
 function Profile() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const { data: profile } = useGetProfileQuery({});
+	const {
+		data: profile,
+		isLoading,
+		isFetching,
+		isError,
+	} = useGetProfileQuery({});
 
 	const bucketUrl = import.meta.env.VITE_BUCKET_URL;
 
@@ -26,19 +33,25 @@ function Profile() {
 					<CiEdit />
 				</button>
 			</div>
-			<div className={styles.mainContent}>
-				<img className={styles.avatar} src={imgSrc} alt="avatar" />
-				<div>
-					<div className={styles.flexColumn}>
-						<h3>Name</h3>
-						<p>{profile?.fullName}</p>
-					</div>
-					<div className={styles.flexColumn}>
-						<h3>Email</h3>
-						<p>{profile?.email}</p>
+			{isLoading || isFetching ? (
+				<Loading />
+			) : isError ? (
+				<ErrorText error={"An error occured while fetching details"} />
+			) : (
+				<div className={styles.mainContent}>
+					<img className={styles.avatar} src={imgSrc} alt="avatar" />
+					<div>
+						<div className={styles.flexColumn}>
+							<h3>Name</h3>
+							<p>{profile?.fullName}</p>
+						</div>
+						<div className={styles.flexColumn}>
+							<h3>Email</h3>
+							<p>{profile?.email}</p>
+						</div>
 					</div>
 				</div>
-			</div>
+			)}
 			{isModalOpen && (
 				<Modal
 					title="Edit Profile"
