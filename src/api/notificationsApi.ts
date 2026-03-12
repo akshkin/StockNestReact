@@ -18,6 +18,7 @@ export type NotificationResponseType = {
 	pageSize: number;
 	pageNumber: number;
 	totalCount: number;
+	totalPagesCount: number;
 };
 
 export type NotificationItemType = {

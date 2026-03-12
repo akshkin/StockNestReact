@@ -8,12 +8,14 @@ type PaginationProps = {
 	currentPage: number;
 	hasNextPage: boolean;
 	onPageChange: (newPage: number) => void;
+	totalPagesCount: number;
 };
 
 function Pagination({
 	currentPage,
 	hasNextPage,
 	onPageChange,
+	totalPagesCount,
 }: PaginationProps) {
 	return (
 		<div className={styles.paginationContainer}>
@@ -24,7 +26,7 @@ function Pagination({
 			>
 				<MdOutlineKeyboardArrowLeft />
 			</button>
-			<span>{`Page ${currentPage}`}</span>
+			<span>{`Page ${currentPage} of ${totalPagesCount}`}</span>
 			<button
 				onClick={() => onPageChange(currentPage + 1)}
 				disabled={!hasNextPage}

@@ -196,6 +196,7 @@ function Category() {
 							currentPage={initialPage}
 							hasNextPage={!!itemsResponse?.hasNextPage}
 							onPageChange={onPageChange}
+							totalPagesCount={itemsResponse?.totalPagesCount}
 						/>
 					)}
 				</>

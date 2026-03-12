@@ -41,7 +41,7 @@ function Notifications() {
 		useGetUnreadNotificationsCountQuery();
 
 	const notificationsToDisplay =
-		initialTab === "unread" ? unreadNotifications?.items : notifications?.items;
+		initialTab === "unread" ? unreadNotifications : notifications;
 
 	function setActiveTab(tab: "unread" | "all") {
 		setInitialTab(tab);
@@ -59,17 +59,15 @@ function Notifications() {
 		setSearchParams(params);
 	}
 
-	let isCountMoreThanPageSize;
-	if (initialTab === "unread") {
-		isCountMoreThanPageSize =
-			unreadNotifications?.totalCount && unreadNotifications?.totalCount > 10;
-	} else {
-		isCountMoreThanPageSize =
-			notifications?.totalCount && notifications?.totalCount > 10;
-	}
+	const isCountMoreThanPageSize =
+		notificationsToDisplay?.totalCount &&
+		notificationsToDisplay?.totalCount > 10;
 
 	const loadingState =
 		isLoading || unreadLoading || isFetching || unreadIsFetching;
+
+	const totalPages =
+		notificationsToDisplay && notificationsToDisplay?.totalPagesCount;
 
 	return (
 		<>
@@ -120,8 +118,8 @@ function Notifications() {
 
 				{loadingState && <Loading />}
 
-				{notificationsToDisplay && notificationsToDisplay?.length > 0 ? (
-					notificationsToDisplay?.map((notification) => (
+				{notificationsToDisplay && notificationsToDisplay?.items.length > 0 ? (
+					notificationsToDisplay?.items.map((notification) => (
 						<NotificationCard key={notification.id} {...notification} />
 					))
 				) : (
@@ -135,8 +133,9 @@ function Notifications() {
 				{isCountMoreThanPageSize ? (
 					<Pagination
 						currentPage={currentPage}
-						hasNextPage={!!notifications?.hasNextPage}
+						hasNextPage={!!notificationsToDisplay?.hasNextPage}
 						onPageChange={onPageChange}
+						totalPagesCount={totalPages!}
 					/>
 				) : null}
 
