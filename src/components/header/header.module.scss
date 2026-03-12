@@ -7,6 +7,9 @@
 
 	.logo {
 		height: 30px;
+		@media (max-width: 700px) {
+			display: none;
+		}
 	}
 
 	nav {
@@ -95,6 +98,20 @@
 		max-width: 400px;
 		padding: 0.5em;
 		@media (max-width: 500px) {
+			display: none;
+		}
+	}
+
+	.logoDesktop {
+		height: 30px;
+		@media (max-width: 700px) {
+			display: none;
+		}
+	}
+
+	.logoMobile {
+		height: 30px;
+		@media (min-width: 700px) {
 			display: none;
 		}
 	}

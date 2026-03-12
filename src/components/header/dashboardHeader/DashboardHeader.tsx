@@ -1,4 +1,5 @@
 import logo from "@/assets/images/logo.svg";
+import mobileLogo from "@/assets/images/logo-mobile.svg";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../header.module.scss";
 import { useLogoutMutation } from "../../../api/authApi";
@@ -19,7 +20,8 @@ function DashboardHeader() {
 	return (
 		<header className={`${styles.header} ${styles.dashheader}`}>
 			<nav>
-				<img src={logo} alt="Logo" className={styles.logo} />
+				<img src={logo} alt="Logo" className={styles.logoDesktop} />
+				<img src={mobileLogo} alt="Logo" className={styles.logoMobile} />
 
 				<div className={styles.searchbarDesktop}>
 					<Searchbar />

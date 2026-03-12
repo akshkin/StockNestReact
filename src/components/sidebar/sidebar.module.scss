@@ -45,9 +45,21 @@
 		}
 	}
 
+	// show side bar as bottom bar on mobile devices/smaller screens
 	@media (max-width: 500px) {
+		bottom: 0;
+		top: auto;
+		left: 0;
+		right: 0;
+		height: 40px;
+		width: 100%;
+
 		.dashlinks {
-			margin-top: 9em;
+			flex-direction: row;
+			justify-content: space-around;
+			align-items: center;
+			margin-top: 0;
+			height: 100%;
 		}
 	}
 }
