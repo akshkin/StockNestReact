@@ -5,6 +5,7 @@ import path from "path/win32";
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [react()],
+	root: path.resolve(__dirname),
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "src"),
