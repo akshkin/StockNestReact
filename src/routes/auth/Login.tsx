@@ -4,7 +4,7 @@ import z from "zod";
 import { loginSchema } from "../../schemas";
 import InputField from "../../components/inputField/InputField";
 import styles from "./auth.module.scss";
-import { zodErrorsToObject } from "../../helpers/utils";
+import { extractErrorMessage, zodErrorsToObject } from "../../helpers/utils";
 import ErrorText from "../../components/errorText/ErrorText";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -96,13 +96,7 @@ function Login() {
 				>
 					Login
 				</button>
-				{error && (
-					<ErrorText
-						error={
-							"data" in error ? error?.data?.toString() : "An error occurred"
-						}
-					/>
-				)}
+				{error && <ErrorText error={extractErrorMessage(error)} />}
 			</form>
 			<Link to="/register">Not a member? Register here</Link>
 		</div>
