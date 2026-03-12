@@ -6,7 +6,7 @@ import { useRegisterMutation } from "../../api/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import ErrorText from "../../components/errorText/ErrorText";
-import { zodErrorsToObject } from "../../helpers/utils";
+import { extractErrorMessage, zodErrorsToObject } from "../../helpers/utils";
 
 type registerSchema = z.infer<typeof registerSchema>;
 
@@ -138,13 +138,7 @@ function Auth() {
 					Register
 				</button>
 				{registerState.error && (
-					<ErrorText
-						error={
-							"data" in registerState.error
-								? registerState.error?.data?.toString()
-								: "An error occurred while registering"
-						}
-					/>
+					<ErrorText error={extractErrorMessage(registerState.error)} />
 				)}
 			</form>
 			<Link to="/login">Already a member? Login</Link>
