@@ -124,20 +124,24 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 			closeModal();
 			toast.success("Successfully updated profile!");
 		}
+		setPreview(null);
+		setRemoveProfileImage(false);
 	}
 
 	function handleRemoveProfileImage() {
 		setPreview(null);
 		setRemoveProfileImage(true);
+		setFile(null);
 		setIsRemoveProfileImageModalOpen(false);
 	}
 
 	const bucketUrl = import.meta.env.VITE_BUCKET_URL;
+	const imagePreview = profile?.profileImageUrl || preview;
 
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
-				{(profile?.profileImageUrl || preview) && (
+				{imagePreview && (
 					<div className={styles.imageWithButton}>
 						{preview ? (
 							<img className={styles.image} src={`${preview}`} />
@@ -147,7 +151,8 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 								src={`${bucketUrl}/${profile?.profileImageUrl}`}
 							/>
 						)}
-						{!removeProfileImage && (
+						{/* show remove imgae button if not clicked on remove or if preview exists */}
+						{(!removeProfileImage || preview) && (
 							<button
 								type="button"
 								className="invertedButton"
@@ -200,7 +205,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 				<button type="submit" disabled={isLoading || imageLoading || !isValid}>
 					Submit
 				</button>
-				<ErrorText error={error ?? ""} />
+				{error && <ErrorText error={error} />}
 			</form>
 			{isRemoveProfileImageModalOpen && (
 				<Modal
