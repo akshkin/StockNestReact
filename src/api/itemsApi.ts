@@ -24,7 +24,7 @@ export const itemsApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: { ...formData },
 			}),
-			invalidatesTags: ["Items"],
+			invalidatesTags: ["Items", "Stats"],
 		}),
 		getItems: builder.query<
 			ItemsResponseType,
@@ -50,7 +50,7 @@ export const itemsApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: itemIds,
 			}),
-			invalidatesTags: ["Items"],
+			invalidatesTags: ["Items", "Stats"],
 		}),
 		getItemPageIndex: builder.query({
 			query: ({ groupId, categoryId, itemId }) => ({

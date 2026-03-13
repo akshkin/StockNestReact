@@ -32,7 +32,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 					...formData,
 				},
 			}),
-			invalidatesTags: ["Groups"],
+			invalidatesTags: ["Groups", "Stats"],
 		}),
 		updateGroup: builder.mutation({
 			query: ({ groupId, formData }) => ({
@@ -49,7 +49,7 @@ export const groupsApiSlice = apiSlice.injectEndpoints({
 				url: `/groups/${id}/delete`,
 				method: "POST",
 			}),
-			invalidatesTags: ["Groups"],
+			invalidatesTags: ["Groups", "Stats"],
 		}),
 		inviteMemeberToGroup: builder.mutation({
 			query: ({ groupId, inviterData }) => ({

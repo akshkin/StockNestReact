@@ -11,5 +11,5 @@ export default defineConfig({
 			src: "/src",
 		},
 	},
-	base: "/StockNestReact/",
+	base: "/",
 });

@@ -25,6 +25,7 @@ export const statsApi = apiSlice.injectEndpoints({
 				url: "stats",
 				method: "GET",
 			}),
+			providesTags: ["Stats"],
 		}),
 	}),
 });

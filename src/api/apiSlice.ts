@@ -71,6 +71,7 @@ export const apiSlice = createApi({
 		"Notifications",
 		"NotificationCount",
 		"Profile",
+		"Stats",
 	],
 	// refetchOnFocus: true,
 	endpoints: () => ({}),

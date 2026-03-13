@@ -13,7 +13,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
 				method: "POST",
 				body: { ...formData },
 			}),
-			invalidatesTags: ["Categories"],
+			invalidatesTags: ["Categories", "Stats"],
 		}),
 		updateCategory: builder.mutation({
 			query: ({ groupId, categoryId, formData }) => ({
@@ -41,7 +41,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
 				url: `categories/group/${groupId}/category/${categoryId}/delete`,
 				method: "POST",
 			}),
-			invalidatesTags: ["Categories"],
+			invalidatesTags: ["Categories", "Stats"],
 		}),
 	}),
 });
