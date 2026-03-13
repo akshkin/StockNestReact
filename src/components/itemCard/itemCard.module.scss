@@ -6,17 +6,30 @@
 
 	.nameColumn {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		gap: 0.3em;
 
+		.nameWithColor {
+			display: flex;
+			align-items: baseline;
+			gap: 0.3em;
+		}
 		.name {
 			font-weight: 300;
+			margin-bottom: 0;
 		}
-	}
-	.colorAccent {
-		width: 15px;
-		height: 15px;
-		border-radius: var(--radius-sm);
+		.colorAccent {
+			width: 15px;
+			height: 15px;
+			border-radius: var(--radius-sm);
+		}
+
+		.updatedText {
+			margin: 0;
+			font-size: 0.75rem;
+			font-style: italic;
+			color: var(--color-muted);
+		}
 	}
 
 	.edit {

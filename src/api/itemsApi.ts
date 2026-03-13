@@ -4,6 +4,10 @@ export type Item = {
 	itemId: number;
 	name: string;
 	quantity: number;
+	createdAt: string;
+	createdBy: string;
+	updatedAt: string;
+	updatedBy: string;
 };
 
 export type ItemsResponseType = {

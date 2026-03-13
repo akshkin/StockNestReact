@@ -1,36 +1,43 @@
 import { useState } from "react";
-import { useDeleteGroupMutation } from "../../api/groupsApi";
+import { useDeleteGroupMutation, type Group } from "../../api/groupsApi";
 import Modal from "../modal/Modal";
 import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
-import { useDeleteCategoryMutation } from "../../api/categoriesApi";
+import {
+	useDeleteCategoryMutation,
+	type Category,
+} from "../../api/categoriesApi";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import ErrorText from "../errorText/ErrorText";
 import { toast } from "react-toastify";
 import { getPermissions } from "../../helpers/utils";
+import { formatDistanceToNow } from "date-fns";
 
-type CardProps = {
-	id: number;
-	name: string;
-	role?: string;
-	type: "Group" | "Category";
-	navigateLink: string;
-	groupId?: number; // needed for category
-	highlight?: boolean; // whether the card is the one that was just created or updated, used to highlight the card
+type BaseCardProps = {
+	highlight?: boolean;
 	openEditModal: (id: number, name: string) => void;
 };
 
-function GroupCard({
-	id,
-	name,
-	role,
-	type,
-	navigateLink,
-	groupId,
-	highlight = false,
-	openEditModal,
-}: CardProps) {
+type GroupCardProps = BaseCardProps & {
+	type: "Group";
+	data: Group;
+	navigateLink: string;
+};
+
+type CategoryCardProps = BaseCardProps & {
+	type: "Category";
+	data: Category;
+	role: string;
+	groupId: number;
+	navigateLink: string;
+};
+
+type CardProps = GroupCardProps | CategoryCardProps;
+
+function GroupCard(props: CardProps) {
+	const { data, type, navigateLink, highlight, openEditModal } = props;
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -48,9 +55,12 @@ function GroupCard({
 	async function handleDelete() {
 		let res;
 		if (isGroup) {
-			res = await deleteGroup({ id: id });
+			res = await deleteGroup({ id: data.groupId });
 		} else {
-			res = await deleteCategory({ groupId, categoryId: id });
+			res = await deleteCategory({
+				groupId: props.groupId,
+				categoryId: data.categoryId,
+			});
 		}
 
 		if (!("error" in res)) {
@@ -72,21 +82,32 @@ function GroupCard({
 		}
 	}
 
-	const { ownerPermission, canCreateEdit } = getPermissions(role);
+	const myRole = isGroup ? data?.role : props?.role;
+	const { ownerPermission, canCreateEdit } = getPermissions(myRole);
 
 	return (
 		<div className={`${styles.groupCard} ${highlight ? styles.highlight : ""}`}>
 			<header>
 				<Link to={navigateLink}>
-					<h3>{name}</h3>
+					<h3>{data?.name}</h3>
 				</Link>
-				{isGroup && <span className={styles.role}>{role}</span>}
+				{isGroup && <span className={styles.role}>{data?.role}</span>}
 			</header>
+			<p className={styles.updatedText}>
+				{data?.updatedBy
+					? `Updated by ${data.updatedBy} ${formatDistanceToNow(new Date(data.updatedAt))} ago`
+					: `Created by ${data.createdBy} ${formatDistanceToNow(new Date(data.createdAt))} ago`}
+			</p>
 			{canCreateEdit && (
 				<div className={styles.buttonsContainer}>
 					<button
 						className="action-btn"
-						onClick={() => openEditModal(id, name)}
+						onClick={() =>
+							openEditModal(
+								isGroup ? data?.groupId : data?.categoryId,
+								data?.name,
+							)
+						}
 					>
 						<RiEditLine /> <span className="label">Edit</span>
 					</button>
