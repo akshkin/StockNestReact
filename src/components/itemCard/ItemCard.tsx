@@ -2,13 +2,11 @@ import { useState } from "react";
 import { RiEditLine } from "react-icons/ri";
 import styles from "./itemCard.module.scss";
 import { getPermissions } from "../../helpers/utils";
+import type { Item } from "../../api/itemsApi";
+import { formatDistanceToNow } from "date-fns";
 
 type ItemCardProps = {
-	groupId: number;
-	categoryId: number;
-	itemId: number;
-	name: string;
-	quantity: number;
+	item: Item;
 	setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
 	isMainChecked: boolean; // main checkbox in the table header
 	role: string;
@@ -17,9 +15,7 @@ type ItemCardProps = {
 };
 
 function ItemCard({
-	itemId,
-	name,
-	quantity,
+	item,
 	setSelectedItems,
 	isMainChecked,
 	role,
@@ -28,6 +24,8 @@ function ItemCard({
 }: ItemCardProps) {
 	const [isChecked, setIsChecked] = useState(false);
 
+	const { itemId, name, quantity, createdAt, createdBy, updatedAt, updatedBy } =
+		item;
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		setIsChecked(e.target.checked);
 
@@ -63,11 +61,18 @@ function ItemCard({
 				</td>
 			)}
 			<td className={styles.nameColumn}>
-				<span
-					className={styles.colorAccent}
-					style={{ backgroundColor: stringToColor(name) }}
-				/>
-				<h4 className={styles.name}>{name}</h4>
+				<span className={styles.nameWithColor}>
+					<span
+						className={styles.colorAccent}
+						style={{ backgroundColor: stringToColor(name) }}
+					/>
+					<h4 className={styles.name}>{name}</h4>
+				</span>
+				<p className={styles.updatedText}>
+					{updatedAt
+						? `Updated by ${updatedBy} ${formatDistanceToNow(new Date(updatedAt))}`
+						: `Created by ${createdBy} ${formatDistanceToNow(new Date(createdAt))}  `}
+				</p>
 			</td>
 			<td className={styles.quantity}>
 				<p>{quantity}</p>

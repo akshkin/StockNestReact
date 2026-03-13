@@ -176,11 +176,12 @@ function Category() {
 							{items?.map((item: Item) => (
 								<ItemCard
 									key={item.itemId}
-									groupId={Number(groupId)}
-									categoryId={Number(categoryId)}
-									itemId={Number(item.itemId)}
-									name={item.name}
-									quantity={item.quantity}
+									item={item}
+									// groupId={Number(groupId)}
+									// categoryId={Number(categoryId)}
+									// itemId={Number(item.itemId)}
+									// name={item.name}
+									// quantity={item.quantity}
 									setSelectedItems={setSelectedItems}
 									isMainChecked={isMainChecked}
 									highlight={location.state?.itemId === item.itemId}
