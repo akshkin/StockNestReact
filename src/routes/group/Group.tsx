@@ -181,8 +181,7 @@ function Group() {
 				categories.map((category: Category) => (
 					<GroupCard
 						key={category.categoryId}
-						id={category.categoryId}
-						name={category.name}
+						data={category}
 						type="Category"
 						role={group?.role}
 						groupId={Number(groupId)}

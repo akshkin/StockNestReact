@@ -4,6 +4,10 @@ export type Group = {
 	groupId: number;
 	name: string;
 	role: string;
+	createdBy: string;
+	createdAt: string;
+	updatedBy: string;
+	updatedAt: string;
 };
 
 export type GroupMember = {

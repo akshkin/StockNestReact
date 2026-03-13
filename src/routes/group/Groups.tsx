@@ -87,11 +87,8 @@ function Groups() {
 			{groups && groups.length > 0 ? (
 				groups.map((group: Group) => (
 					<GroupCard
-						key={group.groupId}
-						id={group.groupId}
+						data={group}
 						type="Group"
-						name={group.name}
-						role={group.role}
 						navigateLink={`/groups/${group.groupId}`}
 						highlight={location.state?.groupId === group.groupId}
 						openEditModal={openEditModal}

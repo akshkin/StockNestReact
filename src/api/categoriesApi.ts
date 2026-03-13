@@ -3,6 +3,10 @@ import { apiSlice } from "./apiSlice";
 export type Category = {
 	categoryId: number;
 	name: string;
+	createdBy: string;
+	createdAt: string;
+	updatedBy: string;
+	updatedAt: string;
 };
 
 export const categoriesApi = apiSlice.injectEndpoints({
