@@ -15,7 +15,7 @@ import Home from "./routes/home/Home";
 
 function App() {
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename="/StockNestReact">
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route path="/" index element={<Home />} />
