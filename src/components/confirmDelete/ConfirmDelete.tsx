@@ -13,11 +13,15 @@ function ConfirmDelete({
 }: ConfirmDeleteProps) {
 	return (
 		<div className="buttonsContainer">
-			<button disabled={isLoading} className="danger" onClick={handleDelete}>
+			<button
+				disabled={isLoading}
+				className="button danger"
+				onClick={handleDelete}
+			>
 				{isLoading ? <Loading /> : "Confirm Delete"}
 			</button>
 
-			<button type="button" onClick={closeModal}>
+			<button className="button" type="button" onClick={closeModal}>
 				Cancel
 			</button>
 		</div>

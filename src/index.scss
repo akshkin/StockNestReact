@@ -41,12 +41,12 @@ h1 {
 	line-height: 1.1;
 }
 
-button {
+.button {
 	cursor: pointer;
 	border: none;
 	font-family: inherit;
 	background-color: var(--color-primary);
-	padding: 0.5em 1.2em;
+	padding: 0.4em 1.2em;
 	color: white;
 	border-radius: var(--radius-sm);
 
@@ -57,6 +57,7 @@ button {
 }
 
 button.back-button {
+	border: 0;
 	background-color: transparent;
 	color: var(--color-primary);
 	font-size: 0.875rem;

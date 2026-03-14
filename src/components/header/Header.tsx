@@ -1,4 +1,5 @@
 import logo from "@/assets/images/app-logo.svg";
+import mobileLogo from "@/assets/images/logo-mobile.svg";
 import styles from "./header.module.scss";
 import { Link } from "react-router-dom";
 
@@ -7,7 +8,8 @@ function Header() {
 		<header className={styles.header}>
 			<nav>
 				<Link to="/">
-					<img src={logo} alt="Logo" className={styles.logo} />
+					<img src={logo} alt="Logo" className={styles.logoDesktop} />
+					<img src={mobileLogo} alt="Logo" className={styles.logoMobile} />
 				</Link>
 				<ul>
 					<li>
@@ -22,7 +24,7 @@ function Header() {
 						</Link>
 					</li>
 					<li>
-						<Link className={styles.register} to="/register">
+						<Link className="button" to="/register">
 							Register
 						</Link>
 					</li>
