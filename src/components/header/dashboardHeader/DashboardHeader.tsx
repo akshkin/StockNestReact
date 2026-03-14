@@ -36,11 +36,7 @@ function DashboardHeader() {
 						</Link>
 					</li>
 					<li>
-						<button
-							type="button"
-							className={styles.register}
-							onClick={handleLogout}
-						>
+						<button type="button" className="button" onClick={handleLogout}>
 							Logout
 						</button>
 					</li>

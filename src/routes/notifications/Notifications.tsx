@@ -107,7 +107,9 @@ function Notifications() {
 				</ul>
 
 				{unreadNotifications && unreadNotifications?.items?.length > 0 && (
-					<button onClick={setNotificationsAsSeen}>Mark all as read</button>
+					<button className="button" onClick={setNotificationsAsSeen}>
+						Mark all as read
+					</button>
 				)}
 			</nav>
 

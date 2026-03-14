@@ -70,8 +70,8 @@ function ItemCard({
 				</span>
 				<p className={styles.updatedText}>
 					{updatedAt
-						? `Updated by ${updatedBy} ${formatDistanceToNow(new Date(updatedAt))}`
-						: `Created by ${createdBy} ${formatDistanceToNow(new Date(createdAt))}  `}
+						? `Updated by ${updatedBy} ${formatDistanceToNow(new Date(updatedAt))} ago`
+						: `Created by ${createdBy} ${formatDistanceToNow(new Date(createdAt))} ago`}
 				</p>
 			</td>
 			<td className={styles.quantity}>
