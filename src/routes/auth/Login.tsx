@@ -7,6 +7,7 @@ import styles from "./auth.module.scss";
 import { extractErrorMessage, zodErrorsToObject } from "../../helpers/utils";
 import ErrorText from "../../components/errorText/ErrorText";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Loading from "../../components/loading/Loading";
 
 type loginScehma = z.infer<typeof loginSchema>;
 
@@ -94,7 +95,7 @@ function Login() {
 					onClick={(e) => handleSubmit(e)}
 					disabled={isLoading || !isFormValid}
 				>
-					Login
+					{isLoading ? <Loading /> : "Login"}
 				</button>
 				{error && <ErrorText error={extractErrorMessage(error)} />}
 			</form>

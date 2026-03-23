@@ -73,7 +73,7 @@ function ThemeIcon() {
 	return (
 		<div className={styles.themeDropdown}>
 			<button
-				className={styles.trigger}
+				className={`${styles.trigger} button`}
 				onClick={() => setIsDropdownOpen((prev) => !prev)}
 			>
 				{theme === "light" && <PiSunDimFill />}
