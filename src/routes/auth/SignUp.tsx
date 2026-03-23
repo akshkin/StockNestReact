@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import InputField from "../../components/inputField/InputField";
 import ErrorText from "../../components/errorText/ErrorText";
 import { extractErrorMessage, zodErrorsToObject } from "../../helpers/utils";
+import Loading from "../../components/loading/Loading";
 
 type registerSchema = z.infer<typeof registerSchema>;
 
@@ -135,7 +136,7 @@ function Auth() {
 					onClick={(e) => handleSubmit(e)}
 					className={styles.button}
 				>
-					Register
+					{registerState.isLoading ? <Loading /> : "Register"}
 				</button>
 				{registerState.error && (
 					<ErrorText error={extractErrorMessage(registerState.error)} />
