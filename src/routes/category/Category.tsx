@@ -158,7 +158,7 @@ function Category() {
 					<table className={styles.table}>
 						<thead>
 							<tr>
-								{canCreateEdit && (
+								{ownerPermission && (
 									<th className={styles.columnOne}>
 										<input
 											type="checkbox"
@@ -177,11 +177,6 @@ function Category() {
 								<ItemCard
 									key={item.itemId}
 									item={item}
-									// groupId={Number(groupId)}
-									// categoryId={Number(categoryId)}
-									// itemId={Number(item.itemId)}
-									// name={item.name}
-									// quantity={item.quantity}
 									setSelectedItems={setSelectedItems}
 									isMainChecked={isMainChecked}
 									highlight={location.state?.itemId === item.itemId}

@@ -119,6 +119,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 		}
 		if (imageError || isError) {
 			setError("An error occured while saving changes");
+			toast.error("An error occured while saving changes");
 			return;
 		} else {
 			closeModal();
@@ -202,7 +203,11 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
 					onChange={(e) => update("lastName", e.target.value)}
 					error={errors.lastName}
 				/>
-				<button type="submit" disabled={isLoading || imageLoading || !isValid}>
+				<button
+					className="button"
+					type="submit"
+					disabled={isLoading || imageLoading || !isValid}
+				>
 					Submit
 				</button>
 				{error && <ErrorText error={error} />}

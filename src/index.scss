@@ -40,15 +40,19 @@ h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
 }
+button {
+	padding: 0.4em 1.2em;
+	border-radius: var(--radius-sm);
+}
 
 .button {
 	cursor: pointer;
 	border: none;
 	font-family: inherit;
 	background-color: var(--color-primary);
-	padding: 0.4em 1.2em;
+	// padding: 0.4em 1.2em;
 	color: white;
-	border-radius: var(--radius-sm);
+	// border-radius: var(--radius-sm);
 
 	&:disabled {
 		background-color: var(--color-muted);
@@ -74,6 +78,7 @@ button.back-button {
 }
 
 button.invertedButton {
+	// padding: 0.4em 1.2em;
 	background-color: var(--color-background-white);
 	border: 1px solid var(--color-primary);
 	color: var(--color-primary);

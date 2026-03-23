@@ -118,6 +118,7 @@ function GroupCategoryAddEditForm<T extends { name: string }>({
 				disabled={isSubmitting || !isValid}
 				onClick={onSubmit}
 				type="submit"
+				className="button"
 			>
 				{isEditing ? "Update" : "Create"}
 			</button>
