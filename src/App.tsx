@@ -1,5 +1,5 @@
 import "./App.scss";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import Layout from "./routes/layout/Layout";
 import Login from "./routes/auth/Login";
 import Dashboard from "./routes/dashboard/Dashboard";
@@ -15,7 +15,7 @@ import Home from "./routes/home/Home";
 
 function App() {
 	return (
-		<BrowserRouter basename="/StockNestReact">
+		<HashRouter>
 			<Routes>
 				<Route path="/" element={<Layout />}>
 					<Route path="/" index element={<Home />} />
@@ -37,7 +37,7 @@ function App() {
 					<Route path="*" element={<h1>404 Not Found</h1>} />
 				</Route>
 			</Routes>
-		</BrowserRouter>
+		</HashRouter>
 	);
 }
 
