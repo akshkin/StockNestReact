@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "prepare": "husky install"
+    "prepare": "node .husky/install.mjs"
   },
   "repository": {
     "type": "git",
