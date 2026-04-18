@@ -3,7 +3,7 @@
 StockNest is an inventory management application built with **React**, **TypeScript**, **Vite**, **SCSS**, and **Redux Toolkit Query**.  
 It allows users to create groups, manage categories, track items, and view real‑time dashboard statistics.
 
-This project is deployed using **GitHub Pages**.
+This project is deployed using **GitHub Pages** with automated workflows.
 
 ## **Features**
 
@@ -38,4 +38,6 @@ This project is deployed using **GitHub Pages**.
 ## **Key Concepts Learned in This Project**
 - RTK Query caching & tag invalidation
 - Cookie-based authentication
+- Linting the files with prettier and ESLint on committing files to the repository
+- Automated deployment on merging pull requests to the main branch using GitHub actions
 
