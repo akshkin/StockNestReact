@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import path from "path/win32";
+import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,8 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      // src: "/src",
-      src: path.resolve(__dirname, "src"),
+      src: "/src",
+      //   src: path.resolve(__dirname, "src"),
     },
   },
   base: "/StockNestReact",
