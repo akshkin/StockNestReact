@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HUSKY: 0
+      VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY }}
+      VITE_BUCKET_URL: ${{ secrets.VITE_BUCKET_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
