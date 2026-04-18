@@ -4,12 +4,13 @@ import path from "path/win32";
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react()],
-	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "src"),
-			src: "/src",
-		},
-	},
-	base: "/StockNestReact",
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      // src: "/src",
+      src: path.resolve(__dirname, "src"),
+    },
+  },
+  base: "/StockNestReact",
 });
