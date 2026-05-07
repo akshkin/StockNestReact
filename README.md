@@ -1,16 +1,18 @@
-# **StockNest — Personal Inventory & Category Management App**
+# **StockNest - Personal Inventory & Category Management App**
 
 StockNest is an inventory management application built with **React**, **TypeScript**, **Vite**, **SCSS**, and **Redux Toolkit Query**.  
 It allows users to create groups, manage categories, track items, and view real‑time dashboard statistics.
 
 This project is deployed using **GitHub Pages**.
+The Backend code can be found [here](https://github.com/akshkin/StockNestMVC)
 
 ## **Features**
 
 ### Groups & Categories
 - Create, edit, and delete groups
 - Add other people to the group and select which role they can have in the group - Co-Owner/Member/Viewer
-- Create categories inside groups   
+- Create categories inside groups
+- Choose a theme (light/dark/system)
 
 ### Item Management
 - Add items to categories  
