@@ -57,26 +57,27 @@ function ItemForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    let res;
-    if (isEditing) {
-      res = await updateItem({ groupId, categoryId, itemId, formData: data });
-    } else {
-      res = await createItem({
-        groupId,
-        categoryId,
-        formData: data,
-      });
-    }
-
-    if (!("error" in res)) {
+    try {
       if (isEditing) {
+        await updateItem({
+          groupId,
+          categoryId,
+          itemId,
+          formData: data,
+        }).unwrap();
         toast.success("Successfully updated item!");
       } else {
+        await createItem({
+          groupId,
+          categoryId,
+          formData: data,
+        }).unwrap();
         toast.success("Successfuly created item");
       }
-      return closeModal();
-    } else {
-      const apiError = normalizeApiError<{ existingItem: Item }>(res.error);
+
+      closeModal();
+    } catch (err) {
+      const apiError = normalizeApiError<{ existingItem: Item }>(err);
 
       if (apiError) {
         setFormError(apiError.message);
