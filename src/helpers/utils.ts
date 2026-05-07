@@ -84,8 +84,8 @@ export function checkDuplicateItemError(error: unknown): Item | null {
   } else {
     if ("status" in error && error.status !== 409) return null;
 
-    if (!("data" in error && "data" in error.data)) {
-      const item = error?.data?.data?.existingItem;
+    if ("data" in error && "payload" in error.data) {
+      const item = error?.data?.payload?.existingItem;
 
       if (!item) return null;
 
@@ -95,19 +95,3 @@ export function checkDuplicateItemError(error: unknown): Item | null {
     return null;
   }
 }
-
-// type ApiError<T = unknown> = {
-// 	status: number;
-// 	message: string;
-// 	data?: T;
-// };
-
-// function normalizeError<T = unknown>(error: unknown): ApiError<T> {
-// 	if (typeof error === "object" && error !== null) {
-// 		return {
-// 			status: error?.status,
-// 			message: error?.data?.message,
-// 			data: error?.data?.data, // <-- unwrap once here
-// 		};
-// 	}
-// }
