@@ -23,7 +23,7 @@ import GroupCard from "../../components/groupCard/GroupCard";
 import { IoMdPersonAdd, IoMdAddCircleOutline } from "react-icons/io";
 import IconButton from "../../components/iconButton/IconButton";
 import AddMemberForm from "./AddMemberForm";
-import { extractErrorMessage, getPermissions } from "../../helpers/utils";
+import { getPermissions, normalizeApiError } from "../../helpers/utils";
 
 type categorySchema = z.infer<typeof groupCategorySchema>;
 
@@ -90,8 +90,9 @@ function Group() {
   const { ownerPermission, canCreateEdit } = getPermissions(role);
   const isEditing = mode === "Edit";
 
-  if (extractErrorMessage(error) === "Group not found")
-    return <ErrorText error={extractErrorMessage(error)} />;
+  const errorMessage = normalizeApiError(error).message;
+  if (errorMessage === "Group not found")
+    return <ErrorText error={errorMessage} />;
 
   return (
     <>
@@ -100,7 +101,7 @@ function Group() {
       {isLoading || isFetching ? (
         <Loading />
       ) : error ? (
-        <ErrorText error={extractErrorMessage(error)} />
+        <ErrorText error={errorMessage} />
       ) : (
         <div className="buttonsContainer">
           {ownerPermission && (
@@ -159,7 +160,12 @@ function Group() {
       {membersLoading || memberFetching ? (
         <Loading />
       ) : memberError ? (
-        <ErrorText error="An error occurred while fetching the group members." />
+        <ErrorText
+          error={
+            normalizeApiError(memberError).message ||
+            "An error occurred while fetching the group members."
+          }
+        />
       ) : (
         groupMembersResponse?.groupMembers.length &&
         groupMembersResponse?.groupMembers.map((groupMember: GroupMember) => (
