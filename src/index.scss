@@ -43,9 +43,10 @@ h1 {
 }
 
 %button-base {
-	padding: 0.4em 1.2em;
+	padding: 0.7em 1.2em;
 	border-radius: var(--radius-sm);
 	cursor: pointer;
+	border: 0;
 }
 
 button {
