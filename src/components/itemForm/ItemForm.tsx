@@ -10,10 +10,7 @@ import {
 import ErrorText from "../errorText/ErrorText";
 import { itemSchema } from "../../schemas";
 import { toast } from "react-toastify";
-import {
-  checkDuplicateItemError,
-  extractErrorMessage,
-} from "../../helpers/utils";
+import { normalizeApiError } from "../../helpers/utils";
 
 type itemSchema = z.infer<typeof itemSchema>;
 
@@ -79,19 +76,25 @@ function ItemForm({
       }
       return closeModal();
     } else {
-      if ("error" in res) {
-        const err = extractErrorMessage(res?.error);
-        setFormError(err);
+      const apiError = normalizeApiError<{ existingItem: Item }>(res.error);
 
-        const existingItem = checkDuplicateItemError(res.error);
-        if (existingItem) {
-          // allow users to update quantity of existing item if they try to add an item with the same name in the same category
-          setFormError(
-            `${existingItem.name} already exists in this category. Would you like to update the quantity instead?`,
-          );
+      if (apiError) {
+        setFormError(apiError.message);
+
+        if (apiError.status === 409 && apiError.payload?.existingItem) {
           setShowUpdateQuantityOptions(true);
+          const existingItem = apiError.payload.existingItem;
           setExistingItemData(existingItem);
-          return;
+
+          if (existingItem) {
+            // allow users to update quantity of existing item if they try to add an item with the same name in the same category
+            setFormError(
+              `${existingItem.name} already exists in this category. Would you like to update the quantity instead?`,
+            );
+            setShowUpdateQuantityOptions(true);
+            setExistingItemData(existingItem);
+            return;
+          }
         }
       }
     }

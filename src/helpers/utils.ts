@@ -1,7 +1,6 @@
 import { ZodError } from "zod";
 import type { NotificationItemType } from "../api/notificationsApi";
 import type { NavigateFunction } from "react-router-dom";
-import type { Item } from "../api/itemsApi";
 
 export function zodErrorsToObject<T extends object>(error: ZodError<T>) {
   const errors: Partial<Record<keyof T, string>> = {};
@@ -77,21 +76,34 @@ export function extractErrorMessage(error: unknown): string {
   return "An unexpected error occurred";
 }
 
-export function checkDuplicateItemError(error: unknown): Item | null {
-  if (!error) return null;
-  if (typeof error !== "object" || error === null) {
-    return null;
-  } else {
-    if ("status" in error && error.status !== 409) return null;
+export type ApiError<TPayload = unknown> = {
+  status: number;
+  message: string;
+  payload?: TPayload;
+};
 
-    if ("data" in error && "payload" in error.data) {
-      const item = error?.data?.payload?.existingItem;
-
-      if (!item) return null;
-
-      return item;
-    }
-
+export function normalizeApiError<TPayload = unknown>(
+  error: unknown,
+): ApiError<TPayload> | null {
+  if (!error || typeof error !== "object") {
     return null;
   }
+
+  if (!("status" in error) || !("data" in error)) {
+    return null;
+  }
+
+  const err = error as {
+    status: number;
+    data?: {
+      message?: string;
+      payload?: TPayload;
+    };
+  };
+
+  return {
+    status: err.status,
+    message: err.data?.message ?? "An unexpected error occurred",
+    payload: err.data?.payload,
+  };
 }
