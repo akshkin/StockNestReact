@@ -64,18 +64,6 @@ export function getPermissions(role?: string) {
   return { ownerPermission, canCreateEdit };
 }
 
-export function extractErrorMessage(error: unknown): string {
-  if (typeof error === "object" && error !== null && "data" in error) {
-    const err = error as { data?: unknown };
-
-    if (err.data && typeof err.data === "object" && "message" in err.data) {
-      return err.data.message as string;
-    }
-  }
-
-  return "An unexpected error occurred";
-}
-
 export type ApiError<TPayload = unknown> = {
   status: number;
   message: string;
@@ -84,26 +72,22 @@ export type ApiError<TPayload = unknown> = {
 
 export function normalizeApiError<TPayload = unknown>(
   error: unknown,
-): ApiError<TPayload> | null {
-  if (!error || typeof error !== "object") {
-    return null;
-  }
-
-  if (!("status" in error) || !("data" in error)) {
-    return null;
-  }
-
-  const err = error as {
-    status: number;
-    data?: {
-      message?: string;
-      payload?: TPayload;
+): ApiError<TPayload> {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    "data" in error
+  ) {
+    const err = error as {
+      status: number;
+      data?: { message?: string; payload?: TPayload };
     };
-  };
-
-  return {
-    status: err.status,
-    message: err.data?.message ?? "An unexpected error occurred",
-    payload: err.data?.payload,
-  };
+    return {
+      status: err.status,
+      message: err.data?.message ?? "An unexpected error occurred",
+      payload: err.data?.payload,
+    };
+  }
+  return { status: 500, message: "An unexpected error occurred" };
 }
