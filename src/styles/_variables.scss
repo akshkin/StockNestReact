@@ -9,7 +9,7 @@
 	--color-secondary: #ff9800;
 	--color-border: #e0e0e0;
 	--color-muted: #777;
-	--color-danger: #f54040;
+	--color-danger: #d72d2d;
 	--radius-sm: 4px;
 	--radius-md: 8px;
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -29,7 +29,7 @@ html.light {
 /* Dark theme */
 html.dark {
 	--color-bg: #121212;
-	--color-background-white: #333;
+	--color-background-white: #161c28;
 	--color-text: #e0e0e0;
 	--color-light-grey: #515050;
 	--color-muted: #aaa;
@@ -38,6 +38,5 @@ html.dark {
 	--color-bg: #121212;
 	--color-text: #e0e0e0;
 	--color-border: #545353;
-	--color-background-white: #333;
 	--color-light-grey: #515050;
 }
