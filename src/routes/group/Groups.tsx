@@ -87,6 +87,7 @@ function Groups() {
       {groups && groups.length > 0 ? (
         groups.map((group: Group) => (
           <GroupCard
+            key={group.groupId}
             data={group}
             type="Group"
             navigateLink={`/groups/${group.groupId}`}

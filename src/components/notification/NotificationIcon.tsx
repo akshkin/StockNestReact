@@ -3,21 +3,24 @@ import styles from "./notificationIcon.module.scss";
 import { useGetUnreadNotificationsCountQuery } from "../../api/notificationsApi";
 
 function NotificationIcon() {
-	const { data: unreadCount } = useGetUnreadNotificationsCountQuery();
+  const { data: unreadCount } = useGetUnreadNotificationsCountQuery();
 
-	return (
-		<span className={styles.notificationsLink}>
-			{unreadCount && unreadCount > 0 ? (
-				<PiBellFill className={styles.bellIcon} />
-			) : (
-				<PiBellLight className={styles.bellIcon} />
-			)}
+  return (
+    <span
+      className={styles.notificationsLink}
+      aria-label="Go to notifications page"
+    >
+      {unreadCount && unreadCount > 0 ? (
+        <PiBellFill className={styles.bellIcon} />
+      ) : (
+        <PiBellLight className={styles.bellIcon} />
+      )}
 
-			{unreadCount && unreadCount > 0 ? (
-				<span className={styles.notificationBadge}>{unreadCount}</span>
-			) : null}
-		</span>
-	);
+      {unreadCount && unreadCount > 0 ? (
+        <span className={styles.notificationBadge}>{unreadCount}</span>
+      ) : null}
+    </span>
+  );
 }
 
 export default NotificationIcon;

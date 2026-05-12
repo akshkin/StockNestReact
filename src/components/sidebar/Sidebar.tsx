@@ -5,58 +5,62 @@ import { HiOutlineUser, HiUserGroup } from "react-icons/hi2";
 import NotificationIcon from "../notification/NotificationIcon";
 
 function Sidebar() {
-	return (
-		<aside className={styles.sidebar}>
-			<nav>
-				<ul className={styles.dashlinks}>
-					<li>
-						<NavLink
-							to="/dashboard"
-							className={({ isActive }) =>
-								`${styles.dashlink} ${isActive ? styles.active : ""}`
-							}
-						>
-							<RxDashboard className={styles.icon} />
-							<span className={styles.text}>Dashboard</span>
-						</NavLink>
-					</li>
-					<li>
-						<NavLink
-							to="/groups"
-							className={({ isActive }) =>
-								`${styles.dashlink} ${isActive ? styles.active : ""}`
-							}
-						>
-							<HiUserGroup className={styles.icon} />
-							<span className={styles.text}>Groups</span>
-						</NavLink>
-					</li>
-					<li>
-						<NavLink
-							to="/notifications?page=1&tab=unread"
-							className={({ isActive }) =>
-								`${styles.dashlink} ${isActive ? styles.active : ""}`
-							}
-						>
-							<NotificationIcon />
-							<span className={styles.text}>Notifications</span>
-						</NavLink>
-					</li>
-					<li>
-						<NavLink
-							to="/profile"
-							className={({ isActive }) =>
-								`${styles.dashlink} ${isActive ? styles.active : ""}`
-							}
-						>
-							<HiOutlineUser />
-							<span className={styles.text}>Profile</span>
-						</NavLink>
-					</li>
-				</ul>
-			</nav>
-		</aside>
-	);
+  return (
+    <aside className={styles.sidebar}>
+      <nav>
+        <ul className={styles.dashlinks}>
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                `${styles.dashlink} ${isActive ? styles.active : ""}`
+              }
+              aria-label="Go to dashboard"
+            >
+              <RxDashboard className={styles.icon} />
+              <span className={styles.text}>Dashboard</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/groups"
+              className={({ isActive }) =>
+                `${styles.dashlink} ${isActive ? styles.active : ""}`
+              }
+              aria-label="Go to groups"
+            >
+              <HiUserGroup className={styles.icon} />
+              <span className={styles.text}>Groups</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/notifications?page=1&tab=unread"
+              className={({ isActive }) =>
+                `${styles.dashlink} ${isActive ? styles.active : ""}`
+              }
+              aria-label="Go to notifications"
+            >
+              <NotificationIcon />
+              <span className={styles.text}>Notifications</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `${styles.dashlink} ${isActive ? styles.active : ""}`
+              }
+              aria-label="Go to profile"
+            >
+              <HiOutlineUser />
+              <span className={styles.text}>Profile</span>
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
 }
 
 export default Sidebar;
