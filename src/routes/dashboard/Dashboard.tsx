@@ -10,7 +10,6 @@ import Loading from "../../components/loading/Loading";
 import ErrorText from "../../components/errorText/ErrorText";
 import DoughnutChart from "../../components/charts/DoughnutChart";
 import useDashboardCharts from "../../hooks/useDashboardCharts";
-import { useGetLatestNotificationsQuery } from "../../api/notificationsApi";
 import NotificationCard from "../../components/notification/NotificationCard";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../features/authSlice";
@@ -18,13 +17,7 @@ import { selectCurrentUser } from "../../features/authSlice";
 function Dashboard() {
   const userName = useSelector(selectCurrentUser);
 
-  const { data: stats, isLoading, isError, isFetching } = useGetStatsQuery({});
-  const {
-    data: notifications,
-    isLoading: notificationsLoading,
-    isError: notificationsError,
-    isFetching: notificationsFetching,
-  } = useGetLatestNotificationsQuery();
+  const { data: stats, isLoading, isError, isFetching } = useGetStatsQuery();
 
   const {
     selectedGroupId,
@@ -149,13 +142,14 @@ function Dashboard() {
 
         <div className={styles.notifications}>
           <h2 className={styles.notificationsTitle}>Recent Notifications</h2>
-          {notificationsLoading || notificationsFetching ? (
+          {isLoading || isFetching ? (
             <Loading />
-          ) : notificationsError ? (
+          ) : isError ? (
             <ErrorText error={"Failed to load notifications"} />
-          ) : notifications && notifications?.length > 0 ? (
+          ) : stats?.latestNotifications &&
+            stats?.latestNotifications.length > 0 ? (
             <>
-              {notifications?.map((notification) => (
+              {stats?.latestNotifications?.map((notification) => (
                 <NotificationCard key={notification.id} {...notification} />
               ))}
               <Link to="/notifications?tab=all&page=1">
