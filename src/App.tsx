@@ -12,33 +12,48 @@ import Groups from "./routes/group/Groups";
 import Notifications from "./routes/notifications/Notifications";
 import Profile from "./routes/profile/Profile";
 import Home from "./routes/home/Home";
+import { ToastContainer } from "react-toastify";
 
 function App() {
-	return (
-		<HashRouter>
-			<Routes>
-				<Route path="/" element={<Layout />}>
-					<Route path="/" index element={<Home />} />
-					<Route path="login" element={<Login />} />
-					<Route path="register" element={<SignUp />} />
-				</Route>
-				<Route element={<ProtectedRoute />}>
-					<Route path="dashboard" element={<Dashboard />} />
-					<Route path="groups" element={<GroupLayout />}>
-						<Route index element={<Groups />} />
-						<Route path=":groupId" element={<Group />} />
-						<Route
-							path=":groupId/category/:categoryId"
-							element={<Category />}
-						/>
-					</Route>
-					<Route path="notifications" element={<Notifications />} />
-					<Route path="profile" element={<Profile />} />
-					<Route path="*" element={<h1>404 Not Found</h1>} />
-				</Route>
-			</Routes>
-		</HashRouter>
-	);
+  return (
+    <>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/" index element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<SignUp />} />
+          </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="groups" element={<GroupLayout />}>
+              <Route index element={<Groups />} />
+              <Route path=":groupId" element={<Group />} />
+              <Route
+                path=":groupId/category/:categoryId"
+                element={<Category />}
+              />
+            </Route>
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+          </Route>
+        </Routes>
+      </HashRouter>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+  );
 }
 
 export default App;
