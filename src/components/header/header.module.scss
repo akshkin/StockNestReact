@@ -65,6 +65,7 @@
 
 .logoDesktop {
 	height: 30px;
+	width: auto;
 	@media (max-width: 700px) {
 		display: none;
 	}
@@ -72,6 +73,7 @@
 
 .logoMobile {
 	height: 20px;
+	width: auto;
 	@media (min-width: 700px) {
 		display: none;
 	}

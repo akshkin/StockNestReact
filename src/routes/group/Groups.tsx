@@ -8,12 +8,12 @@ import {
 import Loading from "../../components/loading/Loading";
 import ErrorText from "../../components/errorText/ErrorText";
 import IconButton from "../../components/iconButton/IconButton";
-import { IoMdAddCircleOutline } from "react-icons/io";
 import Modal from "../../components/modal/Modal";
 import GroupCategoryAddEditForm from "../../components/groupCategoryForm/GroupCategoryAddEditForm";
 import { groupCategorySchema } from "../../schemas";
 import GroupCard from "../../components/groupCard/GroupCard";
 import { useLocation } from "react-router-dom";
+import { CirclePlus } from "lucide-react";
 
 const defaultGroupData = {
   name: "",
@@ -56,7 +56,7 @@ function Groups() {
       {error && <ErrorText error={"An error occuring while fetching groups"} />}
 
       <IconButton
-        icon={<IoMdAddCircleOutline />}
+        icon={<CirclePlus size={20} />}
         title="Create a new group"
         onClick={openModal}
       />
@@ -87,6 +87,7 @@ function Groups() {
       {groups && groups.length > 0 ? (
         groups.map((group: Group) => (
           <GroupCard
+            key={group.groupId}
             data={group}
             type="Group"
             navigateLink={`/groups/${group.groupId}`}

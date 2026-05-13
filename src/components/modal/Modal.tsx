@@ -1,27 +1,27 @@
 import React from "react";
 import styles from "./modal.module.scss";
-import { IoCloseOutline } from "react-icons/io5";
+import { X } from "lucide-react";
 
 type ModalProps = {
-	title: string;
-	children?: React.ReactNode;
-	closeModal: () => void;
+  title: string;
+  children?: React.ReactNode;
+  closeModal: () => void;
 };
 
 function Modal({ title, children, closeModal }: ModalProps) {
-	return (
-		<div className={styles.backdrop}>
-			<div className={styles.modal}>
-				<header className={styles.modalHeader}>
-					<h3>{title}</h3>
-					<button className={styles.closeBtn} onClick={closeModal}>
-						<IoCloseOutline />
-					</button>
-				</header>
-				<div>{children}</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className={styles.backdrop}>
+      <div className={styles.modal}>
+        <header className={styles.modalHeader}>
+          <h3>{title}</h3>
+          <button className={styles.closeBtn} onClick={closeModal}>
+            <X />
+          </button>
+        </header>
+        <div>{children}</div>
+      </div>
+    </div>
+  );
 }
 
 export default Modal;
