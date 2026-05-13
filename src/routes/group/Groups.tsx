@@ -53,50 +53,54 @@ function Groups() {
     <section>
       {isLoading && <Loading />}
 
-      {error && <ErrorText error={"An error occuring while fetching groups"} />}
-
-      <IconButton
-        icon={<CirclePlus size={20} />}
-        title="Create a new group"
-        onClick={openModal}
-      />
-
-      {isModalOpen && (
-        <Modal
-          title={`${isEditing ? "Edit group" : "Create a new group"}`}
-          closeModal={closeModal}
-          children={
-            <GroupCategoryAddEditForm
-              label="Group"
-              groupId={isEditing ? selectedGroup?.id : undefined}
-              initialValue={
-                selectedGroup?.id
-                  ? { name: selectedGroup.name }
-                  : defaultGroupData
-              }
-              schema={groupCategorySchema}
-              onCreate={(args) => createNewGroup(args).unwrap()}
-              onUpdate={(args) => updateGroup(args).unwrap()}
-              closeModal={closeModal}
-              mode={mode}
-            />
-          }
-        />
-      )}
-
-      {groups && groups.length > 0 ? (
-        groups.map((group: Group) => (
-          <GroupCard
-            key={group.groupId}
-            data={group}
-            type="Group"
-            navigateLink={`/groups/${group.groupId}`}
-            highlight={location.state?.groupId === group.groupId}
-            openEditModal={openEditModal}
-          />
-        ))
+      {error ? (
+        <ErrorText error={"An error occuring while fetching groups"} />
       ) : (
-        <p>No groups available</p>
+        <>
+          <IconButton
+            icon={<CirclePlus size={20} />}
+            title="Create a new group"
+            onClick={openModal}
+          />
+
+          {isModalOpen && (
+            <Modal
+              title={`${isEditing ? "Edit group" : "Create a new group"}`}
+              closeModal={closeModal}
+              children={
+                <GroupCategoryAddEditForm
+                  label="Group"
+                  groupId={isEditing ? selectedGroup?.id : undefined}
+                  initialValue={
+                    selectedGroup?.id
+                      ? { name: selectedGroup.name }
+                      : defaultGroupData
+                  }
+                  schema={groupCategorySchema}
+                  onCreate={(args) => createNewGroup(args).unwrap()}
+                  onUpdate={(args) => updateGroup(args).unwrap()}
+                  closeModal={closeModal}
+                  mode={mode}
+                />
+              }
+            />
+          )}
+
+          {groups && groups.length > 0 ? (
+            groups.map((group: Group) => (
+              <GroupCard
+                key={group.groupId}
+                data={group}
+                type="Group"
+                navigateLink={`/groups/${group.groupId}`}
+                highlight={location.state?.groupId === group.groupId}
+                openEditModal={openEditModal}
+              />
+            ))
+          ) : (
+            <p>No groups available</p>
+          )}
+        </>
       )}
     </section>
   );
