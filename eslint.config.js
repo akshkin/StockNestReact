@@ -6,7 +6,12 @@ import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist/**", "dev-dist/**", "node_modules/**"]),
+  globalIgnores([
+    "dist/**",
+    "dev-dist/**",
+    "node_modules/**",
+    "**/workbox-*.js",
+  ]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
