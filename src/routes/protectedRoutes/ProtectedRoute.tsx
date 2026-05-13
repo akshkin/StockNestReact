@@ -4,45 +4,36 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import styles from "./protectRoute.module.css";
 import { useGetMeQuery } from "../../api/authApi";
 import Loading from "../../components/loading/Loading";
-import { ToastContainer } from "react-toastify";
+import OfflineText from "../../components/offlineText/OfflineText";
+import useOnlineStatus from "../../hooks/useOnlineStatus";
 
 function ProtectedRoute() {
-	const { error: getMeError, isLoading, isFetching } = useGetMeQuery({});
+  const { error: getMeError, isLoading, isFetching } = useGetMeQuery({});
+  const isOnline = useOnlineStatus();
 
-	if (isLoading || isFetching) return <Loading />;
+  if (isLoading || (isFetching && isOnline)) return <Loading />;
 
-	if (getMeError && "status" in getMeError && getMeError.status === 401) {
-		return (
-			<Navigate
-				to="/login"
-				state={{ message: "Please login to access the dashboard" }}
-			/>
-		);
-	}
+  if (getMeError && "status" in getMeError && getMeError.status === 401) {
+    return (
+      <Navigate
+        to="/login"
+        state={{ message: "Please login to access the dashboard" }}
+      />
+    );
+  }
 
-	return (
-		<div className={styles.layoutContainer}>
-			<DashboardHeader />
-			<div className={styles.container}>
-				<Sidebar />
-				<main className={styles.main}>
-					<Outlet />
-				</main>
-			</div>
-			<ToastContainer
-				position="bottom-right"
-				autoClose={5000}
-				hideProgressBar={true}
-				newestOnTop={true}
-				closeOnClick={false}
-				rtl={false}
-				pauseOnFocusLoss
-				draggable
-				pauseOnHover
-				theme="light"
-			/>
-		</div>
-	);
+  return (
+    <div className={styles.layoutContainer}>
+      <DashboardHeader />
+      <div className={styles.container}>
+        <Sidebar />
+        <main className={styles.main}>
+          {!isOnline && <OfflineText />}
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
 }
 
 export default ProtectedRoute;
