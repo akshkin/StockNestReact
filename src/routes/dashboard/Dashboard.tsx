@@ -93,7 +93,7 @@ function Dashboard() {
           </div>
 
           <div className={styles.groupTab}>
-            <h4>Groups</h4>
+            <h2>Groups</h2>
             <div>
               {uniqueGroups.map((g) => (
                 <span
