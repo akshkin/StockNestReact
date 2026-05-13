@@ -20,10 +20,10 @@ import {
   type Category,
 } from "../../api/categoriesApi";
 import GroupCard from "../../components/groupCard/GroupCard";
-import { IoMdPersonAdd, IoMdAddCircleOutline } from "react-icons/io";
 import IconButton from "../../components/iconButton/IconButton";
 import AddMemberForm from "./AddMemberForm";
 import { getPermissions, normalizeApiError } from "../../helpers/utils";
+import { FolderPlus, UserRoundPlus } from "lucide-react";
 
 type categorySchema = z.infer<typeof groupCategorySchema>;
 
@@ -106,14 +106,14 @@ function Group() {
         <div className="buttonsContainer">
           {ownerPermission && (
             <IconButton
-              icon={<IoMdPersonAdd />}
+              icon={<UserRoundPlus size={20} />}
               title="Add a person to a group"
               onClick={() => setIsModalOpen(true)}
             />
           )}
           {canCreateEdit && (
             <IconButton
-              icon={<IoMdAddCircleOutline />}
+              icon={<FolderPlus size={20} />}
               title="Create a category"
               onClick={openCategoryModal}
               variant="dark"

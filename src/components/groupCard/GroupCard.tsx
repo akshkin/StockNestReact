@@ -3,7 +3,6 @@ import { useDeleteGroupMutation, type Group } from "../../api/groupsApi";
 import Modal from "../modal/Modal";
 import styles from "./groupCard.module.scss";
 import { Link } from "react-router-dom";
-import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 import {
   useDeleteCategoryMutation,
   type Category,
@@ -13,6 +12,7 @@ import ErrorText from "../errorText/ErrorText";
 import { toast } from "react-toastify";
 import { getPermissions } from "../../helpers/utils";
 import { formatDistanceToNow } from "date-fns";
+import { SquarePen, Trash2 } from "lucide-react";
 
 type BaseCardProps = {
   highlight?: boolean;
@@ -110,7 +110,8 @@ function GroupCard(props: CardProps) {
               )
             }
           >
-            <RiEditLine /> <span className="label">Edit</span>
+            <SquarePen size={20} />
+            <span className="label">Edit</span>
           </button>
           {ownerPermission && (
             <button
@@ -118,7 +119,7 @@ function GroupCard(props: CardProps) {
               aria-label={`Delete ${type.toLowerCase()}`}
               onClick={openModal}
             >
-              <RiDeleteBin6Line />
+              <Trash2 size={20} />
               <span className="label">Delete</span>
             </button>
           )}

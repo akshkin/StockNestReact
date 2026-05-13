@@ -1,8 +1,7 @@
 import styles from "./sidebar.module.scss";
 import { NavLink } from "react-router-dom";
-import { RxDashboard } from "react-icons/rx";
-import { HiOutlineUser, HiUserGroup } from "react-icons/hi2";
 import NotificationIcon from "../notification/NotificationIcon";
+import { LayoutDashboard, UserRoundCog, UsersRound } from "lucide-react";
 
 function Sidebar() {
   return (
@@ -17,7 +16,7 @@ function Sidebar() {
               }
               aria-label="Go to dashboard"
             >
-              <RxDashboard className={styles.icon} />
+              <LayoutDashboard className={styles.icon} />
               <span className={styles.text}>Dashboard</span>
             </NavLink>
           </li>
@@ -29,7 +28,7 @@ function Sidebar() {
               }
               aria-label="Go to groups"
             >
-              <HiUserGroup className={styles.icon} />
+              <UsersRound className={styles.icon} />
               <span className={styles.text}>Groups</span>
             </NavLink>
           </li>
@@ -53,7 +52,7 @@ function Sidebar() {
               }
               aria-label="Go to profile"
             >
-              <HiOutlineUser />
+              <UserRoundCog className={styles.icon} />
               <span className={styles.text}>Profile</span>
             </NavLink>
           </li>

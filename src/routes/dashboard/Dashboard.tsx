@@ -1,9 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useGetStatsQuery } from "../../api/statsApi";
 import MetricsCard from "../../components/metricsCard/MetricsCard";
-import { HiDocumentPlus, HiDocumentText, HiUserGroup } from "react-icons/hi2";
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import { AiFillProduct } from "react-icons/ai";
 import styles from "./dashboard.module.scss";
 import BarChart from "../../components/charts/BarChart";
 import Loading from "../../components/loading/Loading";
@@ -13,6 +10,7 @@ import useDashboardCharts from "../../hooks/useDashboardCharts";
 import NotificationCard from "../../components/notification/NotificationCard";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../features/authSlice";
+import { FilePen, FilePlus, Files, FolderOpen, UsersRound } from "lucide-react";
 
 function Dashboard() {
   const userName = useSelector(selectCurrentUser);
@@ -40,31 +38,31 @@ function Dashboard() {
   const metricsMap = {
     groups: {
       title: "Total Groups",
-      icon: <HiUserGroup />,
+      icon: <UsersRound size={35} />,
       backgroundColor: "#FE9F43",
       value: stats?.totalGroups ?? 0,
     },
     categories: {
       title: "Total Categories",
-      icon: <BiSolidCategoryAlt />,
+      icon: <FolderOpen size={35} />,
       backgroundColor: "#092C4C",
       value: stats?.totalCategories ?? 0,
     },
     items: {
       title: "Total Items",
-      icon: <AiFillProduct />,
+      icon: <Files size={35} />,
       backgroundColor: "#0E9384",
       value: stats?.totalItems ?? 0,
     },
     userCreated: {
       title: "Items created by you",
-      icon: <HiDocumentPlus />,
+      icon: <FilePlus size={35} />,
       backgroundColor: "#1976d2",
       value: stats?.userCreatedItems ?? 0,
     },
     userUpdated: {
       title: "Items updated by you",
-      icon: <HiDocumentText />,
+      icon: <FilePen size={35} />,
       backgroundColor: "#1976d2",
       value: stats?.userCreatedItems ?? 0,
     },
