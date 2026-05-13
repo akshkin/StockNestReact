@@ -1,10 +1,22 @@
 # **StockNest - Personal Inventory & Category Management App**
 
 StockNest is an inventory management application built with **React**, **TypeScript**, **Vite**, **SCSS**, and **Redux Toolkit Query**.  
+This is now a **PWA**, allowing users to get a native feel on mobile devices, thereby improving user experience.
 It allows users to create groups, manage categories, track items, and view real‑time dashboard statistics.
 
 This project is deployed using **GitHub Pages** with automated workflows.
 The Backend code can be found [here](https://github.com/akshkin/StockNestMVC)
+
+
+## Why I built this?
+I wanted an app where I could keep track of items that I have at home. The ability to add members to a group with role assignments gives me the flexibility to share a group with others so that they, too, can know and make changes (based on role).
+
+## What I learned from this project?
+- How to build an authentication system using secure http cookies
+- How role assignments work
+- GitHub workflows
+- PWA significantly improves UX
+- How notifications work
 
 
 ## **Features**
