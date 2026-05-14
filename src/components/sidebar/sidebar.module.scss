@@ -54,6 +54,8 @@
 		right: 0;
 		height: 40px;
 		width: 100%;
+		z-index: 1;
+		box-shadow: var(--shadow-bottom);
 
 		.dashlinks {
 			flex-direction: row;
