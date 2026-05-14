@@ -49,6 +49,49 @@ h1 {
 	border: 0;
 }
 
+select,
+::picker(select) {
+	appearance: base-select;
+	margin-block: 1em;
+	width: 100%;
+	font-size: 0.75rem;
+	padding: 0.5em;
+	border-radius: var(--radius-sm);
+	background-color: var(--color-light-grey);
+	color: var(--color-text);
+	cursor: pointer;
+
+	&::picker-icon {
+		color: var(--color-muted);
+		transition: 0.4s rotate;
+	}
+
+	&:open::picker-icon {
+		rotate: 180deg;
+	}
+}
+
+::picker(select) {
+	max-width: 400px;
+}
+
+option {
+	border-bottom: 1px solid var(--color-muted);
+	padding: 0.3em;
+	transition: 0.4s;
+
+	&:last-of-type {
+		border-bottom: none;
+	}
+}
+
+input[type="checkbox"] {
+	accent-color: var(--color-primary) !important;
+	transform: scale(1.6); // increase the checkbox size
+	transform-origin: top left; // prevents weird shifting
+	cursor: pointer;
+}
+
 button {
 	@extend %button-base;
 }
