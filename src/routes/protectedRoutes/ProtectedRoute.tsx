@@ -6,18 +6,24 @@ import { useGetMeQuery } from "../../api/authApi";
 import Loading from "../../components/loading/Loading";
 import OfflineText from "../../components/offlineText/OfflineText";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../features/authSlice";
 
 function ProtectedRoute() {
+  const userName = useSelector(selectCurrentUser);
   const { error: getMeError, isLoading, isFetching } = useGetMeQuery({});
   const isOnline = useOnlineStatus();
 
   if (isLoading || (isFetching && isOnline)) return <Loading />;
+
+  if (!userName) return <Navigate to="login" replace />;
 
   if (getMeError && "status" in getMeError && getMeError.status === 401) {
     return (
       <Navigate
         to="/login"
         state={{ message: "Please login to access the dashboard" }}
+        replace
       />
     );
   }
