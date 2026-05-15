@@ -6,6 +6,8 @@ import type {
   QueryReturnValue,
 } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { logOut } from "../features/authSlice";
+import { toast } from "react-toastify";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -37,8 +39,16 @@ const baseQueryWithReauth = async (
       typeof args.url === "string" &&
       args.url.includes("/account/login"));
 
-  // prevent refresh request when logging in
-  if (result?.error?.status === 401 && !isLoginRequest) {
+  const isRefreshRequest =
+    (typeof args === "string" && args.includes("/account/refresh")) ||
+    (typeof args === "object" &&
+      args !== null &&
+      "url" in args &&
+      typeof args.url === "string" &&
+      args.url.includes("/account/refresh"));
+
+  // prevent refresh request when logging in and if it is a refresh request
+  if (result?.error?.status === 401 && !isLoginRequest && !isRefreshRequest) {
     if (!refreshPromise) {
       refreshPromise = (async () =>
         await baseQuery("/account/refresh", api, extraOptions))().finally(
@@ -53,6 +63,11 @@ const baseQueryWithReauth = async (
     if (!refreshResult.error) {
       return await baseQuery(args, api, extraOptions);
     }
+
+    api.dispatch(logOut());
+
+    // Show a toast notification
+    toast.error("Your session has expired. Please log in again.");
 
     return refreshResult;
   }
