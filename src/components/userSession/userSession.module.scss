@@ -1,0 +1,67 @@
+.sessionCard {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.7em;
+	border: 2px solid #e5e7eb;
+	border-radius: var(--radius-md);
+	background: var(--color-light-grey);
+	transition: box-shadow 0.2s ease;
+
+	&:hover {
+		box-shadow: var(--shadow-sm);
+	}
+}
+
+.left {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.iconBox {
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--radius-md);
+}
+
+.deviceName {
+	font-size: 0.875rem;
+	font-weight: 500;
+	margin: 0;
+}
+
+.location {
+	font-size: 0.75rem;
+	color: var(--color-muted);
+	margin: 0;
+}
+
+.right {
+	text-align: right;
+}
+
+.time {
+	font-size: 0.675rem;
+	color: var(--color-muted);
+}
+
+.currentBadge {
+	display: inline-block;
+	margin-top: 0.3em;
+	padding: 3px 8px;
+	font-size: 0.675rem;
+	border-radius: 999px;
+	background: #dcfce7;
+	color: #166534;
+}
+
+/* Icons */
+.icon {
+	color: var(--color-primary);
+	width: 18px;
+	height: 18px;
+}
