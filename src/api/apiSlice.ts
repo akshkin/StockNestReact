@@ -47,8 +47,21 @@ const baseQueryWithReauth = async (
       typeof args.url === "string" &&
       args.url.includes("/account/refresh"));
 
-  // prevent refresh request when logging in and if it is a refresh request
-  if (result?.error?.status === 401 && !isLoginRequest && !isRefreshRequest) {
+  const isLogoutRequest =
+    (typeof args === "string" && args.includes("/account/logout")) ||
+    (typeof args === "object" &&
+      args !== null &&
+      "url" in args &&
+      typeof args.url === "string" &&
+      args.url.includes("/account/logout"));
+
+  // prevent refresh request when logging in , logging out and if it is a refresh request
+  if (
+    result?.error?.status === 401 &&
+    !isLoginRequest &&
+    !isRefreshRequest &&
+    !isLogoutRequest
+  ) {
     if (!refreshPromise) {
       refreshPromise = (async () =>
         await baseQuery("/account/refresh", api, extraOptions))().finally(
