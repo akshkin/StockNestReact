@@ -6,6 +6,7 @@ import ProfileForm from "../../components/profileForm/ProfileForm";
 import Loading from "../../components/loading/Loading";
 import ErrorText from "../../components/errorText/ErrorText";
 import { Pencil } from "lucide-react";
+import SettingsAndPrivacy from "../../components/profileForm/SettingsAndPrivacy";
 
 function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,6 +53,7 @@ function Profile() {
           </div>
         </div>
       )}
+      <SettingsAndPrivacy />
       {isModalOpen && (
         <Modal
           title="Edit Profile"

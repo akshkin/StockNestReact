@@ -115,6 +115,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
       // if user just updates first name and last name
       await updateProfile({
         ...data,
+        profileImageUrl: profile.profileImageUrl,
       });
     }
     if (imageError || isError) {

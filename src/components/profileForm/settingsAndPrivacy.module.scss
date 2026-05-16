@@ -1,0 +1,42 @@
+.container {
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: filter 0.2s ease;
+
+	&:hover {
+		filter: brightness(120%);
+	}
+
+	h2 {
+		font-weight: 600;
+		font-size: 1.1rem;
+	}
+}
+
+.chevron {
+	font-size: 0.875rem;
+}
+
+.content {
+	margin-top: 0.5em;
+}
+
+.subText {
+	font-size: 0.75rem;
+	color: var(--color-muted);
+	margin-bottom: 0.6em;
+}
+
+.sessionList {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+}
