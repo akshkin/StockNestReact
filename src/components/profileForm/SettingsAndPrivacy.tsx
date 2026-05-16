@@ -82,7 +82,8 @@ function SettingsAndPrivacy() {
           </p>
 
           <div className={styles.sessionList}>
-            {sessions?.length &&
+            {sessions &&
+              sessions?.length > 0 &&
               sessions.map((session) => (
                 <UserSessionCard
                   session={session}
