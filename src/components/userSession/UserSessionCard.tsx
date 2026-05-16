@@ -59,7 +59,7 @@ function UserSessionCard({
           <span className={styles.currentBadge}>This device</span>
         )}
       </div>
-      {displayRevokeButton && (
+      {handleRevokeClick && displayRevokeButton && (
         <button
           className={styles.revokeButton}
           type="button"

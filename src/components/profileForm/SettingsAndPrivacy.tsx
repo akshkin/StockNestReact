@@ -28,11 +28,7 @@ function SettingsAndPrivacy() {
   const modalChild = (session: UserSessionType) => {
     return (
       <div>
-        <UserSessionCard
-          session={session}
-          displayRevokeButton={false}
-          handleRevokeClick={handleRevokeClick}
-        />
+        <UserSessionCard session={session} displayRevokeButton={false} />
         <br />
         {activeSession && (
           <ConfirmDelete
