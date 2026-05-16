@@ -31,12 +31,14 @@ export const profileApi = apiSlice.injectEndpoints({
         url: "/sessions",
         method: "GET",
       }),
+      providesTags: ["Sessions"],
     }),
     revokeSession: builder.mutation({
       query: (sessionId) => ({
         url: `/sessions/revoke/${sessionId}`,
         method: "POST",
       }),
+      invalidatesTags: ["Sessions"],
     }),
   }),
 });

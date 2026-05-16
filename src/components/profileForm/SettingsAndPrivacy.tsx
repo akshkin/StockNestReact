@@ -8,6 +8,8 @@ import styles from "./settingsAndPrivacy.module.scss";
 import Modal from "../modal/Modal";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import UserSessionCard from "../userSession/UserSessionCard";
+import { toast } from "react-toastify";
+import ErrorText from "../errorText/ErrorText";
 
 function SettingsAndPrivacy() {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
@@ -23,9 +25,6 @@ function SettingsAndPrivacy() {
     setIsModalOpen(false);
   }
 
-  console.log(error);
-  console.log(activeSession);
-
   const modalChild = (session: UserSessionType) => {
     return (
       <div>
@@ -35,11 +34,16 @@ function SettingsAndPrivacy() {
           handleRevokeClick={handleRevokeClick}
         />
         <br />
-        <ConfirmDelete
-          handleDelete={() => handleRevokeSession(activeSession.sessionId!)}
-          closeModal={closeModal}
-          isLoading={false}
-        />
+        {activeSession && (
+          <ConfirmDelete
+            handleDelete={() => handleRevokeSession(activeSession.sessionId)}
+            closeModal={closeModal}
+            isLoading={false}
+          />
+        )}
+        {error && (
+          <ErrorText error={"Something went wrong. Failed to revoke session"} />
+        )}
       </div>
     );
   };
@@ -52,12 +56,12 @@ function SettingsAndPrivacy() {
   function handleRevokeSession(sessionId: number) {
     try {
       revokeSession(sessionId).unwrap();
-      setIsModalOpen(false);
-      // if (sessionId === activeSession?.sessionId) {
-      // 	navigate("/");
-      // }
     } catch (err) {
       console.error(err);
+      toast.error("Something went wrong. Failed to revoke session");
+    } finally {
+      setIsModalOpen(false);
+      setActiveSession(null);
     }
   }
 
@@ -89,10 +93,10 @@ function SettingsAndPrivacy() {
           </div>
         </div>
       )}
-      {isModalOpen && (
+      {isModalOpen && activeSession && (
         <Modal
           title="This will log you out of this device"
-          children={modalChild(activeSession!)}
+          children={modalChild(activeSession)}
           closeModal={() => setIsModalOpen(false)}
         />
       )}

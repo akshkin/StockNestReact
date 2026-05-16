@@ -100,6 +100,7 @@ export const apiSlice = createApi({
     "NotificationCount",
     "Profile",
     "Stats",
+    "Sessions",
   ],
 
   refetchOnReconnect: true,
