@@ -1,45 +1,52 @@
 import "./App.scss";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import Layout from "./routes/layout/Layout";
-import Login from "./routes/auth/Login";
-import Dashboard from "./routes/dashboard/Dashboard";
-import SignUp from "./routes/auth/SignUp";
 import ProtectedRoute from "./routes/protectedRoutes/ProtectedRoute";
-import Group from "./routes/group/Group";
-import Category from "./routes/category/Category";
-import GroupLayout from "./routes/group/GroupLayout";
-import Groups from "./routes/group/Groups";
-import Notifications from "./routes/notifications/Notifications";
-import Profile from "./routes/profile/Profile";
 import Home from "./routes/home/Home";
 import { ToastContainer } from "react-toastify";
+import { lazy, Suspense } from "react";
+import Loading from "./components/loading/Loading";
+
+const Layout = lazy(() => import("./routes/layout/Layout"));
+const Login = lazy(() => import("./routes/auth/Login"));
+const Dashboard = lazy(() => import("./routes/dashboard/Dashboard"));
+const SignUp = lazy(() => import("./routes/auth/SignUp"));
+const GroupLayout = lazy(() => import("./routes/group/GroupLayout"));
+const Groups = lazy(() => import("./routes/group/Groups"));
+const Group = lazy(() => import("./routes/group/Group"));
+const Category = lazy(() => import("./routes/category/Category"));
+const Notifications = lazy(
+  () => import("./routes/notifications/Notifications"),
+);
+const Profile = lazy(() => import("./routes/profile/Profile"));
 
 function App() {
   return (
     <>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" index element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<SignUp />} />
-          </Route>
-          <Route element={<ProtectedRoute />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="groups" element={<GroupLayout />}>
-              <Route index element={<Groups />} />
-              <Route path=":groupId" element={<Group />} />
-              <Route
-                path=":groupId/category/:categoryId"
-                element={<Category />}
-              />
+      <Suspense fallback={<Loading />}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route path="/" index element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<SignUp />} />
             </Route>
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="*" element={<h1>404 Not Found</h1>} />
-          </Route>
-        </Routes>
-      </HashRouter>
+            <Route element={<ProtectedRoute />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="groups" element={<GroupLayout />}>
+                <Route index element={<Groups />} />
+                <Route path=":groupId" element={<Group />} />
+                <Route
+                  path=":groupId/category/:categoryId"
+                  element={<Category />}
+                />
+              </Route>
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="*" element={<h1>404 Not Found</h1>} />
+            </Route>
+          </Routes>
+        </HashRouter>
+      </Suspense>
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

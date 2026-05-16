@@ -46,6 +46,6 @@ export const profileApi = apiSlice.injectEndpoints({
 export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
-  useGetAllSessionsQuery,
+  useLazyGetAllSessionsQuery,
   useRevokeSessionMutation,
 } = profileApi;
