@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useGetProfileQuery } from "../../api/profileApi";
 import styles from "./profile.module.scss";
 import Modal from "../../components/modal/Modal";
@@ -6,7 +6,10 @@ import ProfileForm from "../../components/profileForm/ProfileForm";
 import Loading from "../../components/loading/Loading";
 import ErrorText from "../../components/errorText/ErrorText";
 import { Pencil } from "lucide-react";
-import SettingsAndPrivacy from "../../components/profileForm/SettingsAndPrivacy";
+
+const SettingsAndPrivacy = lazy(
+  () => import("../../components/profileForm/SettingsAndPrivacy"),
+);
 
 function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,7 +56,9 @@ function Profile() {
           </div>
         </div>
       )}
-      <SettingsAndPrivacy />
+      <Suspense fallback={<Loading />}>
+        <SettingsAndPrivacy />
+      </Suspense>
       {isModalOpen && (
         <Modal
           title="Edit Profile"

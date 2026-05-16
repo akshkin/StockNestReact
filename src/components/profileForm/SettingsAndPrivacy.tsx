@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  useGetAllSessionsQuery,
+  useLazyGetAllSessionsQuery,
   useRevokeSessionMutation,
   type UserSessionType,
 } from "../../api/profileApi";
@@ -10,6 +10,7 @@ import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import UserSessionCard from "../userSession/UserSessionCard";
 import { toast } from "react-toastify";
 import ErrorText from "../errorText/ErrorText";
+import Loading from "../loading/Loading";
 
 function SettingsAndPrivacy() {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
@@ -18,8 +19,11 @@ function SettingsAndPrivacy() {
     null,
   );
 
-  const [revokeSession, { error }] = useRevokeSessionMutation();
-  const { data: sessions } = useGetAllSessionsQuery();
+  const [revokeSession] = useRevokeSessionMutation();
+  const [
+    triggerSessions,
+    { data: sessions, error, isLoading: sessionsLoading },
+  ] = useLazyGetAllSessionsQuery();
 
   function closeModal() {
     setIsModalOpen(false);
@@ -61,35 +65,47 @@ function SettingsAndPrivacy() {
     }
   }
 
+  function handleSettingsClick() {
+    setIsSettingOpen((prev) => !prev);
+    try {
+      triggerSessions().unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div className={styles.container}>
-      <div
-        className={styles.header}
-        onClick={() => setIsSettingOpen((prev) => !prev)}
-      >
+      <div className={styles.header} onClick={handleSettingsClick}>
         <h2>Settings & Privacy</h2>
         <span className={styles.chevron}>{isSettingOpen ? "▲" : "▼"}</span>
       </div>
 
-      {isSettingOpen && (
-        <div className={styles.content}>
-          <p className={styles.subText}>
-            You are currently logged in on these devices.
-          </p>
+      {isSettingOpen &&
+        (sessionsLoading ? (
+          <Loading />
+        ) : (
+          <div className={styles.content}>
+            <p className={styles.subText}>
+              You are currently logged in on these devices.
+            </p>
 
-          <div className={styles.sessionList}>
-            {sessions &&
-              sessions?.length > 0 &&
-              sessions.map((session) => (
-                <UserSessionCard
-                  session={session}
-                  displayRevokeButton={true}
-                  handleRevokeClick={handleRevokeClick}
-                />
-              ))}
+            <div className={styles.sessionList}>
+              {sessions &&
+                sessions?.length > 0 &&
+                sessions.map((session) => (
+                  <UserSessionCard
+                    session={session}
+                    displayRevokeButton={true}
+                    handleRevokeClick={handleRevokeClick}
+                  />
+                ))}
+            </div>
+            {error && (
+              <ErrorText error="There was a problem loading sessions" />
+            )}
           </div>
-        </div>
-      )}
+        ))}
       {isModalOpen && activeSession && (
         <Modal
           title="This will log you out of this device"
