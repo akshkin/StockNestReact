@@ -8,6 +8,8 @@ import InputField from "../../components/inputField/InputField";
 import ErrorText from "../../components/errorText/ErrorText";
 import { normalizeApiError, zodErrorsToObject } from "../../helpers/utils";
 import Loading from "../../components/loading/Loading";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/authSlice";
 
 type registerSchema = z.infer<typeof registerSchema>;
 
@@ -28,6 +30,7 @@ function Auth() {
   const [register, registerState] = useRegisterMutation();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const isFormValid =
     Object.keys(errors).length === 0 &&
@@ -55,7 +58,7 @@ function Auth() {
     try {
       const response = await register(data);
       if (response.data?.user) {
-        await new Promise((resolve) => setTimeout(resolve, 200)); // Add a delay of 0.2 seconds
+        dispatch(setCredentials(response.data?.user.firstName));
         navigate("/dashboard", {
           replace: true,
           state: {

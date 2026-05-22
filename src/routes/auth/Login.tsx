@@ -8,6 +8,8 @@ import { normalizeApiError, zodErrorsToObject } from "../../helpers/utils";
 import ErrorText from "../../components/errorText/ErrorText";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../components/loading/Loading";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/authSlice";
 
 type loginScehma = z.infer<typeof loginSchema>;
 
@@ -22,6 +24,8 @@ function Login() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+
   const message = location.state?.message || "";
 
   const isFormValid =
@@ -50,7 +54,7 @@ function Login() {
     try {
       const response = await login(data).unwrap();
       if (response?.user) {
-        await new Promise((resolve) => setTimeout(resolve, 200)); // Add a delay of 0.2 seconds
+        dispatch(setCredentials(response.user.firstName));
         navigate("/dashboard", { replace: true });
       }
     } catch (err) {
