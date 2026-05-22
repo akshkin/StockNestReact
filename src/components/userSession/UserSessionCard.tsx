@@ -46,7 +46,7 @@ function UserSessionCard({
 
         <div>
           <h3 className={styles.deviceName}>{session.deviceName}</h3>
-          <p className={styles.location}>{session.location}</p>
+          {/* <p className={styles.location}>{session.location}</p> */}
         </div>
       </div>
 
