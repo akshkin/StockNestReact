@@ -11,7 +11,6 @@ function NotificationIcon() {
       aria-label="Go to notifications page"
     >
       {unreadCount && unreadCount > 0 ? (
-        // <PiBellFill className={styles.bellIcon} />
         <BellDot size={20} className={styles.bellIcon} />
       ) : (
         <Bell size={20} className={styles.bellIcon} />

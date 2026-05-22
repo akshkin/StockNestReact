@@ -9,16 +9,6 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
-      onQueryStarted: async (_, { queryFulfilled, dispatch }) => {
-        try {
-          await queryFulfilled;
-          setTimeout(() => {
-            dispatch(apiSlice.util.resetApiState());
-          }, 1000);
-        } catch (err) {
-          console.log(err);
-        }
-      },
     }),
     register: builder.mutation({
       query: (data) => ({
@@ -40,8 +30,7 @@ export const authApi = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          console.log(data);
+          await queryFulfilled;
           dispatch(logOut());
           setTimeout(() => {
             dispatch(apiSlice.util.resetApiState());

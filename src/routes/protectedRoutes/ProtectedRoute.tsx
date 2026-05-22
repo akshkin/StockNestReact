@@ -11,12 +11,17 @@ import { selectCurrentUser } from "../../features/authSlice";
 
 function ProtectedRoute() {
   const userName = useSelector(selectCurrentUser);
-  const { error: getMeError, isLoading, isFetching } = useGetMeQuery({});
+  const {
+    error: getMeError,
+    isLoading,
+    isFetching,
+  } = useGetMeQuery(undefined, {
+    // refetch on mount to restore session
+    refetchOnMountOrArgChange: true,
+  });
   const isOnline = useOnlineStatus();
 
   if (isLoading || (isFetching && isOnline)) return <Loading />;
-
-  if (!userName) return <Navigate to="login" replace />;
 
   if (getMeError && "status" in getMeError && getMeError.status === 401) {
     return (
@@ -27,6 +32,8 @@ function ProtectedRoute() {
       />
     );
   }
+
+  if (!userName) return <Navigate to="login" replace />;
 
   return (
     <div className={styles.layoutContainer}>

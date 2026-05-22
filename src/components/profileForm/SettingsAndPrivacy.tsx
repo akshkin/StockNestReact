@@ -89,12 +89,17 @@ function SettingsAndPrivacy() {
             <p className={styles.subText}>
               You are currently logged in on these devices.
             </p>
+            <p className={styles.subText}>
+              NOTE: We are currently working on displaying the location of these
+              devices.
+            </p>
 
             <div className={styles.sessionList}>
               {sessions &&
                 sessions?.length > 0 &&
                 sessions.map((session) => (
                   <UserSessionCard
+                    key={session.sessionId}
                     session={session}
                     displayRevokeButton={true}
                     handleRevokeClick={handleRevokeClick}
