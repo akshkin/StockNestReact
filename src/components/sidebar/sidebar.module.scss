@@ -63,6 +63,20 @@
 			align-items: center;
 			margin-top: 0;
 			height: 100%;
+
+			.dashlink {
+				flex-direction: column;
+				font-size: 0.75rem;
+				gap: 0;
+
+				.notificationText {
+					margin-top: -5px; // position it to line with other link texts
+				}
+				.text {
+					display: block;
+					font-size: 0.75rem;
+				}
+			}
 		}
 	}
 }

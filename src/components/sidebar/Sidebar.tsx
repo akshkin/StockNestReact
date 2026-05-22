@@ -41,7 +41,9 @@ function Sidebar() {
               aria-label="Go to notifications"
             >
               <NotificationIcon />
-              <span className={styles.text}>Notifications</span>
+              <span className={`${styles.text} ${styles.notificationText}`}>
+                Notifications
+              </span>
             </NavLink>
           </li>
           <li>
