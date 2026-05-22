@@ -85,19 +85,16 @@ define(["./workbox-7e5eb42b"], function (workbox) {
         revision: "f65d217c61d26523a8d84f776233dc91",
       },
       {
-        url: "/StockNestReact/index.html",
-        revision: "0.d2pntlh5e5",
+        url: "index.html",
+        revision: "0.78jgevpm3h8",
       },
     ],
     {},
   );
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(
-    new workbox.NavigationRoute(
-      workbox.createHandlerBoundToURL("/StockNestReact/index.html"),
-      {
-        allowlist: [/^\/$/],
-      },
-    ),
+    new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+      allowlist: [/^\/$/],
+    }),
   );
 });
