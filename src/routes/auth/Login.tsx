@@ -10,6 +10,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Loading from "../../components/loading/Loading";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../features/authSlice";
+import { store } from "../../store";
+import { statsApi } from "../../api/statsApi";
 
 type loginScehma = z.infer<typeof loginSchema>;
 
@@ -55,6 +57,9 @@ function Login() {
       const response = await login(data).unwrap();
       if (response?.user) {
         dispatch(setCredentials(response.user.firstName));
+        store.dispatch(
+          statsApi.util.prefetch("getStats", undefined, { force: false }),
+        );
         navigate("/dashboard", { replace: true });
       }
     } catch (err) {
