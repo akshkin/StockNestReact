@@ -72,7 +72,7 @@ function ThemeIcon() {
   return (
     <div className={styles.themeDropdown}>
       <button
-        className={`${styles.trigger} button`}
+        className={styles.trigger}
         aria-label="Select theme"
         onClick={() => setIsDropdownOpen((prev) => !prev)}
       >

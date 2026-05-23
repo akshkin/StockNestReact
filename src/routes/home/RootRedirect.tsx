@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
 import { selectAuthStatus, selectCurrentUser } from "../../features/authSlice";
 import Loading from "../../components/loading/Loading";
-import { Navigate } from "react-router-dom";
-import Home from "./Home";
+import { Navigate, Outlet } from "react-router-dom";
 
 function RootRedirect() {
   // check for user and user's status to show appropriate page
@@ -14,9 +13,11 @@ function RootRedirect() {
   }
 
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    <Navigate to="/dashboard" replace />;
+  } else {
+    <Navigate to="/" replace />;
   }
 
-  return <Home />;
+  return <Outlet />;
 }
 export default RootRedirect;
