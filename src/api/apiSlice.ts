@@ -31,37 +31,7 @@ const baseQueryWithReauth = async (
    *   response from refresh request
    */
 
-  const isLoginRequest =
-    (typeof args === "string" && args.includes("/account/login")) ||
-    (typeof args === "object" &&
-      args !== null &&
-      "url" in args &&
-      typeof args.url === "string" &&
-      args.url.includes("/account/login"));
-
-  const isRefreshRequest =
-    (typeof args === "string" && args.includes("/account/refresh")) ||
-    (typeof args === "object" &&
-      args !== null &&
-      "url" in args &&
-      typeof args.url === "string" &&
-      args.url.includes("/account/refresh"));
-
-  const isLogoutRequest =
-    (typeof args === "string" && args.includes("/account/logout")) ||
-    (typeof args === "object" &&
-      args !== null &&
-      "url" in args &&
-      typeof args.url === "string" &&
-      args.url.includes("/account/logout"));
-
-  // prevent refresh request when logging in , logging out and if it is a refresh request
-  if (
-    result?.error?.status === 401 &&
-    !isLoginRequest &&
-    !isRefreshRequest &&
-    !isLogoutRequest
-  ) {
+  if (result?.error?.status === 401) {
     if (!refreshPromise) {
       refreshPromise = (async () =>
         await baseQuery("/account/refresh", api, extraOptions))().finally(
@@ -73,14 +43,20 @@ const baseQueryWithReauth = async (
 
     const refreshResult = await refreshPromise;
 
+    // check if refresh or getMe request
+    const isAuthRequest =
+      api.endpoint === "getMe" || api.endpoint === "refresh";
+
     if (!refreshResult.error) {
       return await baseQuery(args, api, extraOptions);
     }
 
     api.dispatch(logOut());
 
-    // Show a toast notification
-    toast.error("Your session has expired. Please log in again.");
+    // do not show toast when user has manually logged out
+    if (!isAuthRequest) {
+      toast.error("Your session has expired. Please log in again.");
+    }
 
     return refreshResult;
   }
