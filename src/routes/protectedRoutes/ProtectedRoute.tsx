@@ -2,28 +2,22 @@ import { Navigate, Outlet } from "react-router-dom";
 import DashboardHeader from "../../components/header/dashboardHeader/DashboardHeader";
 import Sidebar from "../../components/sidebar/Sidebar";
 import styles from "./protectRoute.module.css";
-import { useGetMeQuery } from "../../api/authApi";
 import Loading from "../../components/loading/Loading";
 import OfflineText from "../../components/offlineText/OfflineText";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../features/authSlice";
+import { selectAuthStatus, selectCurrentUser } from "../../features/authSlice";
 
 function ProtectedRoute() {
   const userName = useSelector(selectCurrentUser);
-  const {
-    error: getMeError,
-    isLoading,
-    isFetching,
-  } = useGetMeQuery(undefined, {
-    // refetch on mount to restore session
-    refetchOnMountOrArgChange: true,
-  });
+  const status = useSelector(selectAuthStatus);
+
   const isOnline = useOnlineStatus();
 
-  if (isLoading || (isFetching && isOnline)) return <Loading />;
+  if (status === "loading" || (status === "unknown" && isOnline))
+    return <Loading />;
 
-  if (getMeError && "status" in getMeError && getMeError.status === 401) {
+  if (status === "guest" || !userName) {
     return (
       <Navigate
         to="/login"
@@ -32,8 +26,6 @@ function ProtectedRoute() {
       />
     );
   }
-
-  if (!userName) return <Navigate to="login" replace />;
 
   return (
     <div className={styles.layoutContainer}>

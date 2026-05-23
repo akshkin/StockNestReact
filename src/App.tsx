@@ -1,10 +1,11 @@
 import "./App.scss";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./routes/protectedRoutes/ProtectedRoute";
-import Home from "./routes/home/Home";
 import { ToastContainer } from "react-toastify";
 import { lazy, Suspense } from "react";
 import Loading from "./components/loading/Loading";
+import AuthInitializer from "./routes/auth/AuthInitializer";
+import RootRedirect from "./routes/home/RootRedirect";
 
 const Layout = lazy(() => import("./routes/layout/Layout"));
 const Login = lazy(() => import("./routes/auth/Login"));
@@ -22,11 +23,12 @@ const Profile = lazy(() => import("./routes/profile/Profile"));
 function App() {
   return (
     <>
+      <AuthInitializer />
       <Suspense fallback={<Loading />}>
         <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
-              <Route path="/" index element={<Home />} />
+              <Route path="/" index element={<RootRedirect />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<SignUp />} />
             </Route>
