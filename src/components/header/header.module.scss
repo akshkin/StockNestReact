@@ -16,6 +16,7 @@
 		ul {
 			list-style: none;
 			display: flex;
+			align-items: center;
 			gap: 1em;
 			margin: 0;
 			padding: 0;
@@ -43,18 +44,6 @@
 					}
 				}
 			}
-			// .head {
-			// 	background: var(--color-primary);
-			// 	padding: 0.3em 1.2em;
-			// 	border-radius: 4px;
-			// 	color: white;
-			// 	position: relative;
-			// 	transition: color 0.3s ease;
-
-			// 	&:hover {
-			// 		color: var(--color-text);
-			// 	}
-			// }
 		}
 		// align logo and nav vertically on smaller screens
 		@media (max-width: 500px) {
