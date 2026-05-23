@@ -1,4 +1,4 @@
-import { logOut, setCredentials } from "../features/authSlice";
+import { logOut, setAuthStatus, setCredentials } from "../features/authSlice";
 import { apiSlice } from "./apiSlice";
 
 export const authApi = apiSlice.injectEndpoints({
@@ -9,6 +9,14 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setAuthStatus("authenticated"));
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
     register: builder.mutation({
       query: (data) => ({
@@ -16,6 +24,14 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setAuthStatus("authenticated"));
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
     refresh: builder.query({
       query: () => ({
@@ -32,6 +48,7 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           await queryFulfilled;
           dispatch(logOut());
+          dispatch(setAuthStatus("guest"));
           setTimeout(() => {
             dispatch(apiSlice.util.resetApiState());
           }, 1000);
