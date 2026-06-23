@@ -1,0 +1,31 @@
+.breadcrumb {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+
+	font-size: 0.9rem;
+
+	margin-bottom: 1rem;
+
+	a {
+		text-decoration: none;
+		color: var(--primary);
+
+		transition: opacity 0.2s;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+}
+
+.separator {
+	color: #999;
+}
+
+.current {
+	color: var(--color-secondary);
+	font-weight: 600;
+	cursor: default;
+}

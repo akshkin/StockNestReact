@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { MoveLeft } from "lucide-react";
+import Breadcrumb from "../../components/breadcrumb/Breadcrumb";
 
 function GroupLayout() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ function GroupLayout() {
         <MoveLeft />
         Back
       </button>
+      <Breadcrumb />
       <Outlet />
     </>
   );
