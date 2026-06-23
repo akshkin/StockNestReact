@@ -62,7 +62,9 @@ export default function Breadcrumb() {
             <span className={styles.separator}>/ </span>
 
             {shouldLink(index) ? (
-              <Link to={to}>{label}</Link>
+              <Link to={to} className={styles.current}>
+                {label}
+              </Link>
             ) : (
               <span className={styles.current}>{label}</span>
             )}
