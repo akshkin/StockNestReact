@@ -15,6 +15,7 @@ import { useZodForm } from "../../hooks/useZodForm";
 import { profileSchema } from "../../schemas";
 import type z from "zod";
 import { ImageUp } from "lucide-react";
+import imageCompression from "browser-image-compression";
 
 type ProfileFormProps = {
   closeModal: () => void;
@@ -58,16 +59,23 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
     }
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFileSizeError("");
     const selected = e.target.files?.[0];
-    const maxFileSize = 1 * 1024 * 1024;
+    const maxFileSize = 8 * 1024 * 1024;
     if (selected) {
       if (selected?.size > maxFileSize) {
         setFileSizeError("File should be less than 1MB");
         return;
       }
-      setFile(selected);
+
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 700,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(selected, options);
+      setFile(compressedFile);
       setPreview(URL.createObjectURL(selected));
     }
   }
