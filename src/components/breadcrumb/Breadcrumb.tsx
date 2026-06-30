@@ -41,10 +41,6 @@ export default function Breadcrumb() {
     return labels[segment] || segment;
   }
 
-  function shouldLink(index: number) {
-    return paths[index] !== "category" && !(index === 3 && categoryId);
-  }
-
   return (
     <nav className={styles.breadcrumb}>
       <Link to="/dashboard">Dashboard</Link>
@@ -61,12 +57,11 @@ export default function Breadcrumb() {
           <span key={to}>
             <span className={styles.separator}>/ </span>
 
-            {shouldLink(index) ? (
-              <Link to={to} className={styles.current}>
-                {label}
-              </Link>
-            ) : (
+            {/* show the current path in secondary color */}
+            {index === paths.length - 1 ? (
               <span className={styles.current}>{label}</span>
+            ) : (
+              <Link to={to}>{label}</Link>
             )}
           </span>
         );

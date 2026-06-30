@@ -1,94 +1,104 @@
+import type { MemberRole } from "../helpers/utils";
 import { apiSlice } from "./apiSlice";
 
 export type Group = {
-	groupId: number;
-	name: string;
-	role: string;
-	createdBy: string;
-	createdAt: string;
-	updatedBy: string;
-	updatedAt: string;
+  groupId: number;
+  name: string;
+  role: string;
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string;
 };
 
 export type GroupMember = {
-	fullName: string;
-	email: string;
-	role: string;
-	isMe: boolean;
-	userId: string;
-	profileImageUrl: string;
+  fullName: string;
+  email: string;
+  role: MemberRole;
+  isMe: boolean;
+  userId: string;
+  profileImageUrl: string;
 };
 
 export const groupsApiSlice = apiSlice.injectEndpoints({
-	endpoints: (builder) => ({
-		getGroups: builder.query({
-			query: () => "/groups",
-			providesTags: ["Groups"],
-		}),
-		getGroupById: builder.query({
-			query: (id) => `/groups/${id}`,
-		}),
-		createNewGroup: builder.mutation({
-			query: ({ formData }) => ({
-				url: "/groups/create",
-				method: "POST",
-				body: {
-					...formData,
-				},
-			}),
-			invalidatesTags: ["Groups", "Stats"],
-		}),
-		updateGroup: builder.mutation({
-			query: ({ groupId, formData }) => ({
-				url: `/groups/${groupId}/edit`,
-				method: "POST",
-				body: {
-					...formData,
-				},
-			}),
-			invalidatesTags: ["Groups"],
-		}),
-		deleteGroup: builder.mutation({
-			query: ({ id }) => ({
-				url: `/groups/${id}/delete`,
-				method: "POST",
-			}),
-			invalidatesTags: ["Groups", "Stats"],
-		}),
-		inviteMemeberToGroup: builder.mutation({
-			query: ({ groupId, inviterData }) => ({
-				url: `/groups/${groupId}/invite`,
-				method: "POST",
-				body: {
-					...inviterData,
-				},
-			}),
-			invalidatesTags: ["GroupMembers"],
-		}),
-		getGroupMembers: builder.query({
-			query: (groupId) => ({
-				url: `/groups/${groupId}/members`,
-				method: "GET",
-			}),
-			providesTags: ["GroupMembers"],
-		}),
-		removeGroupMember: builder.mutation({
-			query: ({ groupId, userId }) => ({
-				url: `/groups/${groupId}/deleteMember/${userId}`,
-				method: "POST",
-			}),
-			invalidatesTags: ["GroupMembers"],
-		}),
-	}),
+  endpoints: (builder) => ({
+    getGroups: builder.query({
+      query: () => "/groups",
+      providesTags: ["Groups"],
+    }),
+    getGroupById: builder.query({
+      query: (id) => `/groups/${id}`,
+    }),
+    createNewGroup: builder.mutation({
+      query: ({ formData }) => ({
+        url: "/groups/create",
+        method: "POST",
+        body: {
+          ...formData,
+        },
+      }),
+      invalidatesTags: ["Groups", "Stats"],
+    }),
+    updateGroup: builder.mutation({
+      query: ({ groupId, formData }) => ({
+        url: `/groups/${groupId}/edit`,
+        method: "POST",
+        body: {
+          ...formData,
+        },
+      }),
+      invalidatesTags: ["Groups"],
+    }),
+    deleteGroup: builder.mutation({
+      query: ({ id }) => ({
+        url: `/groups/${id}/delete`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Groups", "Stats"],
+    }),
+    inviteMemeberToGroup: builder.mutation({
+      query: ({ groupId, inviterData }) => ({
+        url: `/groups/${groupId}/invite`,
+        method: "POST",
+        body: {
+          ...inviterData,
+        },
+      }),
+      invalidatesTags: ["GroupMembers"],
+    }),
+    getGroupMembers: builder.query({
+      query: (groupId) => ({
+        url: `/groups/${groupId}/members`,
+        method: "GET",
+      }),
+      providesTags: ["GroupMembers"],
+    }),
+    removeGroupMember: builder.mutation({
+      query: ({ groupId, userId }) => ({
+        url: `/groups/${groupId}/deleteMember/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["GroupMembers"],
+    }),
+    editGroupMemberRole: builder.mutation({
+      query: ({ groupId, userId, dto }) => ({
+        url: `/groups/${groupId}/editMemberRole/${userId}`,
+        method: "POST",
+        body: { ...dto },
+      }),
+      invalidatesTags: ["GroupMembers"],
+    }),
+  }),
 });
 
 export const {
-	useGetGroupsQuery,
-	useGetGroupByIdQuery,
-	useCreateNewGroupMutation,
-	useUpdateGroupMutation,
-	useDeleteGroupMutation,
-	useInviteMemeberToGroupMutation,
-	useGetGroupMembersQuery,
-	useRemoveGroupMemberMutation,
+  useGetGroupsQuery,
+  useGetGroupByIdQuery,
+  useCreateNewGroupMutation,
+  useUpdateGroupMutation,
+  useDeleteGroupMutation,
+  useInviteMemeberToGroupMutation,
+  useGetGroupMembersQuery,
+  useRemoveGroupMemberMutation,
+  useEditGroupMemberRoleMutation,
 } = groupsApiSlice;
