@@ -7,6 +7,7 @@ import ErrorText from "../../components/errorText/ErrorText";
 import styles from "./group.module.scss";
 import { normalizeApiError, zodErrorsToObject } from "../../helpers/utils";
 import { toast } from "react-toastify";
+import { Info } from "lucide-react";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
 
@@ -77,6 +78,24 @@ function AddMemberForm({ groupId, closeModal }: AddMemberFormProps) {
         onChange={(e) => handleChange(e)}
         error={errors?.email}
       />
+
+      <div className={styles.wrapper}>
+        <label htmlFor="role">Select role </label>
+        <Info className={styles.icon} />
+
+        <div className={styles.tooltip}>
+          <p>
+            <strong>Co-Owner</strong> — Full access inclusing adding other
+            members
+          </p>
+          <p>
+            <strong>Member</strong> — Create and edit items, category
+          </p>
+          <p>
+            <strong>Viewer</strong> — View only
+          </p>
+        </div>
+      </div>
 
       <select
         name="role"
