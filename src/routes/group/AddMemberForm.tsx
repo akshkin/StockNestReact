@@ -1,27 +1,42 @@
 import React, { useState } from "react";
-import { useInviteMemeberToGroupMutation } from "../../api/groupsApi";
+import {
+  useEditGroupMemberRoleMutation,
+  useInviteMemeberToGroupMutation,
+} from "../../api/groupsApi";
 import { inviteMemberSchema } from "../../schemas";
 import type z from "zod";
 import InputField from "../../components/inputField/InputField";
 import ErrorText from "../../components/errorText/ErrorText";
 import styles from "./group.module.scss";
-import { normalizeApiError, zodErrorsToObject } from "../../helpers/utils";
+import {
+  normalizeApiError,
+  zodErrorsToObject,
+  type MemberRole,
+} from "../../helpers/utils";
 import { toast } from "react-toastify";
 import { Info } from "lucide-react";
 
 type inviteMemberSchema = z.infer<typeof inviteMemberSchema>;
 
-const defaultInviterData: inviteMemberSchema = {
-  email: "",
-  role: "Member",
-};
-
 type AddMemberFormProps = {
   groupId: number;
   closeModal: () => void;
+  isEditingRole?: boolean;
+  memberRole?: MemberRole;
+  userId?: string;
 };
 
-function AddMemberForm({ groupId, closeModal }: AddMemberFormProps) {
+function AddMemberForm({
+  groupId,
+  closeModal,
+  isEditingRole = false,
+  memberRole,
+  userId,
+}: AddMemberFormProps) {
+  const defaultInviterData: inviteMemberSchema = {
+    email: "",
+    role: memberRole ?? "Viewer",
+  };
   const [formData, setFormData] = useState(defaultInviterData);
   const [errors, setErrors] = useState<
     Partial<Record<keyof inviteMemberSchema, string>>
@@ -30,6 +45,8 @@ function AddMemberForm({ groupId, closeModal }: AddMemberFormProps) {
     inviteMemberToGroup,
     { error: inviteError, isLoading: isInviting, reset },
   ] = useInviteMemeberToGroupMutation();
+  const [editMemberRole, { isLoading: loadingIsEditingRole }] =
+    useEditGroupMemberRoleMutation();
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -54,30 +71,52 @@ function AddMemberForm({ groupId, closeModal }: AddMemberFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await inviteMemberToGroup({
-        groupId: Number(groupId),
-        inviterData: { ...formData },
-      }).unwrap();
-      setFormData(defaultInviterData);
-      closeModal();
-      toast.success("Successfully added member to group!");
+      if (isEditingRole) {
+        await editMemberRole({
+          groupId: Number(groupId),
+          userId: userId,
+          dto: { role: formData.role },
+        }).unwrap();
+      } else {
+        await inviteMemberToGroup({
+          groupId: Number(groupId),
+          inviterData: { ...formData },
+        }).unwrap();
+      }
+      if (isEditingRole) {
+        toast.success("Successfully changed member's role");
+      } else {
+        toast.success("Successfully added member to group!");
+      }
     } catch (err) {
       console.error("Failed to invite member to group", err);
+      if (isEditingRole) {
+        toast.error("Failed to change the member's role");
+      } else {
+        toast.error("Failed to invite member to group");
+      }
+    } finally {
+      setFormData(defaultInviterData);
+      closeModal();
     }
   }
 
-  const isFormValid =
-    Object.keys(errors).length === 0 && formData.email && formData.role;
+  const isFormValid = isEditingRole
+    ? formData.role !== memberRole // if new role is other than the current role
+    : Object.keys(errors).length === 0 && formData.email && formData.role;
+
   return (
     <form>
-      <InputField
-        label="Email Address"
-        value={formData.email}
-        name="email"
-        placeholder="johndoe@example.com"
-        onChange={(e) => handleChange(e)}
-        error={errors?.email}
-      />
+      {!isEditingRole && (
+        <InputField
+          label="Email Address"
+          value={formData.email}
+          name="email"
+          placeholder="johndoe@example.com"
+          onChange={(e) => handleChange(e)}
+          error={errors?.email}
+        />
+      )}
 
       <div className={styles.wrapper}>
         <label htmlFor="role">Select role </label>
@@ -108,8 +147,11 @@ function AddMemberForm({ groupId, closeModal }: AddMemberFormProps) {
       </select>
 
       <div className={styles.buttonsContainer}>
-        <button disabled={!isFormValid || isInviting} onClick={handleSubmit}>
-          Add
+        <button
+          disabled={isInviting || !isFormValid || loadingIsEditingRole}
+          onClick={handleSubmit}
+        >
+          {isEditingRole ? "Save" : "Add"}
         </button>
         <button className="invertedButton" type="button" onClick={closeModal}>
           Cancel

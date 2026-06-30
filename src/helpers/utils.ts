@@ -91,3 +91,5 @@ export function normalizeApiError<TPayload = unknown>(
   }
   return { status: 500, message: "An unexpected error occurred" };
 }
+
+export type MemberRole = "Viewer" | "Member" | "Co-Owner";

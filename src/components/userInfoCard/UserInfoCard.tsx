@@ -8,7 +8,8 @@ import Modal from "../modal/Modal";
 import ErrorText from "../errorText/ErrorText";
 import ConfirmDelete from "../confirmDelete/ConfirmDelete";
 import { toast } from "react-toastify";
-import { UserRoundX } from "lucide-react";
+import { UserRoundPen, UserRoundX } from "lucide-react";
+import AddMemberForm from "../../routes/group/AddMemberForm";
 
 type UserCardInfoProps = {
   groupId: number;
@@ -18,6 +19,7 @@ type UserCardInfoProps = {
 
 function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { fullName, role, isMe, userId, profileImageUrl } = user;
 
   const [removeGroupMember, { isLoading, error }] =
@@ -50,9 +52,13 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
       {(myRole === "Owner" || myRole === "Co-Owner") &&
         !isMe && ( // show delete button only to owner of the group
           <div className={styles.iconsContainer}>
-            {/* <button>
-						<RiEditLine color="blue" />
-					</button>{" "} */}
+            <button
+              title="Change user role"
+              aria-label="Change user role"
+              onClick={() => setIsEditModalOpen(true)}
+            >
+              <UserRoundPen />
+            </button>{" "}
             <button
               className={styles.deleteIcon}
               onClick={() => setIsModalOpen(true)}
@@ -73,6 +79,26 @@ function UserInfoCard({ groupId, user, myRole }: UserCardInfoProps) {
                 handleDelete={handleDelete}
                 closeModal={() => setIsModalOpen(false)}
                 isLoading={isLoading}
+              />
+              {error && (
+                <ErrorText error="An error occured while removing the member" />
+              )}
+            </>
+          }
+        />
+      )}
+      {isEditModalOpen && (
+        <Modal
+          title={`Change user role for ${fullName}`}
+          closeModal={() => setIsEditModalOpen(false)}
+          children={
+            <>
+              <AddMemberForm
+                groupId={groupId}
+                closeModal={() => setIsEditModalOpen(false)}
+                isEditingRole={true}
+                memberRole={role}
+                userId={userId}
               />
               {error && (
                 <ErrorText error="An error occured while removing the member" />
