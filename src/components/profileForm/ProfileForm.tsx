@@ -161,7 +161,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
                 src={`${bucketUrl}/${profile?.profileImageUrl}`}
               />
             )}
-            {/* show remove imgae button if not clicked on remove or if preview exists */}
+            {/* show remove image button if not clicked on remove or if preview exists */}
             {(!removeProfileImage || preview) && (
               <button
                 type="button"
@@ -189,7 +189,7 @@ function ProfileForm({ closeModal }: ProfileFormProps) {
         <span className={styles.fileName}>
           {file ? file?.name : "No file chosen"}
         </span>
-        <small className={styles.smallText}>Max file size should be 1MB</small>
+        <small className={styles.smallText}>Max file size should be 8MB</small>
 
         {fileSizeError && <ErrorText error={fileSizeError} />}
 
