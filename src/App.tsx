@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { lazy, Suspense } from "react";
 import Loading from "./components/loading/Loading";
 import AuthInitializer from "./routes/auth/AuthInitializer";
-import RootRedirect from "./routes/home/RootRedirect";
+// import RootRedirect from "./routes/home/RootRedirect";
 import Home from "./routes/home/Home";
 
 const Layout = lazy(() => import("./routes/layout/Layout"));
@@ -28,27 +28,27 @@ function App() {
       <Suspense fallback={<Loading />}>
         <HashRouter>
           <Routes>
-            <Route element={<RootRedirect />}>
-              <Route path="/" element={<Layout />}>
-                <Route path="/" index element={<Home />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<SignUp />} />
-              </Route>
-              <Route element={<ProtectedRoute />}>
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="groups" element={<GroupLayout />}>
-                  <Route index element={<Groups />} />
-                  <Route path=":groupId" element={<Group />} />
-                  <Route
-                    path=":groupId/category/:categoryId"
-                    element={<Category />}
-                  />
-                </Route>
-                <Route path="notifications" element={<Notifications />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="*" element={<h1>404 Not Found</h1>} />
-              </Route>
+            {/* <Route element={<RootRedirect />}> */}
+            <Route path="/" element={<Layout />}>
+              <Route path="/" index element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<SignUp />} />
             </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="groups" element={<GroupLayout />}>
+                <Route index element={<Groups />} />
+                <Route path=":groupId" element={<Group />} />
+                <Route
+                  path=":groupId/category/:categoryId"
+                  element={<Category />}
+                />
+              </Route>
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="*" element={<h1>404 Not Found</h1>} />
+            </Route>
+            {/* </Route> */}
           </Routes>
         </HashRouter>
       </Suspense>
