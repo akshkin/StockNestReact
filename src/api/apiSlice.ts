@@ -9,7 +9,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logOut } from "../features/authSlice";
 import { toast } from "react-toastify";
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl = import.meta.env.DEV ? import.meta.env.VITE_BASE_URL : "/api";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,

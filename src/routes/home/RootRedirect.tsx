@@ -13,10 +13,11 @@ function RootRedirect() {
   }
 
   if (user) {
-    <Navigate to="/dashboard" replace />;
-  } else {
-    <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
+  // else {
+  //   <Navigate to="/" replace />;
+  // }
 
   return <Outlet />;
 }
